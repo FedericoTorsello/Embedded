@@ -30,7 +30,6 @@ public:
 class MsgServiceClass {
 
 public:
-
   Msg* currentMsg;
   bool msgAvailable;
 

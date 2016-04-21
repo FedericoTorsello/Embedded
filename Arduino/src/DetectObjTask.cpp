@@ -1,5 +1,6 @@
 #include "DetectObjTask.h"
 #include "Arduino.h"
+#include "Level.h"
 
 const float vs = 331.5 + 0.6*20;
 
@@ -25,9 +26,16 @@ void DetectObjTask::tick(){
   float tUS = pulseIn(echoPin, HIGH);
   float t = tUS / 1000.0 / 1000.0 / 2;
   float d = t*vs;
-  if (d >= 0 && d <= pContext->getMaxDistance()){
-    pContext->setDetectedObj(d);
-  } else {
-    pContext->setNoObjDetected();
-  }
+
+  // long rnd = random(5,50);
+  // Serial.println("valore random " + String(rnd));
+
+  // Level level;
+  //
+  // long rnd = level.genRndNumber(5,50);
+  // if (d >= rnd - 5 && d <= rnd + 5){
+  //   pContext->setDetectedObj(d);
+  // } else {
+  //   pContext->setNoObjDetected();
+  // }
 }
