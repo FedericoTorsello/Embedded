@@ -1,0 +1,32 @@
+#!/usr/bin/env python2
+import serial
+import time
+import simplejson as json
+
+
+def readJSON(arduino):
+    stop = False
+    while not stop:
+        arduino.write("OK\n")
+        s = arduino.readline()
+        if s != "":
+            pj = json.loads(s)
+            stop = True
+        print pj.msg
+
+
+def main():
+    try:
+        arduino = serial.Serial(
+            "/dev/ttyACM0", 9600,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            bytesize=serial.EIGHTBITS,
+            timeout=1
+        )
+        readJSON(arduino)
+    except serial.SerialException, e:
+        print e
+
+if __name__ == "__main__":
+    main()
