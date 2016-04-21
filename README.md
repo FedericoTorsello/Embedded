@@ -1,2 +1,0 @@
-# Embedded
-Progetto Embedded Arduino
