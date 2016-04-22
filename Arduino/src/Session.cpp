@@ -1,6 +1,6 @@
 #include "Session.h"
 
-int currentSession;
+unsigned int currentSession;
 
 Session::Session(){
 }
@@ -13,6 +13,6 @@ int Session::getSession(){
   return currentSession;
 }
 
-void Session::setSession(int value){
+void Session::setSession(unsigned int value){
   currentSession = value;
 }

@@ -8,7 +8,6 @@ class Context {
   float maxDistance;
 
 public:
-
   Context(float maxDistance){
     objDetected = false;
     this->maxDistance = maxDistance;
@@ -35,6 +34,5 @@ public:
     return maxDistance;
   }
 };
-
 
 #endif

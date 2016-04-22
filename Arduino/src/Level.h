@@ -5,18 +5,17 @@
 
 
 class Level {
-
-  int currentLevel;
-  long currentRandom;
-
 public:
   Level();
-  Level(int initialLevel);
-  int getLevel();
-  void setLevel(int value);
-  long genRndNumber(int min, int max);
-  void playLevel(int nLevel);
+  Level(unsigned int initialLevel);
+  unsigned int getLevel();
+  void setLevel(unsigned int value);
+  long genRndNumber(unsigned int min, unsigned int max);
+  void playLevel(unsigned int nLevel);
   void printLevel();
+private:
+  unsigned int currentLevel;
+  long currentRandom;
 };
 
 #endif

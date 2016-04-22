@@ -6,16 +6,14 @@
 #include "Context.h"
 
 class LedEnlightingTask: public Task {
-
-  int pin;
-  LightPwm* led;
-  Context* pContext;
-
 public:
-
   LedEnlightingTask(int pin, Context* pContext);
   void init(int period);
   void tick();
+private:
+  int pin;
+  LightPwm* led;
+  Context* pContext;
 };
 
 #endif

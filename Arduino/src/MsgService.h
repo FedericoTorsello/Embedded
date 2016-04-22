@@ -4,9 +4,6 @@
 #include "Arduino.h"
 
 class Msg {
-  String content;
-  String sender;
-
 public:
   Msg(String sender, String content) {
     this->content = content;
@@ -20,6 +17,9 @@ public:
   String getSender(){
     return sender;
   }
+private:
+  String content;
+  String sender;
 };
 
 class Pattern {

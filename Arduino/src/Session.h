@@ -2,14 +2,13 @@
 #define __SESSION__
 
 class Session {
-
-  int currentSession;
-
 public:
   Session();
   Session(int initialSession);
   int getSession();
-  void setSession(int value);
+  void setSession(unsigned int value);
+private:
+  unsigned int currentSession;
 };
 
 #endif

@@ -8,23 +8,27 @@ long currentRandom;
 Level::Level(){
 }
 
-Level::Level(int initialLevel){
+Level::Level(unsigned int initialLevel){
   this->currentLevel = initialLevel;
 }
 
-int Level::getLevel(){
+unsigned int Level::getLevel(){
   return currentLevel;
 }
 
-void Level::setLevel(int value){
+void Level::printLevel(){
+  Serial.println("Current level " + String(getLevel()));
+}
+
+void Level::setLevel(unsigned int value){
   currentLevel = value;
 }
 
-long Level::genRndNumber(int min, int max) {
+long Level::genRndNumber(unsigned int min, unsigned int max) {
   return random(min,max);
 }
 
-void Level::playLevel(int nLevel) {
+void Level::playLevel(unsigned int nLevel) {
   setLevel(nLevel);
   printLevel();
 
@@ -34,8 +38,4 @@ void Level::playLevel(int nLevel) {
   // } else {
   //   pContext->setNoObjDetected();
   // }
-}
-
-void Level::printLevel(){
-  Serial.println("Livello corrente: " + String(getLevel()));
 }
