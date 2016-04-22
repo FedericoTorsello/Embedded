@@ -4,17 +4,17 @@
 #include "Arduino.h"
 
 
-class Game{
+class Game {
 public:
-  Game();
-  // Game(bool state);
+    Game();
+    // Game(bool state);
 
-  bool isRunning();
-  void startGame();
-  // void startGame(unsigned int setLevel);
-  void stopGame();
+    bool isRunning();
+    void startGame();
+    // void startGame(unsigned int setLevel);
+    void stopGame();
 private:
-  bool stateGame;
+    bool stateGame;
 };
 
 #endif

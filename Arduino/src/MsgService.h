@@ -5,44 +5,44 @@
 
 class Msg {
 public:
-  Msg(String sender, String content) {
-    this->content = content;
-    this->sender = sender;
-  }
+    Msg(String sender, String content) {
+        this->content = content;
+        this->sender = sender;
+    }
 
-  String getContent(){
-    return content;
-  }
+    String getContent() {
+        return content;
+    }
 
-  String getSender(){
-    return sender;
-  }
+    String getSender() {
+        return sender;
+    }
 private:
-  String content;
-  String sender;
+    String content;
+    String sender;
 };
 
 class Pattern {
 public:
-  virtual boolean match(const Msg& m) = 0;
+    virtual boolean match(const Msg& m) = 0;
 };
 
 class MsgServiceClass {
 
 public:
-  Msg* currentMsg;
-  bool msgAvailable;
+    Msg* currentMsg;
+    bool msgAvailable;
 
-  void init(const String& name);
+    void init(const String& name);
 
-  bool isMsgAvailable();
-  Msg* receiveMsg();
+    bool isMsgAvailable();
+    Msg* receiveMsg();
 
-  bool isMsgAvailable(Pattern& pattern);
-  Msg* receiveMsg(Pattern& pattern);
+    bool isMsgAvailable(Pattern& pattern);
+    Msg* receiveMsg(Pattern& pattern);
 
-  void sendMsg(const String& msg);
-  void sendMsgTo(const String& who, const String& msg);
+    void sendMsg(const String& msg);
+    void sendMsgTo(const String& who, const String& msg);
 };
 
 extern MsgServiceClass MsgService;

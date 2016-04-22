@@ -3,36 +3,36 @@
 
 class Context {
 
-	bool objDetected;
-  float objDistance;
-  float maxDistance;
+    bool objDetected;
+    float objDistance;
+    float maxDistance;
 
 public:
-  Context(float maxDistance){
-    objDetected = false;
-    this->maxDistance = maxDistance;
-  }
+    Context(float maxDistance) {
+        objDetected = false;
+        this->maxDistance = maxDistance;
+    }
 
-  void setDetectedObj(float distance){
-    objDetected = true;
-    objDistance = distance;
-  }
+    void setDetectedObj(float distance) {
+        objDetected = true;
+        objDistance = distance;
+    }
 
-  void setNoObjDetected(){
-    objDetected = false;
-  }
+    void setNoObjDetected() {
+        objDetected = false;
+    }
 
-  bool isObjDetected(){
-    return objDetected;
-  }
+    bool isObjDetected() {
+        return objDetected;
+    }
 
-  float getObjDistance(){
-    return objDistance;
-  }
+    float getObjDistance() {
+        return objDistance;
+    }
 
-  float getMaxDistance(){
-    return maxDistance;
-  }
+    float getMaxDistance() {
+        return maxDistance;
+    }
 };
 
 #endif

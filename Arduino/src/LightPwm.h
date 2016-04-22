@@ -5,7 +5,7 @@
 
 class LightPwm : public Light {
 public:
-  virtual void setIntensity(int) = 0;
+    virtual void setIntensity(int) = 0;
 };
 
 #endif

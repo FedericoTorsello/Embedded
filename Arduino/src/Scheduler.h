@@ -8,14 +8,14 @@
 
 class Scheduler {
 public:
-  void init(int basePeriod);
-  virtual bool addTask(Task* task);
-  virtual void schedule();
+    void init(int basePeriod);
+    virtual bool addTask(Task* task);
+    virtual void schedule();
 private:
-  int basePeriod;
-  int nTasks;
-  Task* taskList[MAX_TASKS];
-  Timer timer;
+    int basePeriod;
+    int nTasks;
+    Task* taskList[MAX_TASKS];
+    Timer timer;
 };
 
 #endif

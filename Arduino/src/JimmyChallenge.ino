@@ -16,41 +16,40 @@ Level level;
 // Button button(2);
 // Level level;
 
-void setup(){
-  MsgService.init("JimmyChallenge");
+void setup() {
+    MsgService.init("JimmyChallenge");
 
-  // sched.init(100);
-  // Serial.begin(9600);
-  // Context* pContext = new Context(0.5);
-  //
-  // Task* t0 = new DetectObjTask(8,7,pContext);
-  // t0->init(100);
-  // sched.addTask(t0);
-  //
-  // Task* t1 = new LedEnlightingTask(3,pContext);
-  // t1->init(100);
-  // sched.addTask(t1);
+    // sched.init(100);
+    // Serial.begin(9600);
+    // Context* pContext = new Context(0.5);
 
-  session.setSession(1);
+    // Task* t0 = new DetectObjTask(8,7,pContext);
+    // t0->init(100);
+    // sched.addTask(t0);
 
-  if(session.getSession() != 0){
-      game.startGame();
-  }
+    // Task* t1 = new LedEnlightingTask(3,pContext);
+    // t1->init(100);
+    // sched.addTask(t1);
 
-  if(game.isRunning()){
-    level.setLevel(0);
-    level.playLevel(level.getLevel());
-  }else{
-    game.stopGame();
-  }
+    session.setSession(1);
 
+    if (session.getSession() != 0) {
+        game.startGame();
+    }
+
+    if (game.isRunning()) {
+        level.setLevel(0);
+        level.playLevel(level.getLevel());
+    } else {
+        game.stopGame();
+    }
 }
 
-void loop(){
-  // sched.schedule();
-  // if(button.readBool()){
-  //   led.switchOn();
-  // }else{
-  //   led.switchOff();
-  // }
+void loop() {
+    // sched.schedule();
+    // if (button.readBool()) {
+    //   led.switchOn();
+    // } else {
+    //   led.switchOff();
+    // }
 }

@@ -3,13 +3,13 @@
 
 #include "Light.h"
 
-class LedMock: public Light {
+class LedMock : public Light {
 public:
-  LedMock(int pin);
-  void switchOn();
-  void switchOff();
+    LedMock(int pin);
+    void switchOn();
+    void switchOff();
 protected:
-  int pin;
+    int pin;
 };
 
 #endif

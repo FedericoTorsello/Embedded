@@ -5,15 +5,15 @@
 #include "LedPwm.h"
 #include "Context.h"
 
-class LedEnlightingTask: public Task {
+class LedEnlightingTask : public Task {
 public:
-  LedEnlightingTask(int pin, Context* pContext);
-  void init(int period);
-  void tick();
+    LedEnlightingTask(int pin, Context* pContext);
+    void init(int period);
+    void tick();
 private:
-  int pin;
-  LightPwm* led;
-  Context* pContext;
+    int pin;
+    LightPwm* led;
+    Context* pContext;
 };
 
 #endif

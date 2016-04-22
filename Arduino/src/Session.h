@@ -3,12 +3,12 @@
 
 class Session {
 public:
-  Session();
-  Session(int initialSession);
-  int getSession();
-  void setSession(unsigned int value);
+    Session();
+    Session(int initialSession);
+    int getSession();
+    void setSession(unsigned int value);
 private:
-  unsigned int currentSession;
+    unsigned int currentSession;
 };
 
 #endif

@@ -3,12 +3,12 @@
 
 #include "Input.h"
 
-class Button: public Input {
+class Button : public Input {
 public:
-  Button(int pin);
-  bool readBool();
+    Button(int pin);
+    bool readBool();
 protected:
-  int pin;
+    int pin;
 };
 
 #endif

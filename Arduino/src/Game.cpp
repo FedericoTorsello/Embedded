@@ -4,20 +4,20 @@
 bool stateGame;
 // Level level;
 
-Game::Game(){
+Game::Game() {
 }
 
 // Game::Game(bool state){
 //   this->stateGame = state;
 // }
 
-bool Game::isRunning(){
-  return stateGame;
+bool Game::isRunning() {
+    return stateGame;
 }
 
-void Game::startGame(){
-  Serial.println("Start Game!");
-  stateGame = true;
+void Game::startGame() {
+    Serial.println("Start Game!");
+    stateGame = true;
 }
 
 // void Game::startGame(unsigned int setLevel){
@@ -25,7 +25,7 @@ void Game::startGame(){
 //   level.playLevel(setLevel);
 // }
 
-void Game::stopGame(){
-  Serial.println("Game Over!");
-  stateGame = false;
+void Game::stopGame() {
+    Serial.println("Game Over!");
+    stateGame = false;
 }

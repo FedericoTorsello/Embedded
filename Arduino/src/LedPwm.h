@@ -4,16 +4,16 @@
 #include "Led.h"
 #include "LightPwm.h"
 
-class LedPwm:  public LightPwm, public Led {
+class LedPwm :  public LightPwm, public Led {
 public:
-  LedPwm(int pin);
-  LedPwm(int pin, int intensity);
-  void switchOn();
-  void switchOff();
-  void setIntensity(int v);
+    LedPwm(int pin);
+    LedPwm(int pin, int intensity);
+    void switchOn();
+    void switchOff();
+    void setIntensity(int v);
 private:
-  int currentIntensity;
-  bool isOn;
+    int currentIntensity;
+    bool isOn;
 };
 
 #endif

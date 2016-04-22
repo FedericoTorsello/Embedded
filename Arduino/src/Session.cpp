@@ -2,17 +2,17 @@
 
 unsigned int currentSession;
 
-Session::Session(){
+Session::Session() {
 }
 
-Session::Session(int initialSession){
-  this->currentSession = initialSession;
+Session::Session(int initialSession) {
+    this->currentSession = initialSession;
 }
 
-int Session::getSession(){
-  return currentSession;
+int Session::getSession() {
+    return currentSession;
 }
 
-void Session::setSession(unsigned int value){
-  currentSession = value;
+void Session::setSession(unsigned int value) {
+    currentSession = value;
 }

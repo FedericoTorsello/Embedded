@@ -4,10 +4,10 @@
 class Task {
   int myPeriod;
   int timeElapsed;
-  
+
 public:
   virtual void init(int period){
-    myPeriod = period;  
+    myPeriod = period;
     timeElapsed = 0;
   }
 
@@ -19,11 +19,10 @@ public:
       timeElapsed = 0;
       return true;
     } else {
-      return false; 
+      return false;
     }
   }
-  
+
 };
 
 #endif
-
