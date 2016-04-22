@@ -1,7 +1,7 @@
 #include "Level.h"
 #include "DetectObjTask.h"
 
-int currentLevel;
+unsigned int currentLevel;
 long currentRandom;
 
 
@@ -31,6 +31,7 @@ long Level::genRndNumber(unsigned int min, unsigned int max) {
 void Level::playLevel(unsigned int nLevel) {
     setLevel(nLevel);
     printLevel();
+
 
     // long rnd = genRndNumber(5,50);
     // if (d >= rnd - 5 && d <= rnd + 5){

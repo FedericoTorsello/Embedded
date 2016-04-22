@@ -1,8 +1,9 @@
 #include "Game.h"
-// #include "Level.h"
+#include "Level.h"
 
 bool stateGame;
-// Level level;
+unsigned int score;
+Level level;
 
 Game::Game() {
 }
@@ -20,12 +21,29 @@ void Game::startGame() {
     stateGame = true;
 }
 
-// void Game::startGame(unsigned int setLevel){
-//   stateGame = true;
-//   level.playLevel(setLevel);
-// }
-
 void Game::stopGame() {
     Serial.println("Game Over!");
     stateGame = false;
+}
+
+void Game::setScore(unsigned int newScore){
+    score = newScore;
+}
+
+void Game::playGame(unsigned int selectLevel){
+    switch (selectLevel) {
+        case 0:
+            level.playLevel(0);
+            break;
+        case 1:
+            level.playLevel(1);
+            break;
+        case 2:
+            level.playLevel(2);
+            break;
+        case 3:
+            level.playLevel(3);
+            break;
+        default:;
+    }
 }

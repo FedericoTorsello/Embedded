@@ -13,6 +13,8 @@ public:
     void startGame();
     // void startGame(unsigned int setLevel);
     void stopGame();
+    void setScore(unsigned int newScore);
+    void playGame(unsigned int selectLevel);
 private:
     bool stateGame;
 };

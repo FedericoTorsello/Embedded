@@ -4,11 +4,11 @@
 class Session {
 public:
     Session();
-    Session(int initialSession);
-    int getSession();
-    void setSession(unsigned int value);
+    Session(bool initialSession);
+    bool isEnabled();
+    void setSession(bool value);
 private:
-    unsigned int currentSession;
+    bool currentSession;
 };
 
 #endif

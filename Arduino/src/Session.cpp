@@ -1,18 +1,19 @@
 #include "Session.h"
+#include "Game.h"
 
-unsigned int currentSession;
+bool currentSession;
 
 Session::Session() {
 }
 
-Session::Session(int initialSession) {
+Session::Session(bool initialSession) {
     this->currentSession = initialSession;
 }
 
-int Session::getSession() {
+bool Session::isEnabled() {
     return currentSession;
 }
 
-void Session::setSession(unsigned int value) {
+void Session::setSession(bool value) {
     currentSession = value;
 }

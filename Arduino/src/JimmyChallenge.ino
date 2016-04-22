@@ -6,21 +6,21 @@
 // #include "Level.h"
 #include "Session.h"
 #include "Game.h"
-#include "Level.h"
 
 Scheduler sched;
 Session session;
 Game game;
-Level level;
 // Led led(13);
 // Button button(2);
 // Level level;
+
+// unsigned int livelloSelezionato;
 
 void setup() {
     MsgService.init("JimmyChallenge");
 
     // sched.init(100);
-    // Serial.begin(9600);
+    //Serial.begin(9600); <--questo decommentato fa sballare gli output
     // Context* pContext = new Context(0.5);
 
     // Task* t0 = new DetectObjTask(8,7,pContext);
@@ -31,18 +31,34 @@ void setup() {
     // t1->init(100);
     // sched.addTask(t1);
 
-    session.setSession(1);
-
-    if (session.getSession() != 0) {
+    session.setSession(true);
+    if (session.isEnabled()) {
+        game.setScore(0);
+        //TODO gestiste il feedback
         game.startGame();
+
+        // if (Serial.available()){
+        //       livelloSelezionato=  Serial.readString()[0];
+        // }
     }
 
-    if (game.isRunning()) {
-        level.setLevel(0);
-        level.playLevel(level.getLevel());
-    } else {
-        game.stopGame();
-    }
+    // questo while è solo un'idea
+    // cioè finchè la sessione è true si può giocare
+    // (che poi mettendo tutto nel loop() si potrebbe pure far senza)
+
+    // while (session.isEnabled()) {
+    //     while (game.isRunning()) {
+            // game.playGame(livelloInserito);
+        // }
+
+
+        game.playGame(0);
+
+        if(!game.isRunning()) {
+            game.stopGame();
+            session.setSession(false);
+        }
+    // }
 }
 
 void loop() {
