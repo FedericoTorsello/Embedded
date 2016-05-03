@@ -3,6 +3,7 @@
 
 #include "Led.h"
 #include "LightPwm.h"
+#include "Arduino.h"
 
 class LedPwm :  public LightPwm, public Led {
 public:

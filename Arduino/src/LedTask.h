@@ -4,10 +4,11 @@
 #include "Task.h"
 #include "LedPwm.h"
 #include "Context.h"
+#include "Arduino.h"
 
-class LedEnlightingTask : public Task {
+class LedTask : public Task {
 public:
-    LedEnlightingTask(int pin, Context* pContext);
+    LedTask(int pin, Context* pContext);
     void init(int period);
     void tick();
 private:

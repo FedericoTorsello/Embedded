@@ -1,11 +1,18 @@
 #ifndef __CONTEXT__
 #define __CONTEXT__
 
-class Context {
+/*
+ * Raccoglie tutti gli stati delle variabili della partita.
+ * Viene usato per comunicare tra i vari Task e poter implemantare
+ * eventuale busy wait.
+ */
 
+class Context {
+private:
     bool objDetected;
     float objDistance;
     float maxDistance;
+    bool startGame;
 
 public:
     Context(float maxDistance) {
@@ -32,6 +39,14 @@ public:
 
     float getMaxDistance() {
         return maxDistance;
+    }
+
+    void setGame(bool v) {
+        startGame = v;
+    }
+
+    bool getGame() {
+        return true;
     }
 };
 

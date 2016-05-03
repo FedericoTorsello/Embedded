@@ -2,6 +2,7 @@
 #define __LED__
 
 #include "Light.h"
+#include "Arduino.h"
 
 class Led : public Light {
 public:

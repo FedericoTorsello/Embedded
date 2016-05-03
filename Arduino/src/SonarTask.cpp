@@ -1,8 +1,4 @@
-#include "DetectObjTask.h"
-#include "Arduino.h"
-#include "Level.h"
-
-const float vs = 331.5 + 0.6*20;
+#include "SonarTask.h"
 
 DetectObjTask::DetectObjTask(int trigPin, int echoPin, Context* pContext) {
     this->trigPin = trigPin;

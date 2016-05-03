@@ -1,14 +1,13 @@
 #include "LedMock.h"
-#include "Arduino.h"
 
 LedMock::LedMock(int pin) {
     this->pin = pin;
 }
 
 void LedMock::switchOn() {
-    Serial.println("LED " + String(this->pin) + " HIGH");
+    printf("LED %i HIGH", this->pin);
 }
 
 void LedMock::switchOff() {
-    Serial.println("LED " + String(this->pin) + " LOW");
+    printf("LED %i LOW", this->pin);
 };

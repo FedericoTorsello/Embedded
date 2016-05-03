@@ -3,6 +3,7 @@
 
 #include "Timer.h"
 #include "Task.h"
+#include "Arduino.h"
 
 #define MAX_TASKS 10
 

@@ -3,6 +3,7 @@
 
 #include "Task.h"
 #include "Context.h"
+#include "Arduino.h"
 
 class DetectObjTask : public Task {
 public:
@@ -13,6 +14,7 @@ private:
     Context* pContext;
     int echoPin;
     int trigPin;
+    const float vs = 331.5 + 0.6*20;
 };
 
 #endif

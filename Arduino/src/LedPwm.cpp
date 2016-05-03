@@ -1,5 +1,4 @@
 #include "LedPwm.h"
-#include "Arduino.h"
 
 LedPwm::LedPwm(int pin) : Led(pin) {
     currentIntensity = 128;

@@ -2,6 +2,7 @@
 #define __LEDMOCK__
 
 #include "Light.h"
+#include <stdio.h>
 
 class LedMock : public Light {
 public:
