@@ -1,9 +1,9 @@
 #include "Arduino.h"
 #include "MsgService.h"
 
+/* Must be declared here for Arduino serialEvent() */
 String content;
 String sender;
-
 MsgServiceClass MsgService;
 
 bool MsgServiceClass::isMsgAvailable() {
@@ -23,8 +23,9 @@ Msg* MsgServiceClass::receiveMsg() {
     }
 }
 
-void MsgServiceClass::init(const String&  name) {
-    Serial.begin(9600);
+void MsgServiceClass::init(const int baud, const String&  name) {
+    Serial.begin(baud);
+    while(!Serial) {}
     // reserve 200 bytes for the inputString:
     content.reserve(256);
     sender.reserve(20);
@@ -32,7 +33,7 @@ void MsgServiceClass::init(const String&  name) {
     sender="";
     currentMsg = NULL;
     msgAvailable = false;
-    Serial.println(String("join:"+name));
+    Serial.println(String(name));
 }
 
 void MsgServiceClass::sendMsg(const String& msg) {
@@ -44,9 +45,7 @@ void MsgServiceClass::sendMsgTo(const String& who, const String& msg) {
 }
 
 void serialEvent() {
-
     delay(50);
-
     /* reading the sender */
     while (Serial.available()) {
         // get the new byte:
@@ -60,11 +59,9 @@ void serialEvent() {
     }
 
     /* reading the content */
-
     while (Serial.available()) {
         // get the new byte:
         char inChar = (char)Serial.read();
-
         // add it to the inputString:
         if (inChar=='$') {
             MsgService.currentMsg = new Msg(sender,content);
@@ -74,7 +71,6 @@ void serialEvent() {
             content += inChar;
         }
     }
-
 }
 
 bool MsgServiceClass::isMsgAvailable(Pattern& pattern) {

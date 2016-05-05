@@ -4,8 +4,6 @@
 #include "Arduino.h"
 
 class Timer {
-private:
-    volatile bool timerFlag;
 public:
     Timer();
     void setupFreq(int freq);

@@ -12,17 +12,9 @@ void LedTask::init(int period) {
 }
 
 void LedTask::tick() {
-    led->switchOn();
-    delay(1000);
-    led->switchOff();
-    delay(1000);
-    /*if (pContext->isObjDetected()) {
-        float d = pContext->getObjDistance();
-        int val = (pContext->getMaxDistance() - d)*255;
-        if (val >= 0 && val <= 255) {
-            led->setIntensity(val);
-        }
+    if (pContext->isObjDetected()) {
+        led->switchOn();
     } else {
-        led->setIntensity(0);
-    }*/
+        led->switchOff();
+    }
 }

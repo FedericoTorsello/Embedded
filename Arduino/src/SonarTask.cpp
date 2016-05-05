@@ -1,10 +1,12 @@
 #include "SonarTask.h"
 
-SonarTask::SonarTask(int trigPin, int echoPin, Context* pContext) {
+SonarTask::SonarTask(int trigPin, int echoPin, int maxDist, Context* pContext) {
     this->trigPin = trigPin;
     this->echoPin = echoPin;
+    this->MAX_DISTANCE = maxDist;
     this->pContext = pContext;
-    NewPing sonar(trigPin, echoPin, MAX_DISTANCE);
+    // set the sonar, [timeout]
+    this->sonar = new NewPing(this->trigPin, this->echoPin, this->MAX_DISTANCE);
 }
 
 void SonarTask::init(int period) {
@@ -14,14 +16,23 @@ void SonarTask::init(int period) {
 }
 
 void SonarTask::tick() {
-    Serial.println("OK");
-    // int uS = sonar->ping();
-    // int distance = uS / US_ROUNDTRIP_CM;
-    // int thresold = 20;
-    // //int thresold = pContext->readRandom();
-    // if (distance + DELTA < thresold && distance - DELTA > thresold) {
-    //     Serial.println(distance);
-    // }else {
-    //     Serial.println("DIO CANE");
-    // }
+    // If game is started
+    if (pContext->getGame()) {
+        // result from sonar
+        int distance = sonar->ping() / US_ROUNDTRIP_CM;
+        // distance to guess
+        int distanceGuess = pContext->getDistanceGuess();
+        if(distance <= distanceGuess + DELTA && distance >= distanceGuess - DELTA) {
+            // Correct distance, check time
+            endTime = millis();
+            if (endTime - startTime >= MIN_TIME) {
+                if (endTime - startTime <= MAX_TIME)
+                    Serial.println("DENTRO" + String(distance));
+                else
+                    Serial.println("TRPP DEN");
+            }
+        } else {
+            startTime = millis();
+        }
+    }
 }

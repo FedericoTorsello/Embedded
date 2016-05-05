@@ -2,6 +2,7 @@
 #define __MSGSERVICE__
 
 #include "Arduino.h"
+#include "ArduinoJson.h"
 
 class Msg {
 public:
@@ -32,15 +33,11 @@ class MsgServiceClass {
 public:
     Msg* currentMsg;
     bool msgAvailable;
-
-    void init(const String& name);
-
+    void init(const int, const String &);
     bool isMsgAvailable();
     Msg* receiveMsg();
-
     bool isMsgAvailable(Pattern& pattern);
     Msg* receiveMsg(Pattern& pattern);
-
     void sendMsg(const String& msg);
     void sendMsgTo(const String& who, const String& msg);
 };

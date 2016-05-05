@@ -1,8 +1,10 @@
 #include "Timer.h"
 
-/*ISR(TIMER1_COMPA_vect) {
+volatile bool timerFlag;
+
+ISR(TIMER1_COMPA_vect) {
     timerFlag = true;
-   }*/
+}
 
 Timer::Timer() {
     timerFlag = false;

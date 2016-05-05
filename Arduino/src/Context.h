@@ -13,6 +13,7 @@ private:
     float objDistance;
     float maxDistance;
     bool startGame;
+    int distanceGuess;
 
 public:
     Context(float maxDistance) {
@@ -47,6 +48,14 @@ public:
 
     bool getGame() {
         return true;
+    }
+
+    void setDistanceGuess(int v) {
+        distanceGuess = v;
+    }
+
+    int getDistanceGuess() {
+        return distanceGuess;
     }
 };
 
