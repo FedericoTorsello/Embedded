@@ -1,20 +1,24 @@
-#ifndef __DETECTOBJTASK__
-#define __DETECTOBJTASK__
+#ifndef __SONARTASK__
+#define __SONARTASK__
 
 #include "Task.h"
 #include "Context.h"
 #include "Arduino.h"
+#include "NewPing.h"
 
-class DetectObjTask : public Task {
+class SonarTask : public Task {
 public:
-    DetectObjTask(int trigPin, int echoPin, Context* pContext);
+    SonarTask(int trigPin, int echoPin, Context *pContext);
     void init(int period);
     void tick();
 private:
-    Context* pContext;
+    NewPing *sonar;
+    Context *pContext;
     int echoPin;
     int trigPin;
-    const float vs = 331.5 + 0.6*20;
+    const int MAX_DISTANCE = 100;
+    /* errore di lettura */
+    const int DELTA = 1;
 };
 
 #endif

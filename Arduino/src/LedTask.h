@@ -2,7 +2,7 @@
 #define __LEDTASK__
 
 #include "Task.h"
-#include "LedPwm.h"
+#include "Led.h"
 #include "Context.h"
 #include "Arduino.h"
 
@@ -13,7 +13,7 @@ public:
     void tick();
 private:
     int pin;
-    LightPwm* led;
+    Light* led;
     Context* pContext;
 };
 

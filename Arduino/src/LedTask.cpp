@@ -7,12 +7,16 @@ LedTask::LedTask(int pin, Context* pContext) {
 
 void LedTask::init(int period) {
     Task::init(period);
-    led = new LedPwm(pin);
+    led = new Led(pin);
     led->switchOn();
 }
 
 void LedTask::tick() {
-    if (pContext->isObjDetected()) {
+    led->switchOn();
+    delay(1000);
+    led->switchOff();
+    delay(1000);
+    /*if (pContext->isObjDetected()) {
         float d = pContext->getObjDistance();
         int val = (pContext->getMaxDistance() - d)*255;
         if (val >= 0 && val <= 255) {
@@ -20,5 +24,5 @@ void LedTask::tick() {
         }
     } else {
         led->setIntensity(0);
-    }
+    }*/
 }
