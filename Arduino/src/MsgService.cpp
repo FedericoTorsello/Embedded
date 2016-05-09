@@ -29,7 +29,7 @@ void MsgServiceClass::init(const int baud, const String&  name) {
     content.reserve(256);
     sender.reserve(20);
     content = "";
-    sender="";
+    sender= "";
     currentMsg = NULL;
     msgAvailable = false;
     sendMsg(name);

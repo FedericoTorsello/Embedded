@@ -18,7 +18,7 @@ public:
             JsonObject &root = jsonBuffer.createObject();
             root["to"] = this->sender;
             root["msg"] = "Parse Error";
-            Serial.println(root.printTo(Serial));
+            root.printTo(Serial);
             Serial.flush();
         }
     }

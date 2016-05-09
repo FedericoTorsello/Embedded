@@ -18,10 +18,10 @@ bool Scheduler::addTask(Task* task) {
 
 void Scheduler::schedule() {
     timer.waitForNextTick();
-    for (Task *task : taskList) {
-        if (task->updateAndCheckTime(basePeriod) && task->isEnabled()) {
+    for (int i = 0; i < nTasks; i++) {
+        if (taskList[i]->updateAndCheckTime(basePeriod) && taskList[i]->isEnabled()) {
             // cli();
-            task->tick();
+            taskList[i]->tick();
             // sei();
         }
     }
