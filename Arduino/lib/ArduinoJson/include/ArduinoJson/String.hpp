@@ -7,15 +7,18 @@
 
 #pragma once
 
-#include "../Print.hpp"
+#include "Configuration.hpp"
+
+#if ARDUINOJSON_USE_ARDUINO_STRING
+
+#include <WString.h>
+
+#else
+
+#include <string>
 
 namespace ArduinoJson {
-namespace Internals {
+typedef std::string String;
+}
 
-// A dummy Print implementation used in JsonPrintable::measureLength()
-class DummyPrint : public Print {
- public:
-  virtual size_t write(uint8_t) { return 1; }
-};
-}
-}
+#endif
