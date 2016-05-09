@@ -7,7 +7,7 @@ void Scheduler::init(int basePeriod) {
 }
 
 bool Scheduler::addTask(Task* task) {
-    if (nTasks < MAX_TASKS-1) {
+    if (nTasks < MAX_TASKS - 1) {
         taskList[nTasks] = task;
         nTasks++;
         return true;
@@ -18,10 +18,10 @@ bool Scheduler::addTask(Task* task) {
 
 void Scheduler::schedule() {
     timer.waitForNextTick();
-    for (int i = 0; i < nTasks; i++) {
-        if (taskList[i]->updateAndCheckTime(basePeriod)) {
+    for (Task *task : taskList) {
+        if (task->updateAndCheckTime(basePeriod) && task->isEnabled()) {
             // cli();
-            taskList[i]->tick();
+            task->tick();
             // sei();
         }
     }

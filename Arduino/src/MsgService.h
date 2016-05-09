@@ -16,6 +16,7 @@ public:
             this->sender = root["from"].asString();
         } else {
             JsonObject &root = jsonBuffer.createObject();
+            root["to"] = this->sender;
             root["msg"] = "Parse Error";
             Serial.println(root.printTo(Serial));
             Serial.flush();
@@ -36,7 +37,7 @@ private:
 
 class Pattern {
 public:
-    virtual boolean match(const Msg& m) = 0;
+    virtual boolean match(const Msg &) = 0;
 };
 
 class MsgServiceClass {
@@ -45,11 +46,11 @@ public:
     bool msgAvailable;
     void init(const int, const String &);
     bool isMsgAvailable();
-    bool isMsgAvailable(Pattern& pattern);
+    bool isMsgAvailable(Pattern &);
     Msg* receiveMsg();
-    Msg* receiveMsg(Pattern& pattern);
-    void sendMsg(const String& msg);
-    void sendMsgTo(const String& who, const String& msg);
+    Msg* receiveMsg(Pattern &);
+    void sendMsg(const String &);
+    void sendMsgTo(const String &, const String &);
 };
 
 extern MsgServiceClass MsgService;

@@ -5,18 +5,17 @@
 #include "Task.h"
 #include "Arduino.h"
 
-#define MAX_TASKS 10
-
 class Scheduler {
-public:
-    void init(int basePeriod);
-    virtual bool addTask(Task* task);
-    virtual void schedule();
 private:
+    const static int MAX_TASKS = 10;
     int basePeriod;
     int nTasks;
-    Task* taskList[MAX_TASKS];
+    Task *taskList[MAX_TASKS];
     Timer timer;
+public:
+    void init(int);
+    virtual bool addTask(Task *);
+    virtual void schedule();
 };
 
 #endif
