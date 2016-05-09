@@ -1,4 +1,3 @@
-#include "Arduino.h"
 #include "MsgService.h"
 
 /* Must be declared here for Arduino serialEvent() */
@@ -25,7 +24,7 @@ Msg* MsgServiceClass::receiveMsg() {
 
 void MsgServiceClass::init(const int baud, const String&  name) {
     Serial.begin(baud);
-    while(!Serial) {}
+    while(!Serial) { }
     // reserve 200 bytes for the inputString:
     content.reserve(256);
     sender.reserve(20);
@@ -33,43 +32,37 @@ void MsgServiceClass::init(const int baud, const String&  name) {
     sender="";
     currentMsg = NULL;
     msgAvailable = false;
-    Serial.println(String(name));
+    sendMsg(name);
 }
 
 void MsgServiceClass::sendMsg(const String& msg) {
-    Serial.println(msg);
+    StaticJsonBuffer<100> jsonBuffer;
+    JsonObject &root = jsonBuffer.createObject();
+    root["msg"] = msg;
+    root.printTo(Serial);
+    Serial.flush();
 }
 
 void MsgServiceClass::sendMsgTo(const String& who, const String& msg) {
-    Serial.println(String(who+":"+msg));
+    StaticJsonBuffer<100> jsonBuffer;
+    JsonObject &root = jsonBuffer.createObject();
+    root["to"] = who;
+    root["msg"] = msg;
+    root.printTo(Serial);
+    Serial.flush();
 }
 
+/* from arduino environment */
 void serialEvent() {
-    delay(50);
-    /* reading the sender */
-    while (Serial.available()) {
-        // get the new byte:
+    while(Serial.available()) {
+        // read byte by byte
         char inChar = (char)Serial.read();
-        // add it to the inputString:
-        if (inChar==':') {
-            break;
-        } else {
-            sender += inChar;
-        }
-    }
-
-    /* reading the content */
-    while (Serial.available()) {
-        // get the new byte:
-        char inChar = (char)Serial.read();
-        // add it to the inputString:
-        if (inChar=='$') {
-            MsgService.currentMsg = new Msg(sender,content);
+        if (inChar == '\n') {
+            MsgService.currentMsg = new Msg(content);
             MsgService.msgAvailable = true;
             break;
-        } else {
+        } else
             content += inChar;
-        }
     }
 }
 

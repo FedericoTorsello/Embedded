@@ -6,9 +6,20 @@
 
 class Msg {
 public:
-    Msg(String sender, String content) {
-        this->content = content;
-        this->sender = sender;
+    Msg(String content) {
+        // Read the message from serial e parse it
+        StaticJsonBuffer<100> jsonBuffer;
+        JsonObject &root = jsonBuffer.parseObject(content);
+        // { "msg": "test1", "from": "serial" }
+        if (root.success() && root.containsKey("msg") && root.containsKey("from")) {
+            this->content = root["msg"].asString();
+            this->sender = root["from"].asString();
+        } else {
+            JsonObject &root = jsonBuffer.createObject();
+            root["msg"] = "Parse Error";
+            Serial.println(root.printTo(Serial));
+            Serial.flush();
+        }
     }
 
     String getContent() {
@@ -29,14 +40,13 @@ public:
 };
 
 class MsgServiceClass {
-
 public:
     Msg* currentMsg;
     bool msgAvailable;
     void init(const int, const String &);
     bool isMsgAvailable();
-    Msg* receiveMsg();
     bool isMsgAvailable(Pattern& pattern);
+    Msg* receiveMsg();
     Msg* receiveMsg(Pattern& pattern);
     void sendMsg(const String& msg);
     void sendMsgTo(const String& who, const String& msg);
