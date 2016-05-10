@@ -22,16 +22,19 @@ void SonarTask::tick() {
         int distance = sonar->ping() / US_ROUNDTRIP_CM;
         // distance to guess
         int distanceGuess = pContext->getDistanceGuess();
+        distanceGuess = 10;
         if(distance <= distanceGuess + DELTA && distance >= distanceGuess - DELTA) {
             // Correct distance, check time
             endTime = millis();
             if (endTime - startTime >= MIN_TIME) {
-                if (endTime - startTime <= MAX_TIME)
-                    Serial.println("DENTRO" + String(distance));
-                else
+                if (endTime - startTime <= MAX_TIME) {
+                    pContext->setDetectedObj(30);
+                    Serial.println("DENTRO");
+                } else
                     Serial.println("TRPP DEN");
             }
         } else {
+            pContext->setNoObjDetected();
             startTime = millis();
         }
     }
