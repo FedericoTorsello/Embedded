@@ -23,6 +23,7 @@ public:
     SonarTask(int trigPin, int echoPin, int maxDist, Context *pContext);
     void init(int period);
     void tick();
+    void printPadlockState();
 };
 
 #endif
