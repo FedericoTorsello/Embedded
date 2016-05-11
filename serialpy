@@ -1,53 +1,70 @@
 #!/usr/bin/env python3
 import importlib.util
 import serial
+import simplejson as json
+import threading
+import sys
 
+# Import serial threaded from pyserial
 spec = importlib.util.spec_from_file_location(
-        "LineReader",
-        "./modules/serial/threaded/__init__.py")
+    "LineReader", "./modules/serial/threaded/__init__.py")
 serialThread = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(serialThread)
 
-arduino = serial.Serial(
-            "/dev/ttyACM0", 9600,
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
-            bytesize=serial.EIGHTBITS,
-            timeout=1
-        )
+arduinoPort = serial.Serial("/dev/ttyACM1",
+                            9600,
+                            parity=serial.PARITY_NONE,
+                            stopbits=serial.STOPBITS_ONE,
+                            bytesize=serial.EIGHTBITS,
+                            timeout=1)
+
+# {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
 
 
-class ReaderThread:
-    workerReader = None
+class PrintLines(serialThread.LineReader):
+    def connection_made(self, transport):
+        super(PrintLines, self).connection_made(transport)
 
-    def __init__(self):
-        self.workerReder = serialThread.ReaderThread(arduino, PrintLines)
+    def handle_line(self, data):
+        self.printJSON(data)
 
-    def start(self):
-        if self.workerReader is not None:
-            self.workerReader.start()
+    def connection_lost(self, exc):
+        print("Port Closed!")
+
+    def printJSON(self, data):
+        try:
+            data = json.loads(data)
+            print(data.get('msg'))
+        except ValueError:
+            pass
+
+class WriteWorker(threading.Thread):
+    readw = None
+    
+    def __init__(self, rw):
+        super(WriteWorker, self).__init__()
+        self.readw = rw
+
+    def run(self):
+        import time
+        
+        while True:
+            self.readw.write('{"msg":"ciao"}\n'.encode("ascii"))
+            time.sleep(2)
+
+
+def main():
+    readWorker = serialThread.ReaderThread(arduinoPort, PrintLines)
+    w = WriteWorker(readWorker)
+    readWorker.start()
+    w.daemon = True
+    w.start()
+    w.join()
+    readWorker.join()
+
 
 if __name__ == '__main__':
-    import time
-    import traceback
-
-    class PrintLines(serialThread.LineReader):
-        def connection_made(self, transport):
-            super(PrintLines, self).connection_made(transport)
-
-        def handle_line(self, data):
-            print(repr(data))
-
-        def connection_lost(self, exc):
-            if exc:
-                traceback.print_exc(exc)
-            print('port closed\n')
-
-    ser = serial.serial_for_url('/dev/ttyACM0', baudrate=9600, timeout=1)
-    Work = serialThread.ReaderThread(ser, PrintLines)
-    Work.start()
-
-    while True:
-        print("OK")
-        time.sleep(1)
-    Work.join()
+    try :
+        main()
+    except (KeyboardInterrupt, SystemExit):
+        print('Bye!')
