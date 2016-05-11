@@ -20,8 +20,8 @@ private:
     const int MIN_TIME = 500;
     const int MAX_TIME = 1000;
 public:
-    SonarTask(int trigPin, int echoPin, int maxDist, Context *pContext);
-    void init(int period);
+    SonarTask(int, int, int, Context *);
+    void init(int);
     void tick();
     void printPadlockState();
 };

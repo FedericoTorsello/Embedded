@@ -8,8 +8,8 @@
 
 class LedPwmTask : public Task {
 public:
-    LedPwmTask(int pin, Context* pContext);
-    void init(int period);
+    LedPwmTask(int, Context *);
+    void init(int);
     void tick();
 private:
     int pin;

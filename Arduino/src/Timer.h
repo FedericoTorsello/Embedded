@@ -6,9 +6,9 @@
 class Timer {
 public:
     Timer();
-    void setupFreq(int freq);
+    void setupFreq(int);
     /* period in ms */
-    void setupPeriod(int period);
+    void setupPeriod(int);
     void waitForNextTick();
 };
 

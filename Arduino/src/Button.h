@@ -5,7 +5,7 @@
 
 class Button : public Input {
 public:
-    Button(int pin);
+    Button(int);
     bool readBool();
 protected:
     int pin;

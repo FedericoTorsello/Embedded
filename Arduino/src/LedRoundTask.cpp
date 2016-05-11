@@ -1,20 +1,16 @@
 #include "LedRoundTask.h"
 
-LedRoundTask::LedRoundTask(int pin, Context* pContext) {
-    this->pin = pin;
+LedRoundTask::LedRoundTask(int *pins, int size, Context* pContext) {
+    this->pins = pins;
+    this->size = size;
     this->pContext = pContext;
+    led = new Multiplexer(pins, size);
 }
 
 void LedRoundTask::init(int period) {
     Task::init(period);
-    led = new LedRound(pin);
-    led->switchOn();
 }
 
 void LedRoundTask::tick() {
-    // if (pContext->isObjDetected()) {
-        led->switchOn();
-    // } else {
-    //     led->switchOff();
-    // }
+    led->carousel(300);
 }

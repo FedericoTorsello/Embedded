@@ -6,14 +6,10 @@
 
 const int BAUD = 9600;
 const int MAX_DISTANCE_SONAR = 100;
+int channel[] = { 2, 3, 4, 5 };
 Scheduler sched;
 
 void setup() {
-
-    for (int thisPin = 2; thisPin < 7; thisPin++) {
-		pinMode(thisPin, OUTPUT);
-	}
-
     MsgService.init(BAUD, "JimmyChallenge");
     sched.init(100);
     Context *c = new Context(0.5);
@@ -26,7 +22,7 @@ void setup() {
     t1->init(10);
     sched.addTask(t1);
 
-    LedRoundTask *t2 = new LedRoundTask(13, c);
+    LedRoundTask *t2 = new LedRoundTask(channel, 4, c);
     t2->init(10);
     sched.addTask(t2);
 }

@@ -1,16 +1,20 @@
-#ifndef __LED__
-#define __LED__
+#ifndef __LEDROUND__
+#define __LEDROUND__
 
 #include "Light.h"
 #include "Arduino.h"
 
 class LedRound : public Light {
 public:
-    LedRound(int pin);
+    LedRound(int *, int);
     void switchOn();
     void switchOff();
+    void switchRoundOn(int *, int);
+    void switchRoundOff(int *, int);
 protected:
-    int pin;
+    int *pins;
+private:
+    int size;
 };
 
 #endif

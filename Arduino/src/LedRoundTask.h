@@ -2,18 +2,19 @@
 #define __LEDROUNDTASK__
 
 #include "Task.h"
-#include "LedRound.h"
+#include "Multiplexer.h"
 #include "Context.h"
 #include "Arduino.h"
 
 class LedRoundTask : public Task {
 public:
-    LedRoundTask(int pin, Context* pContext);
-    void init(int period);
+    LedRoundTask(int *, int, Context *);
+    void init(int);
     void tick();
 private:
-    int pin;
-    Light* led;
+    int *pins;
+    int size;
+    Multiplexer *led;
     Context* pContext;
 };
 

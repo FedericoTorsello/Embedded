@@ -1,5 +1,4 @@
 #include "SonarTask.h"
-#include "Time.h"
 
 SonarTask::SonarTask(int trigPin, int echoPin, int maxDist, Context* pContext) {
     this->trigPin = trigPin;
@@ -17,8 +16,8 @@ void SonarTask::init(int period) {
 }
 
 int inc;
-time_t t, t2 , t3;
-time_t t_local;
+int t, t2 , t3;
+int t_local;
 bool tempoCorretto = false;
 const int DELTA = 5, indovina = 20;
 bool padlockOpen = false;
@@ -50,7 +49,7 @@ void SonarTask::tick() {
 
 	if(distance <= indovina + DELTA && distance >= indovina - DELTA && !padlockOpen){
 
-		t = now();
+		t = millis();
 		t = t - t2; // inizializzazione a zero
 
 		if(tempoCorretto && t == 0){
@@ -77,7 +76,7 @@ void SonarTask::tick() {
 		}
 
 		if (t >= 4) {
-			t3 = now();
+			t3 = millis();
 			t3 = t3 - t2 - 4; // -4 per far partire il tempo t3 da zero
 
 			switch (t3) {
@@ -112,7 +111,7 @@ void SonarTask::tick() {
 		}
 	}else{
 		if(!padlockOpen){
-			t2 = now();
+			t2 = millis();
 			// printPadlockState();
 		}
 	}

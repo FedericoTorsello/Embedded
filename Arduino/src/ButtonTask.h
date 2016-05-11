@@ -8,8 +8,8 @@
 
 class ButtonTask : public Task {
 public:
-    ButtonTask(int pin, Context* pContext);
-    void init(int period);
+    ButtonTask(int, Context *);
+    void init(int);
     void tick();
 private:
     int pin;

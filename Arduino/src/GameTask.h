@@ -6,8 +6,8 @@
 
 class GameTask : public Task {
 public:
-    GameTask(Context* pContext);
-    void init(int period);
+    GameTask(Context *);
+    void init(int);
     void tick();
 private:
     Context *pContext;

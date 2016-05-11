@@ -6,7 +6,7 @@
 
 class Led : public Light {
 public:
-    Led(int pin);
+    Led(int);
     void switchOn();
     void switchOff();
 protected:
