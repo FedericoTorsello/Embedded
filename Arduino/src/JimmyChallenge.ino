@@ -1,6 +1,6 @@
 #include "Scheduler.h"
+#include "MessageService.h"
 #include "SonarTask.h"
-#include "MsgService.h"
 #include "LedTask.h"
 #include "LedRound.h"
 
@@ -11,8 +11,7 @@ Scheduler sched;
 Context *c = new Context(0.5);
 
 void setup() {
-    MsgService.init(BAUD, "JimmyChallenge");
-
+    msgService.init(BAUD, "JimmyChallenge");
     sched.init(100);
 }
 
