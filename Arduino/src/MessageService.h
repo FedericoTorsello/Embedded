@@ -9,7 +9,8 @@ public:
     void init(const int, const String &);
     void setMessage(String);
     String getMessage();
-    void errorMsg(String to="all");
+    void errorMsg();
+    void ackMsg(String);
     void sendMsg(String, String, String);
 private:
     String currentMsg = "";

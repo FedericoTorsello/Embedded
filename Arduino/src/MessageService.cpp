@@ -16,11 +16,17 @@ void MessageService::setMessage(String msg) {
     if (!msg.equals("")) {
         StaticJsonBuffer<100> jsonBuffer;
         JsonObject &root = jsonBuffer.parseObject(msg);
-        if (root.success()) {
+        Serial.println("REC " + this->currentMsg);
+        String sender = "";
+        String receiver = "";
+        if (root.success() && root.containsKey("msg")) {
             String content = root["msg"].asString();
-            String sender = root["from"].asString();
-            String receiver = root["to"].asString();
+            if (root.containsKey("from"))
+                sender = root["from"].asString();
+            if (root.containsKey("to"))
+                receiver = root["to"].asString();
             Msg m(content, sender, receiver);
+            msgService.ackMsg(sender);
         } else {
             msgService.errorMsg();
         }
@@ -28,23 +34,39 @@ void MessageService::setMessage(String msg) {
     this->currentMsg = "";
 }
 
-void MessageService::errorMsg(String to) {
-    // default: to = "all"
+void MessageService::errorMsg() {
+    String p = "";
+    StaticJsonBuffer<35> jsonBuffer;
+    JsonObject &root = jsonBuffer.createObject();
+    root["from"] = "arduinoCore";
+    root["msg"] = "Parse Error";
+    root.printTo(p);
+    Serial.println(p);
+    Serial.flush();
+}
+
+void MessageService::ackMsg(String to) {
+    String p = "";
     StaticJsonBuffer<50> jsonBuffer;
     JsonObject &root = jsonBuffer.createObject();
     root["from"] = "arduinoCore";
     root["to"] = to;
-    root["msg"] = "Parse Error";
-    root.printTo(Serial);
+    root["msg"] = "ACK";
+    root.printTo(p);
+    Serial.println(p);
+    Serial.flush();
 }
 
 void MessageService::sendMsg(String content, String sender, String receiver) {
+    String p = "";
     StaticJsonBuffer<100> jsonBuffer;
     JsonObject &root = jsonBuffer.createObject();
     root["from"] = sender;
     root["to"] = receiver;
     root["msg"] = content;
-    root.printTo(Serial);
+    root.printTo(p);
+    Serial.println(p);
+    Serial.flush();
 }
 
 /* from arduino environment */
