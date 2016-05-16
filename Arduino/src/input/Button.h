@@ -5,10 +5,10 @@
 
 class Button : public Input {
 public:
-        Button(int);
-        bool readBool();
+    Button(int);
+    bool readBool();
 protected:
-        int pin;
+    int pin;
 };
 
 #endif

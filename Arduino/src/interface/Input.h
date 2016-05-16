@@ -5,12 +5,12 @@
 
 class Input {
 public:
-        virtual bool readBool() {
-                return false;
-        };
-        virtual int readDistance() {
-                return 0;
-        };
+    virtual bool readBool() {
+        return false;
+    };
+    virtual int readDistance() {
+        return 0;
+    };
 };
 
 #endif

@@ -7,14 +7,14 @@
 
 class LedRoundTask : public Task {
 public:
-        LedRoundTask(int *, int, Context *);
-        void init(int);
-        void tick();
+    LedRoundTask(int *, int, Context *);
+    void init(int);
+    void tick();
 private:
-        int *pins;
-        int size;
-        Multiplexer *led;
-        Context* pContext;
+    int *pins;
+    int size;
+    Multiplexer *led;
+    Context* pContext;
 };
 
 #endif

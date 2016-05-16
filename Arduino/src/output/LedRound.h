@@ -5,15 +5,15 @@
 
 class LedRound : public Light {
 public:
-        LedRound(int *, int);
-        void switchOn();
-        void switchOff();
-        void switchRoundOn(int *, int);
-        void switchRoundOff(int *, int);
+    LedRound(int *, int);
+    void switchOn();
+    void switchOff();
+    void switchRoundOn(int *, int);
+    void switchRoundOff(int *, int);
 protected:
-        int *pins;
+    int *pins;
 private:
-        int size;
+    int size;
 };
 
 #endif

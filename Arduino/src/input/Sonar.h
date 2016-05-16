@@ -6,14 +6,14 @@
 
 class Sonar : public Input {
 public:
-        Sonar(int trigPin, int echoPin, int maxDist);
-        int readDistance();
+    Sonar(int trigPin, int echoPin, int maxDist);
+    int readDistance();
 
 private:
-        NewPing *mySonar;
-        int echoPin;
-        int trigPin;
-        int MAX_DISTANCE;
+    NewPing *mySonar;
+    int echoPin;
+    int trigPin;
+    int MAX_DISTANCE;
 
 };
 

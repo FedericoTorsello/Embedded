@@ -7,13 +7,13 @@
 
 class ButtonTask : public Task {
 public:
-        ButtonTask(int, Context *);
-        void init(int);
-        void tick();
+    ButtonTask(int, Context *);
+    void init(int);
+    void tick();
 private:
-        int pin;
-        Button *btn;
-        Context *pContext;
+    int pin;
+    Button *btn;
+    Context *pContext;
 };
 
 #endif

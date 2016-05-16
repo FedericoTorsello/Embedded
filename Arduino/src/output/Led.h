@@ -5,11 +5,11 @@
 
 class Led : public Light {
 public:
-        Led(int);
-        void switchOn();
-        void switchOff();
+    Led(int);
+    void switchOn();
+    void switchOff();
 protected:
-        int pin;
+    int pin;
 };
 
 #endif

@@ -7,32 +7,32 @@
 
 class SonarTask : public Task {
 public:
-        SonarTask(int, int, int, Context *);
-        void init(int);
-        void tick();
+    SonarTask(int, int, int, Context *);
+    void init(int);
+    void tick();
 
 private:
-        int echoPin;
-        int trigPin;
-        int MAX_DISTANCE;
+    int echoPin;
+    int trigPin;
+    int MAX_DISTANCE;
 
-        int startTime = 0;
-        int endTime = 0;
-        int inc;
-        int t, t2, t3;
-        /* errore di lettura */
-        const int DELTA = 4;
-        const int indovina = 20;
-        const int MIN_TIME = 500;
-        const int MAX_TIME = 1000;
+    int startTime = 0;
+    int endTime = 0;
+    int inc;
+    int t, t2, t3;
+    /* errore di lettura */
+    const int DELTA = 4;
+    const int indovina = 20;
+    const int MIN_TIME = 500;
+    const int MAX_TIME = 1000;
 
-        bool tempoCorretto = false;
-        bool padlockOpen = false;
+    bool tempoCorretto = false;
+    bool padlockOpen = false;
 
-        Input* sonar;
-        Context *pContext;
+    Input* sonar;
+    Context *pContext;
 
-        void printPadlockState();
+    void printPadlockState();
 };
 
 #endif

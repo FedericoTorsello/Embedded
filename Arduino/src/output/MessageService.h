@@ -6,27 +6,27 @@
 
 class MessageService {
 public:
-        void init(const int, const String &);
-        void setMessage(String);
-        String getMessage();
-        void errorMsg();
-        void ackMsg(String);
-        void sendMsg(String, String, String);
+    void init(const int, const String &);
+    void setMessage(String);
+    String getMessage();
+    void errorMsg();
+    void ackMsg(String);
+    void sendMsg(String, String, String);
 private:
-        String currentMsg = "";
-        String sender = "";
+    String currentMsg = "";
+    String sender = "";
 };
 
 extern MessageService msgService;
 
 class Msg {
 public:
-        Msg(String c, String s, String r ) : content(c), sender(s), receiver(r) {
-        }
+    Msg(String c, String s, String r ) : content(c), sender(s), receiver(r) {
+    }
 private:
-        String content;
-        String sender;
-        String receiver;
+    String content;
+    String sender;
+    String receiver;
 };
 
 #endif

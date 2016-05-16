@@ -16,19 +16,18 @@ int echoPin = 12;
 int MAX_DISTANCE = 100;
 
 void setup() {
-        msgService.init(BAUD, "JimmyChallenge");
-        sched.init(100);
+    msgService.init(BAUD, "JimmyChallenge");
+    sched.init(100);
 
-        Task* t0 = new SonarTask(trigPin,echoPin, MAX_DISTANCE, c);
-        t0->init(100);
-        sched.addTask(t0);
+    Task* t0 = new SonarTask(trigPin,echoPin, MAX_DISTANCE, c);
+    t0->init(100);
+    sched.addTask(t0);
 
-        // Task* t1 = new LedTask(13,c);
-        // t1->init(100);
-        // sched.addTask(t1);
-
+    // Task* t1 = new LedTask(13,c);
+    // t1->init(100);
+    // sched.addTask(t1);
 }
 
 void loop() {
-        sched.schedule();
+    sched.schedule();
 }

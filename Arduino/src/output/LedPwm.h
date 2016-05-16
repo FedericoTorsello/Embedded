@@ -6,14 +6,14 @@
 
 class LedPwm :  public LightPwm, public Led {
 public:
-        LedPwm(int);
-        LedPwm(int, int);
-        void switchOn();
-        void switchOff();
-        void setIntensity(int);
+    LedPwm(int);
+    LedPwm(int, int);
+    void switchOn();
+    void switchOff();
+    void setIntensity(int);
 private:
-        int currentIntensity;
-        bool isOn;
+    int currentIntensity;
+    bool isOn;
 };
 
 #endif
