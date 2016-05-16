@@ -2,7 +2,7 @@
 
 Multiplexer::Multiplexer(int *pins, int size) {
     channels = pins;
-    size = size;
+    this->size = size;
     for (int pin = 0; pin < size; ++pin) {
         Serial.println(channels[pin]);
         pinMode(channels[pin], OUTPUT);

@@ -4,7 +4,7 @@ LedRoundTask::LedRoundTask(int *pins, int size, Context* pContext) {
     this->pins = pins;
     this->size = size;
     this->pContext = pContext;
-    led = new Multiplexer(pins, size);
+    this->led = new Multiplexer(pins, size);
 }
 
 void LedRoundTask::init(int period) {

@@ -9,21 +9,24 @@ LedRound::LedRound(int *p, int n) {
 }
 
 void LedRound::switchOn() {
-    Serial.println(size);
     for (int i = 0; i < size; ++i) {
         digitalWrite(pins[i], HIGH);
     }
 }
 
 void LedRound::switchRoundOn(int *who, int n) {
-    for (int i = 0; i < n; ++i) {
-        digitalWrite(who[i], HIGH);
+    if(n < size || n > 0 ){
+        for (int i = 0; i < n; ++i) {
+            digitalWrite(who[i], HIGH);
+        }
     }
 }
 
 void LedRound::switchRoundOff(int *who, int n) {
-    for (int i = 0; i < n; ++i) {
-        digitalWrite(pins[who[i]], LOW);
+    if(n < size || n > 0 ){
+        for (int i = 0; i < n; ++i) {
+            digitalWrite(pins[who[i]], LOW);
+        }
     }
 }
 

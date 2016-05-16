@@ -7,7 +7,7 @@ LedTask::LedTask(int pin, Context* pContext) {
 
 void LedTask::init(int period) {
     Task::init(period);
-    led = new Led(pin);
+    this->led = new Led(pin);
     led->switchOn();
 }
 
