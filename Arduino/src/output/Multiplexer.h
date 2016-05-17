@@ -5,30 +5,34 @@
 
 class Multiplexer {
 public:
-    Multiplexer(int *, int);
-    void switchOn(int);
-    void carousel(int);
+        Multiplexer(int *, int, int);
+        void setInh(bool);
+        void switchOn(int);
+        void switchOff();
+        void carousel(int); 
 private:
-    int *channels;
-    int size;
-    byte truthTable[16][4] = {
-        {0,0,0,0},
-        {1,0,0,0},
-        {0,1,0,0},
-        {1,1,0,0},
-        {0,0,1,0},
-        {1,0,1,0},
-        {0,1,1,0},
-        {1,1,1,0},
-        {0,0,0,1},
-        {1,0,0,1},
-        {0,1,0,1},
-        {1,1,0,1},
-        {0,0,1,1},
-        {1,0,1,1},
-        {0,1,1,1},
-        {1,1,1,1}
-    };
+        int *channels;
+        int size;
+        int pinInh;
+        byte truthTable[16][4] = {
+                {0,0,0,0},
+                {1,0,0,0},
+                {0,1,0,0},
+                {1,1,0,0},
+                {0,0,1,0},
+                {1,0,1,0},
+                {0,1,1,0},
+                {1,1,1,0},
+                {0,0,0,1},
+                {1,0,0,1},
+                {0,1,0,1},
+                {1,1,0,1},
+                {0,0,1,1},
+                {1,0,1,1},
+                {0,1,1,1},
+                {1,1,1,1}
+        };
+
 };
 
 #endif

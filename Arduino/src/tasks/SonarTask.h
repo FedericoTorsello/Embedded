@@ -4,12 +4,14 @@
 #include "../interface/Task.h"
 #include "../input/Sonar.h"
 #include "../control/Context.h"
+#include "../output/MessageService.h"
 
 class SonarTask : public Task {
 public:
     SonarTask(int, int, int, Context *);
     void init(int);
     void tick();
+
 
 private:
     int echoPin;
@@ -32,6 +34,7 @@ private:
     Input* sonar;
     Context *pContext;
 
+    void printDistance();
     void printPadlockState();
 };
 

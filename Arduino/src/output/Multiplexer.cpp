@@ -1,12 +1,20 @@
 #include "Multiplexer.h"
 
-Multiplexer::Multiplexer(int *pins, int size) {
+Multiplexer::Multiplexer(int *pins, int pinInh, int size) {
     channels = pins;
     this->size = size;
+    this->pinInh = pinInh;
+    pinMode(pinInh, OUTPUT);
+    digitalWrite(pinInh, LOW);
+
     for (int pin = 0; pin < size; ++pin) {
         Serial.println(channels[pin]);
         pinMode(channels[pin], OUTPUT);
     }
+}
+
+void Multiplexer::setInh(bool state){
+    digitalWrite(pinInh, state);
 }
 
 void Multiplexer::switchOn(int output) {
@@ -14,6 +22,10 @@ void Multiplexer::switchOn(int output) {
     digitalWrite(channels[1], truthTable[output][1]);
     digitalWrite(channels[2], truthTable[output][2]);
     digitalWrite(channels[3], truthTable[output][3]);
+}
+
+void Multiplexer::switchOff() {
+    setInh(true);
 }
 
 void Multiplexer::carousel(int del) {

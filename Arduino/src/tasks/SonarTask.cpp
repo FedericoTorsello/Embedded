@@ -12,7 +12,6 @@ void SonarTask::init(int period) {
     sonar = new Sonar(this->trigPin, this->echoPin, this->MAX_DISTANCE);
 }
 
-
 void SonarTask::tick() {
     int distance = sonar->readDistance();
 
@@ -92,4 +91,8 @@ void SonarTask::printPadlockState(){
     }else{
         Serial.println("NON APERTO");
     }
+}
+
+void SonarTask::printDistance() {
+    msgService.sendMsg(String(sonar->readDistance()), "arduino", "remote");
 }
