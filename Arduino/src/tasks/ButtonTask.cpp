@@ -1,6 +1,6 @@
 #include "ButtonTask.h"
 
-ButtonTask::ButtonTask(int pin,  unsigned long debounceDelay, Context* pContext) {
+ButtonTask::ButtonTask(int pin,  int debounceDelay, Context* pContext) {
     this->pin = pin;
     this->debounceDelay = debounceDelay;
     this->pContext = pContext;
