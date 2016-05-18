@@ -1,8 +1,6 @@
 var serviceURL = 'phplibs/api.php';
 var data = '{"key": "valasd", "key1": "value1"}';
 
-console.log("OK");
-
 class JSONRequest {
 
 	constructor(url, to) {
@@ -34,7 +32,7 @@ class JSONRequest {
 			timeout:		this._timeout,
 			success:		this._GetPost,
 			error:			this._HandleError,
-			data:			JSON.stringify(data),
+			data:			data,
 		});
 	};
 
@@ -49,4 +47,4 @@ class JSONRequest {
 };
 
 let req = new JSONRequest(serviceURL, data);
-req.sendPost(data);
+req.sendPost('{"ciao":3}');

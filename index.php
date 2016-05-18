@@ -13,11 +13,6 @@
 		<?php
 			//session_set_cookie_params(0, '/', 'www.embedded16.duckdns.org', isset($_SERVER["HTTPS"]), true);
 			//session_start();
-			print_r($_SESSION);
-			require_once("config/conf.inc.php");
-			require_once("phplibs/JWS.php");
-			$j = new JWTAuth(RSA_PASS);
-			$j->isValid();
 		?>
 	</body>
 </html>
