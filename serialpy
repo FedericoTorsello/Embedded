@@ -1,70 +1,51 @@
 #!/usr/bin/env python3
-import importlib.util
-import serial
-import simplejson as json
-import threading
+import asyncio
 import sys
-
-# Import serial threaded from pyserial
-spec = importlib.util.spec_from_file_location(
-    "LineReader", "./modules/serial/threaded/__init__.py")
-serialThread = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(serialThread)
-
-arduinoPort = serial.Serial("/dev/ttyACM1",
-                            9600,
-                            parity=serial.PARITY_NONE,
-                            stopbits=serial.STOPBITS_ONE,
-                            bytesize=serial.EIGHTBITS,
-                            timeout=1)
-
-# {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
+import utils as utils
+from serial.threaded import ReaderThread
 
 
-class PrintLines(serialThread.LineReader):
-    def connection_made(self, transport):
-        super(PrintLines, self).connection_made(transport)
-
-    def handle_line(self, data):
-        self.printJSON(data)
-
-    def connection_lost(self, exc):
-        print("Port Closed!")
-
-    def printJSON(self, data):
-        try:
-            data = json.loads(data)
-            print(data.get('msg'))
-        except ValueError:
-            pass
-
-class WriteWorker(threading.Thread):
-    readw = None
-    
-    def __init__(self, rw):
-        super(WriteWorker, self).__init__()
-        self.readw = rw
-
-    def run(self):
-        import time
-        
-        while True:
-            self.readw.write('{"msg":"ciao"}\n'.encode("ascii"))
-            time.sleep(2)
+def printm(msg, f, t):
+    print("Message: {} for {} from {}".format(msg, t, f))
 
 
-def main():
-    readWorker = serialThread.ReaderThread(arduinoPort, PrintLines)
-    w = WriteWorker(readWorker)
-    readWorker.start()
-    w.daemon = True
-    w.start()
-    w.join()
-    readWorker.join()
+async def dispatch(wworker):
+    while True:
+        data = utils.from_arduino.get()
+        if data is not None:
+            msg, f, t = utils.parse_json(data)
+        else:
+            msg = f = t = None
+        if all(k is not None for k in (msg, f, t)):
+            if t == utils.ARDUINO:
+                wworker.append_message(data)
+            if t == utils.LOCAL:
+                await utils.to_remote.put(data)
+                await asyncio.sleep(1)
+            if t == utils.REMOTE:
+                printm(msg, f, t)
 
 
 if __name__ == '__main__':
-    try :
-        main()
+    try:
+        test_msg = '{"msg":"ciao", "from":"pythonSerial", "to":"me"}'
+        arduino = utils.connect_arduino()
+        s = ReaderThread(arduino, utils.PrintLines)
+        s.start()
+        m, n = s.connect()
+        utils.loop.create_task(dispatch(utils.WriteWorker(s)))
+        print("Press Ctrl-C to stop")
+        utils.loop.run_forever()
+        s.join()
     except (KeyboardInterrupt, SystemExit):
-        print('Bye!')
+        print("Bye!")
+    finally:
+        try:
+            arduino.flushInput()
+            arduino.flushOutput()
+            arduino.close()
+        except NameError:
+            pass
+        utils.loop.stop()
+        utils.loop.close()
+        sys.exit(1)
