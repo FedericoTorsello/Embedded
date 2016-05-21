@@ -5,28 +5,46 @@
 #include "tasks/SonarTask.h"
 #include "tasks/LedTask.h"
 #include "tasks/ButtonTask.h"
+#include "tasks/BuzzerTask.h"
+
+const int BUTTON_PIN = 2;
+const int BUZZER_PIN = 3;
+// pin che controllano i canali A,B,C,D del mux
+// int channel[5] = {4,5,6,7,8};
+const int TRIG_PIN = 11;
+const int ECHO_PIN = 12;
+
+const int LED_PIN = 13;
 
 const int BAUD = 9600;
 const int MAX_DISTANCE_SONAR = 100;
+const int DEBOUNCE_DELAY = 40;
 
-const int trigPin = 11;
-const int echoPin = 12;
-const int MAX_DISTANCE = 100;
-
-// pin che controllano i canali A,B,C,D del mux
-// int channel[5] = {2,3,4,5,6};
 Scheduler sched;
-Context *c = new Context(0.5);
+Context *c = new Context(MAX_DISTANCE_SONAR);
 
 void setup() {
-  msgService.init(BAUD, "JimmyChallenge");
-  sched.init(100);
+    msgService.init(BAUD, "JimmyChallenge");
+    sched.init(100);
 
-  Task* t0 = new ButtonTask(2, 40, c);
-  t0->init(50);
-  sched.addTask(t0);
+    Task* t0 = new SonarTask(TRIG_PIN, ECHO_PIN, MAX_DISTANCE_SONAR, c);
+    t0->init(50);
+    sched.addTask(t0);
+
+    Task* t1 = new ButtonTask(BUTTON_PIN, DEBOUNCE_DELAY, c);
+    t0->init(50);
+    sched.addTask(t1);
+
+    Task* t2 = new BuzzerTask(BUZZER_PIN, c);
+    t2->init(50);
+    sched.addTask(t2);
+
+    Task* t3 = new LedTask(LED_PIN, c);
+    t3->init(50);
+    sched.addTask(t3);
 }
 
 void loop() {
-  sched.schedule();
+    sched.schedule();
+
 }

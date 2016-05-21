@@ -29,13 +29,11 @@ private:
     const int MAX_TIME = 1000;
 
     bool tempoCorretto = false;
-    bool padlockOpen = false;
 
     Input* sonar;
     Context *pContext;
 
     void printDistance();
-    void printPadlockState();
 };
 
 #endif

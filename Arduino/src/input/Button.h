@@ -17,10 +17,8 @@ private:
     // constants won't change. They're used here to
     // set pin numbers:
     // const int buttonPin = 2;    // the number of the pushbutton pin
-    const int ledPin = 13;   // the number of the LED pin
 
     // Variables will change:
-    int ledState;         // the current state of the output pin
     int lastButtonState;   // the previous reading from the input pin
     int buttonState;             // the current reading from the input pin
 

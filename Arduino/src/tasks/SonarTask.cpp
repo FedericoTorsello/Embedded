@@ -14,15 +14,18 @@ void SonarTask::init(int period) {
 
 void SonarTask::tick() {
     int distance = sonar->readDistance();
+    printDistance();
 
-    if(distance <= indovina + DELTA && distance >= indovina - DELTA && !padlockOpen) {
+    if(distance <= indovina + DELTA && distance >= indovina - DELTA && !pContext->isPadlockOpen()) {
+
+        pContext->setPadlockDetected(true);
 
         t = millis()/1000;
         t = t - t2;         // inizializzazione a zero
 
         if(tempoCorretto && t == 0) {
-            padlockOpen = true;
-            printPadlockState();
+            msgService.sendMsg("APERTO", "arduino", "remote");
+            pContext->setPadlockOpen(true);
         }
 
         switch (t) {
@@ -78,18 +81,12 @@ void SonarTask::tick() {
             }
         }
     }else{
-        if(!padlockOpen) {
+        if(!pContext->isPadlockOpen()) {
             t2 = millis()/1000;
-            // printPadlockState();
+            // msgService.sendMsg("NON APERTO", "arduino", "remote");
+            pContext->setPadlockOpen(false);
+            pContext->setPadlockDetected(false);
         }
-    }
-}
-
-void SonarTask::printPadlockState(){
-    if(padlockOpen) {
-        Serial.println("APERTO");
-    }else{
-        Serial.println("NON APERTO");
     }
 }
 

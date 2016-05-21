@@ -4,7 +4,6 @@ void Scheduler::init(int basePeriod) {
     this->basePeriod = basePeriod;
     timer.setupPeriod(basePeriod);
     nTasks = 0;
-    // timer.setupFreq(64);
 }
 
 bool Scheduler::addTask(Task* task) {

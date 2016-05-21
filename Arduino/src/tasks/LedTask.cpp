@@ -8,11 +8,10 @@ LedTask::LedTask(int pin, Context* pContext) {
 void LedTask::init(int period) {
     Task::init(period);
     this->led = new Led(pin);
-    led->switchOn();
 }
 
 void LedTask::tick() {
-    if (pContext->isObjDetected()) {
+    if (pContext->isPadlockOpen()) {
         led->switchOn();
     } else {
         led->switchOff();

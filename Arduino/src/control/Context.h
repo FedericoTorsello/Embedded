@@ -9,54 +9,43 @@
 
 class Context {
 private:
-    bool objDetected;
-    float objDistance;
-    float maxDistance;
-    bool startGame;
-    int distanceGuess;
-
+    int maxDistance;
+    bool padlockOpen;
+    bool padlockDetected;
+    int currentDistance;
 public:
-    Context(float maxDistance) {
-        objDetected = false;
+    Context(int maxDistance) {
         this->maxDistance = maxDistance;
+        padlockOpen = false;
+        padlockDetected = false;
+        currentDistance = 0;
     }
 
-    void setDetectedObj(float distance) {
-        objDetected = true;
-        objDistance = distance;
-    }
-
-    void setNoObjDetected() {
-        objDetected = false;
-    }
-
-    bool isObjDetected() {
-        return objDetected;
-    }
-
-    float getObjDistance() {
-        return objDistance;
-    }
-
-    float getMaxDistance() {
+    int getMaxDistance(){
         return maxDistance;
     }
 
-    void setGame(bool v) {
-        startGame = v;
+    bool isPadlockOpen(){
+        return padlockOpen;
     }
 
-    bool getGame() {
-        return true;
+    void setPadlockOpen(bool status){
+        padlockOpen = status;
     }
 
-    void setDistanceGuess(int v) {
-        distanceGuess = v;
+    bool isPadlockDetected(){
+        return padlockDetected;
     }
 
-    int getDistanceGuess() {
-        return distanceGuess;
+    void setPadlockDetected(bool status){
+        padlockDetected = status;
     }
+
+    int getCurrentDistance(){
+        return currentDistance;
+    }
+
+
 };
 
 #endif

@@ -12,8 +12,8 @@ void LedPwmTask::init(int period) {
 }
 
 void LedPwmTask::tick() {
-    if (pContext->isObjDetected()) {
-        float d = pContext->getObjDistance();
+    if (pContext->isPadlockDetected()) {
+        int d = pContext->getCurrentDistance();
         int val = (pContext->getMaxDistance() - d)*255;
         if (val >= 0 && val <= 255) {
             ledPwm->setIntensity(val);

@@ -5,12 +5,10 @@ Button::Button(int pin, unsigned long debounceDelay) {
     this->debounceDelay = debounceDelay;
 
     // Variables will change:
-    ledState = HIGH;         // the current state of the output pin
     lastButtonState = LOW;   // the previous reading from the input pin
     buttonState = HIGH;
     lastDebounceTime = 0;
     pinMode(pin,INPUT_PULLUP);
-    pinMode(ledPin, OUTPUT);
 }
 
 bool Button::readBool() {
@@ -23,13 +21,13 @@ bool Button::readBool() {
     //era LOW ed è trascorso il tempo necessario
     if(localTime > debounceDelay && buttonState == HIGH && buttonState != lastButtonState) {
             //Inverte l'OUTPUT
-            ledState = !ledState;
+            // ledState = !ledState;
 
             //Ricorda quando l'ultima volta è stato premuto il pulsante
             lastDebounceTime = millis();
     }
 
-    digitalWrite(ledPin, ledState);  //Scrivo lo stato sul LED
+    // digitalWrite(ledPin, ledState);  //Scrivo lo stato sul LED
     lastButtonState = buttonState;
 
     return lastButtonState;
