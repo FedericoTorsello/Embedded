@@ -7,17 +7,19 @@ SonarTask::SonarTask(int trigPin, int echoPin, int maxDist, Context* pContext) {
     this->pContext = pContext;
 }
 
-void SonarTask::init(int period) {
+void SonarTask::init(int period, void (*f)()) {
+    this->_f = f;
     Task::init(period);
     sonar = new Sonar(this->trigPin, this->echoPin, this->MAX_DISTANCE);
 }
 
-void SonarTask::tick(void (*f)()) {
-    distance = sonar->readDistance();
-    pContext->setCurrentDistance(distance);
-    f();
-
-    printDistance();
+void SonarTask::tick() {
+    Task::callFoo();
+    // distance = sonar->readDistance();
+    // pContext->setCurrentDistance(distance);
+    // f();
+    //
+    // printDistance();
 
     // if(distance <= indovina + DELTA && distance >= indovina - DELTA && !pContext->isPadlockOpen()) {
     //
@@ -93,6 +95,6 @@ void SonarTask::tick(void (*f)()) {
     // }
 }
 
-void SonarTask::printDistance() {
-    msgService.sendMsg(String(distance), "arduino", "remote");
-}
+// void SonarTask::printDistance() {
+//     msgService.sendMsg(String(distance), "arduino", "remote");
+// }

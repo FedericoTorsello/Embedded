@@ -6,12 +6,14 @@ ButtonTask::ButtonTask(int pin,  int debounceDelay, Context* pContext) {
     this->pContext = pContext;
 }
 
-void ButtonTask::init(int period) {
+void ButtonTask::init(int period, void (*f)()) {
+    this->_f = f;
     Task::init(period);
     btn = new Button(pin, debounceDelay);
 }
 
-void ButtonTask::tick(void (*f)()) {
-    pContext->setButtonPressed(btn->readBool());
+void ButtonTask::tick() {
+    Task::callFoo();
+    // pContext->setButtonPressed(btn->readBool());
     // Serial.println(state);
 }

@@ -13,12 +13,13 @@ public:
     Light* led;
 
 private:
-    int pin;
     void (*_f)();
     void foo() {
         _f();
     }
     Context* pContext;
+protected:
+    int pin;
 };
 
 #endif

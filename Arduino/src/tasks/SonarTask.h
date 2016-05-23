@@ -9,9 +9,16 @@
 class SonarTask : public Task {
 public:
     SonarTask(int, int, int, Context *);
-    void init(int);
-    void tick(void (*f)());
+    void init(int, void (*)());
+    void tick();
+    Input* sonar;
+    void printDistance();
 private:
+    void (*_f)();
+    void foo() {
+        _f();
+    }
+
     int echoPin;
     int trigPin;
     int MAX_DISTANCE;
@@ -25,15 +32,10 @@ private:
     /* errore di lettura */
     const int DELTA = 4;
     const int indovina = 20;
-    const int MIN_TIME = 500;
-    const int MAX_TIME = 1000;
 
     bool tempoCorretto = false;
 
-    Input* sonar;
     Context *pContext;
-
-    void printDistance();
 };
 
 #endif

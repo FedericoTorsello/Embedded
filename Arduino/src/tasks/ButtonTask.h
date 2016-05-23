@@ -8,10 +8,14 @@
 class ButtonTask : public Task {
 public:
     ButtonTask(int, int, Context *);
-    void init(int);
-    void tick(void (*f)());
-private:
+    void init(int, void (*)());
+    void tick();
     Button *btn;
+private:
+    void (*_f)();
+    void foo() {
+        _f();
+    }
     Context *pContext;
 protected:
     int pin;

@@ -7,10 +7,12 @@ LedRoundTask::LedRoundTask(int *pins, int size, Context* pContext) {
     this->led = new Multiplexer(pins, size, false);
 }
 
-void LedRoundTask::init(int period) {
+void LedRoundTask::init(int period, void (*f)()) {
+    this->_f = f;
     Task::init(period);
 }
 
-void LedRoundTask::tick(void (*f)()) {
-    led->carousel(300);
+void LedRoundTask::tick() {
+    Task::callFoo();
+    // led->carousel(300);
 }
