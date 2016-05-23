@@ -21,8 +21,7 @@ void Scheduler::schedule() {
     for (int i = 0; i < nTasks; i++) {
         if (taskList[i]->updateAndCheckTime(basePeriod) && taskList[i]->isEnabled()) {
             // cli();
-            taskList[i]->tick([]{});
-            // taskList[i]->tick([]{Serial.println("ciao");});
+            taskList[i]->tick();
             // sei();
         }
     }

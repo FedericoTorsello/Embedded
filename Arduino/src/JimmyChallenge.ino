@@ -29,9 +29,9 @@ void setup() {
     msgService.init(BAUD, "JimmyChallenge");
     sched.init(100);
 
-    Task* t0 = new SonarTask(TRIG_PIN, ECHO_PIN, MAX_DISTANCE_SONAR, c);
-    t0->init(50);
-    sched.addTask(t0);
+    // Task* t0 = new SonarTask(TRIG_PIN, ECHO_PIN, MAX_DISTANCE_SONAR, c);
+    // t0->init(50);
+    // sched.addTask(t0);
 
     // Task* t1 = new ButtonTask(BUTTON_PIN, DEBOUNCE_DELAY, c);
     // t0->init(50);
@@ -42,20 +42,12 @@ void setup() {
     // sched.addTask(t2);
 
     t4 = new LedTask(LED_PIN, c);
-    t4->init(50);
+    t4->init(50, [] {
+        Serial.println("OK");
+    });
     sched.addTask(t4);
 }
 
 void loop() {
-    t4->tick([] {
-        prova();
-    });
     sched.schedule();
-}
-
-void prova(){
-    if (c->isPadlockOpen()) {
-    t4->led->switchOn();
-    } else {
-    t4->led->switchOff();}
 }

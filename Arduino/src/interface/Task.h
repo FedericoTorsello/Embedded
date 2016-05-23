@@ -6,15 +6,21 @@ private:
     int myPeriod;
     int timeElapsed;
     bool enabled;
+protected:
+    virtual void foo() = 0;
 public:
+    virtual void init(int, void (*)());
+
     virtual void init(int period) {
         myPeriod = period;
         timeElapsed = 0;
         enabled = true;
     }
-    virtual void tick(void (*foo)()) = 0;
+    virtual void tick() = 0;
 
-    void boh(void (*foo)()){};
+    void callFoo() {
+        foo();
+    }
 
     bool isEnabled() {
         return enabled;

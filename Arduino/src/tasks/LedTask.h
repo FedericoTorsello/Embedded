@@ -8,13 +8,16 @@
 class LedTask : public Task {
 public:
     LedTask(int, Context *);
-    void init(int);
-    void tick(void (*f)());
+    void init(int, void (*)());
+    void tick();
     Light* led;
 
 private:
     int pin;
-
+    void (*_f)();
+    void foo() {
+        _f();
+    }
     Context* pContext;
 };
 
