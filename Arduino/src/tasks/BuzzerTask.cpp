@@ -10,7 +10,7 @@ void BuzzerTask::init(int period) {
     this->buzzer = new Buzzer(pin);
 }
 
-void BuzzerTask::tick() {
+void BuzzerTask::tick(void (*f)()) {
     int varDelayValue;
     int varNumCycles;
 

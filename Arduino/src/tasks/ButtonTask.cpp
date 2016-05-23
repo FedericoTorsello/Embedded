@@ -11,7 +11,7 @@ void ButtonTask::init(int period) {
     btn = new Button(pin, debounceDelay);
 }
 
-void ButtonTask::tick() {
-    btn->readBool();
+void ButtonTask::tick(void (*f)()) {
+    pContext->setButtonPressed(btn->readBool());
     // Serial.println(state);
 }

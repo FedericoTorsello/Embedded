@@ -9,7 +9,7 @@ class LedRoundTask : public Task {
 public:
     LedRoundTask(int *, int, Context *);
     void init(int);
-    void tick();
+    void tick(void (*f)());
 private:
     int *pins;
     int size;

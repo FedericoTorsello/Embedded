@@ -11,6 +11,6 @@ void LedRoundTask::init(int period) {
     Task::init(period);
 }
 
-void LedRoundTask::tick() {
+void LedRoundTask::tick(void (*f)()) {
     led->carousel(300);
 }

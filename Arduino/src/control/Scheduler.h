@@ -11,6 +11,7 @@ private:
     int nTasks;
     Task *taskList[MAX_TASKS];
     Timer timer;
+    void f();
 public:
     void init(int);
     virtual bool addTask(Task *);

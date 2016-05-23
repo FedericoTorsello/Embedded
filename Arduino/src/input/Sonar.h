@@ -9,7 +9,7 @@ public:
     Sonar(int trigPin, int echoPin, int maxDist);
     int readDistance();
 
-private:
+protected:
     NewPing *mySonar;
     int echoPin;
     int trigPin;

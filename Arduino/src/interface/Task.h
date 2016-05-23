@@ -12,7 +12,9 @@ public:
         timeElapsed = 0;
         enabled = true;
     }
-    virtual void tick() = 0;
+    virtual void tick(void (*foo)()) = 0;
+
+    void boh(void (*foo)()){};
 
     bool isEnabled() {
         return enabled;

@@ -10,13 +10,13 @@ class SonarTask : public Task {
 public:
     SonarTask(int, int, int, Context *);
     void init(int);
-    void tick();
-
-
+    void tick(void (*f)());
 private:
     int echoPin;
     int trigPin;
     int MAX_DISTANCE;
+
+    int distance;
 
     int startTime = 0;
     int endTime = 0;

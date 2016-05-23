@@ -9,7 +9,7 @@ class LedPwmTask : public Task {
 public:
     LedPwmTask(int, Context *);
     void init(int);
-    void tick();
+    void tick(void (*f)());
 private:
     int pin;
     LightPwm *ledPwm;

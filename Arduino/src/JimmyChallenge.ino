@@ -23,6 +23,8 @@ const int DEBOUNCE_DELAY = 40;
 Scheduler sched;
 Context *c = new Context(MAX_DISTANCE_SONAR);
 
+LedTask* t4;
+
 void setup() {
     msgService.init(BAUD, "JimmyChallenge");
     sched.init(100);
@@ -31,20 +33,29 @@ void setup() {
     t0->init(50);
     sched.addTask(t0);
 
-    Task* t1 = new ButtonTask(BUTTON_PIN, DEBOUNCE_DELAY, c);
-    t0->init(50);
-    sched.addTask(t1);
+    // Task* t1 = new ButtonTask(BUTTON_PIN, DEBOUNCE_DELAY, c);
+    // t0->init(50);
+    // sched.addTask(t1);
+    //
+    // Task* t2 = new BuzzerTask(BUZZER_PIN, c);
+    // t2->init(50);
+    // sched.addTask(t2);
 
-    Task* t2 = new BuzzerTask(BUZZER_PIN, c);
-    t2->init(50);
-    sched.addTask(t2);
-
-    Task* t3 = new LedTask(LED_PIN, c);
-    t3->init(50);
-    sched.addTask(t3);
+    t4 = new LedTask(LED_PIN, c);
+    t4->init(50);
+    sched.addTask(t4);
 }
 
 void loop() {
+    t4->tick([] {
+        prova();
+    });
     sched.schedule();
+}
 
+void prova(){
+    if (c->isPadlockOpen()) {
+    t4->led->switchOn();
+    } else {
+    t4->led->switchOff();}
 }

@@ -11,7 +11,7 @@ void LedPwmTask::init(int period) {
     ledPwm->switchOn();
 }
 
-void LedPwmTask::tick() {
+void LedPwmTask::tick(void (*f)()) {
     if (pContext->isPadlockDetected()) {
         int d = pContext->getCurrentDistance();
         int val = (pContext->getMaxDistance() - d)*255;

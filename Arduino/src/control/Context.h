@@ -13,6 +13,7 @@ private:
     bool padlockOpen;
     bool padlockDetected;
     int currentDistance;
+    bool buttonPressed;
 public:
     Context(int maxDistance) {
         this->maxDistance = maxDistance;
@@ -41,8 +42,20 @@ public:
         padlockDetected = status;
     }
 
+    void setCurrentDistance(int lastDistance){
+        currentDistance = lastDistance;
+    }
+
     int getCurrentDistance(){
         return currentDistance;
+    }
+
+    void setButtonPressed(bool buttonState){
+        buttonPressed = buttonState;
+    }
+
+    bool isButtonPressed(){
+        return buttonPressed;
     }
 
 

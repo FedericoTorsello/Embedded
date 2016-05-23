@@ -9,7 +9,7 @@ class ButtonTask : public Task {
 public:
     ButtonTask(int, int, Context *);
     void init(int);
-    void tick();
+    void tick(void (*f)());
 private:
     Button *btn;
     Context *pContext;
