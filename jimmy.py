@@ -1,128 +1,74 @@
 #!/usr/bin/env python3
 import asyncio
-import functools
-import queue
-import serial
 import signal
-import simplejson as json
-from serial.threaded import LineReader, ReaderThread
-from serial.tools import list_ports
+import ujson as json
+import utils
+from serial.threaded import ReaderThread
 from aiohttp import ClientSession, ClientOSError, Timeout
 
 _stop = False
-url = "https://embedded16.duckdns.org/phplibs/api.php"
-from_arduino = queue.Queue()
-REMOTE = "remote"
-ARDUINO = "arduino"
+url = 'https://embedded16.duckdns.org/phplibs/api.php'
 
 
-def connect_arduino():
-    try:
-        arduino_port = list(list_ports.grep('2341:0043'))[0][0]
-    except IndexError:
-        print('Arduino is not connected!')
-    else:
-        arduino = serial.Serial(arduino_port,
-                                9600,
-                                parity=serial.PARITY_NONE,
-                                stopbits=serial.STOPBITS_ONE,
-                                bytesize=serial.EIGHTBITS)
-        arduino.setDTR(False)
-        import time
-        time.sleep(0.022)
-        arduino.flushInput()
-        arduino.flushOutput()
-        arduino.setDTR(True)
-        return arduino
-
-
-class PrintLines(LineReader):
-    global from_arduino
-
-    def connection_made(self, transport):
-        super(PrintLines, self).connection_made(transport)
-        self.ready = False
-        self.daemon = True
-
-    def handle_line(self, data):
-        if data == "Pronto!":
-            self.ready = True
-        else:
-            from_arduino.put(data)
-
-    def get_message_queue(self):
-        return self.from_arduino
-
-    def connection_lost(self, exc):
-        print('Port Closed!')
-
-
-async def get_token():
-    data = {'gimme': 'cookie'}
-    try:
-        session = ClientSession()
-        with Timeout(0.8):
-            async with session.post(url, data=data) as response:
-                return {'sessionID': response.cookies['sessionID'].value}
-    finally:
-        session.close()
+async def get_token(user, pwd):
+    h = {'content-type': 'application/json'}
+    data = json.dumps({'request': 'auth', 'username': user, 'password': pwd})
+    with Timeout(0.8):
+        async with ClientSession() as session:
+            async with session.post(url, data=data, headers=h) as response:
+                if 'sessionID' in response.cookies:
+                    return {'sessionID': response.cookies['sessionID'].value}
+                else:
+                    utils.print('Wrong Credentials!', 1)
 
 
 async def send_post(data, cookie):
     global _stop
     try:
+        h = {'Content-Type': 'application/json'}
+        data = {'request': 'test'}
+        data = json.dumps(data)
         with Timeout(0.7):
-            async with ClientSession(cookies=cookie) as session:
+            async with ClientSession(cookies=cookie, headers=h) as session:
                 async with session.post(url, data=data) as response:
                     if response.status == 200:
-                        response.json()
+                        print(await response.json())
+                    else:
+                        utils.print('Error on request', 1)
+                        _stop = True
     except (ClientOSError, Timeout):
-        print("Connection problem.")
+        utils.print('Connection problems.', 1)
         _stop = True
 
 
-def parse_json(data):
-    msg = f = t = ""
-    try:
-        data = json.loads(data)
-        msg = data.get('msg')
-        f = data.get('from')
-        t = data.get('to')
-    except ValueError:
-        pass
-    else:
-        return (msg, f, t)
-
-
-def printm(msg, f, t):
-    print('Message {} from {} from {}'.format(msg, t, f))
-
-
 async def dispatch(cookie, protocol):
-    global _stop, from_arduino
+    global _stop
+    from_arduino = protocol.get_message_queue()
     while not _stop:
         data = from_arduino.get()
-        msg, f, t = parse_json(data)
+        msg, f, t = utils.parse_json(data)
         if all(k is not None for k in (msg, f, t)):
-            if t == ARDUINO:
+            if t == utils.ARDUINO:
                 protocol.write_line(data)
-            if t == REMOTE:
+            if t == utils.REMOTE:
                 await send_post(data, cookie)
-
+        await asyncio.sleep(.001)
 
 async def main(loop):
-    arduino = connect_arduino()
-    reader_arduino = ReaderThread(arduino, PrintLines)
-    reader_arduino.daemon = True
-    reader_arduino.start()
-    m, writer = reader_arduino.connect()
-    cookie = await get_token()
-    if cookie is not None:
-        disp_coro = asyncio.ensure_future(dispatch(cookie, writer))
+    user, pwd = utils.read_inputs()
+    cookie = await get_token(user, pwd)
+    arduino = utils.connect_arduino()
+    if all(k is not None for k in (arduino, cookie)):
+        reader_arduino = ReaderThread(arduino, utils.PrintLines)
+        reader_arduino.daemon = True
+        reader_arduino.start()
+        rt, printlines = reader_arduino.connect()
+        user = pwd = None
+        disp_coro = asyncio.ensure_future(dispatch(cookie, printlines))
         await asyncio.wait([disp_coro], loop=loop)
 
 
-def end(loop):
+def end():
     global _stop
     _stop = True
 
@@ -131,10 +77,10 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     for signame in ('SIGINT', 'SIGTERM'):
         loop.add_signal_handler(
-            getattr(signal, signame), functools.partial(end, loop))
-    print("Ctrl-C to close the program...")
+            getattr(signal, signame), end)
+    utils.print('Ctrl-C to close the program...')
     try:
         loop.run_until_complete(asyncio.ensure_future(main(loop)))
     finally:
         loop.close()
-        print("Bye!", flush=True)
+        utils.print('Bye!')
