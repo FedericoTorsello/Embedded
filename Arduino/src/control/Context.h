@@ -14,12 +14,15 @@ private:
     bool padlockDetected;
     int currentDistance;
     bool buttonPressed;
+    bool tempoCorretto;
+    bool levelPassed;
 public:
     Context(int maxDistance) {
         this->maxDistance = maxDistance;
         padlockOpen = false;
         padlockDetected = false;
         currentDistance = 0;
+        levelPassed = 0;
     }
 
     int getMaxDistance(){
@@ -56,6 +59,14 @@ public:
 
     bool isButtonPressed(){
         return buttonPressed;
+    }
+
+    void setLevelPassed(int nLevel){
+        levelPassed = nLevel + 1;
+    }
+
+    int getLevelToPlay(){
+        return levelPassed;
     }
 
 
