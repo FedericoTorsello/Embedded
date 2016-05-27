@@ -7,6 +7,13 @@ Buzzer::Buzzer(int pin) {
 
 void Buzzer::playSound(int song, int varDelayValue, int varNumCycles) {
 
+    if(varDelayValue == 0){
+        varDelayValue = 1;
+    }
+    if(varNumCycles == 0){
+        varNumCycles = 1;
+    }
+
     // iterate over the notes of the melody:
     for (int thisNote = 0; thisNote < 2; thisNote++) {
         // to calculate the note duration, take one second

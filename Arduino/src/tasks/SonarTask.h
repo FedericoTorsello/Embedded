@@ -15,9 +15,9 @@ public:
     void tick();
     void printDistance();
 
-    int timer1 = 0;
-    int timer2 = 0;
-    int timer3 = 0;
+    unsigned long timer1 = 0;
+    unsigned long timer2 = 0;
+    unsigned long timer3 = 0;
     bool tempoCorretto = false;
 
 private:

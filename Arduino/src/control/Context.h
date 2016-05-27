@@ -15,14 +15,14 @@ private:
     int currentDistance;
     bool buttonPressed;
     bool tempoCorretto;
-    bool levelPassed;
+    int currentlevel;
 public:
     Context(int maxDistance) {
         this->maxDistance = maxDistance;
         padlockOpen = false;
         padlockDetected = false;
         currentDistance = 0;
-        levelPassed = 0;
+        currentlevel = 0;
     }
 
     int getMaxDistance(){
@@ -61,12 +61,12 @@ public:
         return buttonPressed;
     }
 
-    void setLevelPassed(int nLevel){
-        levelPassed = nLevel + 1;
+    void setLevelToPlay(int nLevel){
+        currentlevel = nLevel + 1;
     }
 
     int getLevelToPlay(){
-        return levelPassed;
+        return currentlevel;
     }
 
 
