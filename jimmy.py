@@ -33,7 +33,7 @@ async def send_post(data, cookie, queue):
                 async with session.post(url, data=data) as response:
                     if response.status == 200:
                         d = await response.json()
-                        print(d)
+                        queue.put(d)
                     else:
                         utils.print('Error on request', 1)
                         _stop = True
@@ -46,17 +46,20 @@ async def dispatch(cookie, protocol):
     global _stop
     from_arduino = protocol.get_message_queue()
     while not _stop:
-        data = from_arduino.get()
-        msg, f, t = utils.parse_json(data)
-        if all(k is not None for k in (msg, f, t)):
-            if t == utils.ARDUINO:
-                protocol.write_line(msg)
-            if t == utils.REMOTE:
-                await send_post(data, cookie, from_arduino)
-            if t == utils.LOCAL:
-                utils.print(msg)
-            await asyncio.sleep(0.2)
-
+        try:
+            data = from_arduino.get()
+        except:
+            pass
+        else:
+            msg, f, t = utils.parse_json(data)
+            if all(k is not None for k in (msg, f, t)):
+                if t == utils.ARDUINO:
+                   protocol.write_line(msg)
+                   await asyncio.sleep(0.3)
+                if t == utils.REMOTE:
+                    await send_post(data, cookie, from_arduino)
+                if t == utils.LOCAL:
+                    utils.print(msg)
 
 async def main():
     user, pwd = utils.read_inputs()
