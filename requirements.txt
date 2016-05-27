@@ -1,5 +1,15 @@
 aiohttp==0.21.6
+buildozer==0.32
 cchardet==1.0.0
 chardet==2.3.0
+colored==1.2.2
+Cython==0.24
+Kivy==1.9.1
+Kivy-Garden==0.1.4
+pexpect==4.1.0
+ptyprocess==0.5.1
+pygame==1.9.2.dev1
 pyserial==3.0.1
+requests==2.10.0
 ujson==1.35
+virtualenv==15.0.1
