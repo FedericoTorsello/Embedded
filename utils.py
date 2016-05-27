@@ -2,6 +2,7 @@ import builtins
 import getpass
 import serial
 import queue
+import ujson as json
 from colored import fore, style
 from serial.tools import list_ports
 from serial.threaded import LineReader
@@ -14,13 +15,11 @@ LOCAL = 'local'
 class PrintLines(LineReader):
     def connection_made(self, transport):
         super(PrintLines, self).connection_made(transport)
-        self.daemon = True
         self.from_arduino = queue.Queue()
 
     def handle_line(self, data):
         try:
-            from simplejson import loads
-            loads(data)
+            data = json.loads(data)
         except ValueError:
             pass
         else:
@@ -62,8 +61,6 @@ def connect_arduino():
 
 def parse_json(data):
     try:
-        from simplejson import loads
-        data = loads(data)
         msg = data.get('msg')
         f = data.get('from')
         t = data.get('to')

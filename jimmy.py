@@ -22,7 +22,7 @@ async def get_token(user, pwd):
                     utils.print('Wrong Credentials!', 1)
 
 
-async def send_post(data, cookie):
+async def send_post(data, cookie, queue):
     global _stop
     try:
         h = {'Content-Type': 'application/json'}
@@ -32,7 +32,8 @@ async def send_post(data, cookie):
             async with ClientSession(cookies=cookie, headers=h) as session:
                 async with session.post(url, data=data) as response:
                     if response.status == 200:
-                        print(await response.json())
+                        d = await response.json()
+                        print(d)
                     else:
                         utils.print('Error on request', 1)
                         _stop = True
@@ -49,23 +50,25 @@ async def dispatch(cookie, protocol):
         msg, f, t = utils.parse_json(data)
         if all(k is not None for k in (msg, f, t)):
             if t == utils.ARDUINO:
-                protocol.write_line(data)
+                protocol.write_line(msg)
             if t == utils.REMOTE:
-                await send_post(data, cookie)
-        await asyncio.sleep(.001)
+                await send_post(data, cookie, from_arduino)
+            if t == utils.LOCAL:
+                utils.print(msg)
+            await asyncio.sleep(0.2)
 
-async def main(loop):
+
+async def main():
     user, pwd = utils.read_inputs()
     cookie = await get_token(user, pwd)
+    user = pwd = None
     arduino = utils.connect_arduino()
     if all(k is not None for k in (arduino, cookie)):
         reader_arduino = ReaderThread(arduino, utils.PrintLines)
-        reader_arduino.daemon = True
         reader_arduino.start()
         rt, printlines = reader_arduino.connect()
-        user = pwd = None
         disp_coro = asyncio.ensure_future(dispatch(cookie, printlines))
-        await asyncio.wait([disp_coro], loop=loop)
+        await asyncio.wait([disp_coro])
 
 
 def end():
@@ -80,7 +83,7 @@ if __name__ == '__main__':
             getattr(signal, signame), end)
     utils.print('Ctrl-C to close the program...')
     try:
-        loop.run_until_complete(asyncio.ensure_future(main(loop)))
+        loop.run_until_complete(main())
     finally:
         loop.close()
         utils.print('Bye!')
