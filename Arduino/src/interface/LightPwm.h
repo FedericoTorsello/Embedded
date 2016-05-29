@@ -3,9 +3,13 @@
 
 #include "Light.h"
 
-class LightPwm : public Light {
+namespace interface {
+
+class LightPwm : public interface::Light {
 public:
     virtual void setIntensity(int) = 0;
 };
+
+}
 
 #endif

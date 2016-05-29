@@ -3,7 +3,7 @@
 
 #include "../interface/Light.h"
 
-class Led : public Light {
+class Led : public interface::Light {
 public:
     Led(int);
     void switchOn();

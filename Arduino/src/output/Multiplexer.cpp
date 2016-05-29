@@ -28,16 +28,16 @@ void Multiplexer::switchOff() {
     setInh(true);
 }
 
-void Multiplexer::carousel(int del) {
-    for (int thisChannel = 0; thisChannel <= 5; thisChannel++) {
-        // set the channel pins based on the channel you want:
-        for (int thisPin = 0; thisPin <= 3; thisPin++) {
-            // calculate the state of this pin based on
-            // its bit value in whichChannel:
-            int pinState = bitRead(thisChannel, thisPin);
-            // turn the pin on or off:
-            digitalWrite(channels[thisPin],pinState);
-        }
-        delay(del);
-    }
-}
+// void Multiplexer::carousel(int del) {
+//     for (int thisChannel = 0; thisChannel <= 5; thisChannel++) {
+//         // set the channel pins based on the channel you want:
+//         for (int thisPin = 0; thisPin <= 3; thisPin++) {
+//             // calculate the state of this pin based on
+//             // its bit value in whichChannel:
+//             int pinState = bitRead(thisChannel, thisPin);
+//             // turn the pin on or off:
+//             digitalWrite(channels[thisPin],pinState);
+//         }
+//         delay(del);
+//     }
+// }

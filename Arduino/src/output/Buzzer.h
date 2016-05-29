@@ -3,7 +3,7 @@
 
 #include "../interface/Audio.h"
 
-class Buzzer : public Audio {
+class Buzzer : public interface::Audio {
 public:
     Buzzer(int);
     void playSound(int, int, int);
@@ -22,7 +22,7 @@ private:
     const int noteDurations[2] = {
         4, 8
     };
-    
+
     void buzz(int, int);
 };
 #endif

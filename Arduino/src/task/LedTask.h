@@ -1,7 +1,7 @@
 #ifndef __LEDTASK__
 #define __LEDTASK__
 
-#include "../interface/Task.h"
+#include "../task/Task.h"
 #include "../output/Led.h"
 #include "../control/Context.h"
 
@@ -10,7 +10,7 @@ public:
     LedTask(int, Context *);
     void init(int, void (*)());
     void tick();
-    Light* led;
+    interface::Light* led;
 
 private:
     void (*_f)();

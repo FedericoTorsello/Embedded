@@ -3,6 +3,8 @@
 
 #include "Arduino.h"
 
+namespace interface {
+
 class Input {
 public:
     virtual bool readBool() {
@@ -12,5 +14,7 @@ public:
         return 0;
     };
 };
+
+}
 
 #endif

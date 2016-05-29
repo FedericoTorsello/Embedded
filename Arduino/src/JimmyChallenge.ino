@@ -2,10 +2,10 @@
 #include "output/MessageService.h"
 #include "output/LedRound.h"
 #include "output/Multiplexer.h"
-#include "tasks/SonarTask.h"
-#include "tasks/LedTask.h"
-#include "tasks/ButtonTask.h"
-#include "tasks/BuzzerTask.h"
+#include "task/SonarTask.h"
+#include "task/LedTask.h"
+#include "task/ButtonTask.h"
+#include "task/BuzzerTask.h"
 
 // configurazione porta seriale e messaggi
 const int BAUD = 9600;

@@ -11,18 +11,18 @@ LedPwm::LedPwm(int pin, int intensity) : Led(pin) {
 }
 
 void LedPwm::switchOn() {
-    analogWrite(pin,currentIntensity);
+    analogWrite(pin, currentIntensity);
     isOn = true;
 }
 
 void LedPwm::setIntensity(int value) {
     currentIntensity = value;
     if (isOn) {
-        analogWrite(pin,currentIntensity);
+        analogWrite(pin, currentIntensity);
     }
 }
 
 void LedPwm::switchOff() {
-    analogWrite(pin,0);
+    analogWrite(pin, 0);
     isOn = false;
 }

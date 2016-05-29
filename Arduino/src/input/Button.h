@@ -3,7 +3,7 @@
 
 #include "../interface/Input.h"
 
-class Button : public Input {
+class Button : public interface::Input {
 public:
     Button(int, unsigned long);
     bool readBool();

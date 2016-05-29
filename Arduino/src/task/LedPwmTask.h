@@ -1,7 +1,7 @@
 #ifndef __LEDPWMTASK__
 #define __LEDPWMTASK__
 
-#include "../interface/Task.h"
+#include "../task/Task.h"
 #include "../output/LedPwm.h"
 #include "../control/Context.h"
 
@@ -15,7 +15,7 @@ private:
     void foo() {
         _f();
     }
-    LightPwm *ledPwm;
+    interface::LightPwm *ledPwm;
     Context *pContext;
 protected:
     int pin;

@@ -1,7 +1,7 @@
 #ifndef __BUTTONTASK__
 #define __BUTTONTASK__
 
-#include "../interface/Task.h"
+#include "../task/Task.h"
 #include "../input/Button.h"
 #include "../control/Context.h"
 

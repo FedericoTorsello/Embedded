@@ -1,7 +1,7 @@
 #ifndef __SONARTASK__
 #define __SONARTASK__
 
-#include "../interface/Task.h"
+#include "../task/Task.h"
 #include "../input/Sonar.h"
 #include "../control/Context.h"
 #include "../output/MessageService.h"
@@ -9,7 +9,7 @@
 class SonarTask : public Task {
 public:
     SonarTask(int, int, int, Context *);
-    Input* sonar;
+    interface::Input* sonar;
 
     void init(int, void (*)());
     void tick();

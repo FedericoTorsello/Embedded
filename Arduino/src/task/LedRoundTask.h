@@ -1,7 +1,7 @@
 #ifndef __LEDROUNDTASK__
 #define __LEDROUNDTASK__
 
-#include "../interface/Task.h"
+#include "../task/Task.h"
 #include "../output/Multiplexer.h"
 #include "../control/Context.h"
 

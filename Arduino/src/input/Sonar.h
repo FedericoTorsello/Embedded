@@ -4,7 +4,7 @@
 #include "NewPing.h"
 #include "../interface/Input.h"
 
-class Sonar : public Input {
+class Sonar : public interface::Input {
 public:
     Sonar(int trigPin, int echoPin, int maxDist);
     int readDistance();

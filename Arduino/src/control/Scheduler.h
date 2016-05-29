@@ -1,7 +1,7 @@
 #ifndef __SCHEDULER__
 #define __SCHEDULER__
 
-#include "../interface/Task.h"
+#include "../task/Task.h"
 #include "Timer.h"
 
 class Scheduler {

@@ -1,7 +1,7 @@
 #ifndef __BUZZERTASK__
 #define __BUZZERTASK__
 
-#include "../interface/Task.h"
+#include "../task/Task.h"
 #include "../output/Buzzer.h"
 #include "../control/Context.h"
 
