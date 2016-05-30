@@ -10,12 +10,14 @@ public:
     LedPwmTask(int, Context *);
     void init(int, void (*)());
     void tick();
+
+    interface::LightPwm *ledPwm;
 private:
     void (*_f)();
     void foo() {
         _f();
     }
-    interface::LightPwm *ledPwm;
+
     Context *pContext;
 protected:
     int pin;

@@ -28,7 +28,7 @@ bool Button::readBool() {
     }
 
     // digitalWrite(ledPin, ledState);  //Scrivo lo stato sul LED
-    lastButtonState = buttonState;
+    lastButtonState = !buttonState;
 
     return lastButtonState;
 }

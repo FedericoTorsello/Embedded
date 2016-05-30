@@ -5,13 +5,16 @@ Buzzer::Buzzer(int pin) {
     pinMode(pin,OUTPUT);
 }
 
-void Buzzer::playSound(int song, int varDelayValue, int varNumCycles) {
+void Buzzer::playSound(int sound) {
 
-    if(varDelayValue == 0){
-        varDelayValue = 1;
-    }
-    if(varNumCycles == 0){
-        varNumCycles = 1;
+    int varDelayValue, varNumCycles;
+
+    if(sound == 0){
+        varDelayValue = 3;
+        varNumCycles = 2;
+    } else if(sound == 1){
+        varDelayValue = 4;
+        varNumCycles = 2;
     }
 
     // iterate over the notes of the melody:

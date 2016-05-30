@@ -6,7 +6,7 @@ LedRound::LedRound(int *p, int n) {
     leds[n];
     for (int i = 0; i < size; i++) {
         pinMode(pins[i], OUTPUT);
-        leds[i] = Led(pins[i]);
+        leds[n] = Led(pins[i]);
     }
 }
 

@@ -33,6 +33,8 @@ private:
         {1,1,1,1}
     };
 
+    void muxWrite(int);
+
 };
 
 #endif

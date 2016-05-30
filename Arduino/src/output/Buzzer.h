@@ -6,7 +6,7 @@
 class Buzzer : public interface::Audio {
 public:
     Buzzer(int);
-    void playSound(int, int, int);
+    void playSound(int);
     void stopSound();
 
 protected:

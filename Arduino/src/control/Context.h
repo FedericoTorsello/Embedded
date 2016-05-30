@@ -1,6 +1,7 @@
 #ifndef __CONTEXT__
 #define __CONTEXT__
 
+#include "Arduino.h"
 /*
  * Raccoglie tutti gli stati delle variabili della partita.
  * Viene usato per comunicare tra i vari Task e poter implemantare
@@ -10,19 +11,23 @@
 class Context {
 private:
     int maxDistance;
+    int currentDistance;
+    int currentlevel;
+    int randomNum;
+    bool buttonPressed;
     bool padlockOpen;
     bool padlockDetected;
-    int currentDistance;
-    bool buttonPressed;
-    bool tempoCorretto;
-    int currentlevel;
+    bool gameOver;
+
 public:
     Context(int maxDistance) {
         this->maxDistance = maxDistance;
-        padlockOpen = false;
-        padlockDetected = false;
         currentDistance = 0;
         currentlevel = 0;
+        randomNum = 0;
+        padlockOpen = false;
+        padlockDetected = false;
+        gameOver = false;
     }
 
     int getMaxDistance(){
@@ -62,6 +67,7 @@ public:
     }
 
     void setLevelToPlay(int nLevel){
+        newRandomNumber();
         currentlevel = nLevel + 1;
     }
 
@@ -69,6 +75,23 @@ public:
         return currentlevel;
     }
 
+    int getRandomNumber(){
+        return randomNum;
+    }
+
+    void newRandomNumber(){
+        // utilizzo delle uscite analogiche per creare entropia
+        randomSeed(analogRead(A0)*analogRead(A1));
+        randomNum = random(maxDistance);
+    }
+
+    void setGameOver(bool gameState){
+        gameOver = gameState;
+    }
+
+    bool isGameOver(){
+        return gameOver;
+    }
 
 };
 
