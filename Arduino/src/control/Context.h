@@ -11,13 +11,13 @@
 class Context {
 private:
     int maxDistance;
-    int currentDistance;
     int currentlevel;
     int randomNum;
-    bool buttonPressed;
-    bool padlockOpen;
-    bool padlockDetected;
-    bool gameOver;
+    volatile int currentDistance;
+    volatile bool gameOver;
+    volatile bool buttonPressed;
+    volatile bool padlockOpen;
+    volatile bool padlockDetected;
 
 public:
     Context(int maxDistance) {
@@ -28,6 +28,8 @@ public:
         padlockOpen = false;
         padlockDetected = false;
         gameOver = false;
+        // utilizzo delle uscite analogiche per creare entropia
+        randomSeed(analogRead(A0)*analogRead(A1));
     }
 
     int getMaxDistance(){
@@ -80,9 +82,7 @@ public:
     }
 
     void newRandomNumber(){
-        // utilizzo delle uscite analogiche per creare entropia
-        randomSeed(analogRead(A0)*analogRead(A1));
-        randomNum = random(maxDistance);
+        randomNum = random(5, maxDistance);
     }
 
     void setGameOver(bool gameState){

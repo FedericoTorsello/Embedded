@@ -3,32 +3,26 @@
 Button::Button(int pin, unsigned long debounceDelay) {
     this->pin = pin;
     this->debounceDelay = debounceDelay;
-
-    // Variables will change:
-    lastButtonState = LOW;   // the previous reading from the input pin
-    buttonState = HIGH;
-    lastDebounceTime = 0;
+    //  INPUT_PULLUP: where HIGH means the sensor is off, and LOW means the sensor is on
     pinMode(pin,INPUT_PULLUP);
 }
 
 bool Button::readBool() {
 
-    // sample the state of the button - is it pressed or not?
-    buttonState = digitalRead(pin);
+    // read the state of the switch into a local variable:
+    bool reading = !digitalRead(pin);
 
-    int localTime = millis() - lastDebounceTime;
-    //Se abbiamo premuto in pulsante (HIGH) e la volta prima il suo stato
-    //era LOW ed è trascorso il tempo necessario
-    if(localTime > debounceDelay && buttonState == HIGH && buttonState != lastButtonState) {
-            //Inverte l'OUTPUT
-            // ledState = !ledState;
+    // check to see if you just pressed the button
+    // (i.e. the input went from LOW to HIGH),  and you've waited
+    // long enough since the last press to ignore any noise:
 
-            //Ricorda quando l'ultima volta è stato premuto il pulsante
-            lastDebounceTime = millis();
+    // If the switch changed, due to noise or pressing:
+    if (reading != lastButtonState) {
+        // reset the debouncing timer
+        lastDebounceTime = millis();
     }
 
-    // digitalWrite(ledPin, ledState);  //Scrivo lo stato sul LED
-    lastButtonState = !buttonState;
-
-    return lastButtonState;
+    if ((millis() - lastDebounceTime) > debounceDelay) {
+        return reading;
+    }
 }

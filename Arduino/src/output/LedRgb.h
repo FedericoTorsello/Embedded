@@ -4,9 +4,9 @@
 #include "../interface/LightPwm.h"
 #include "LedPwm.h"
 
-class LedRGB {
+class LedRgb {
 public:
-    LedRGB(int, int, int);
+    LedRgb(int, int, int);
     void switchOn();
     void switchOff();
     void setColor(int, int, int);

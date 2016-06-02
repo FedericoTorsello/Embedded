@@ -5,11 +5,13 @@
 
 class Multiplexer {
 public:
-    Multiplexer(int *, int, int);
-    void setInh(bool);
+    Multiplexer(int *, int);
+    // Multiplexer(int *, int, int);
+    // void setInh(bool);
     void switchOn(int);
     void switchOff();
-    void carousel(int);
+    void carouselYellow(int);
+    void carouselRed(int);
 private:
     int *channels;
     int size;

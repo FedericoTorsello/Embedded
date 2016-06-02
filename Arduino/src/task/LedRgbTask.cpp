@@ -1,17 +1,19 @@
-#include "LedPwmTask.h"
+#include "LedRgbTask.h"
 
-LedPwmTask::LedPwmTask(int pin, Context* pContext) {
-    this->pin = pin;
+LedRgbTask::LedRgbTask(int pin1, int pin2, int pin3, Context* pContext) {
+    this->pin1 = pin1;
+    this->pin2 = pin2;
+    this->pin3 = pin3;
     this->pContext = pContext;
-    this->ledPwm = new LedPwm(pin);
+    this->ledRgb = new LedRgb(pin1, pin2, pin3);
 }
 
-void LedPwmTask::init(int period, void (*f)()) {
+void LedRgbTask::init(int period, void (*f)()) {
     this->_f = f;
     Task::init(period);
 }
 
-void LedPwmTask::tick() {
+void LedRgbTask::tick() {
     Task::callFoo();
     // if (pContext->isPadlockDetected()) {
     //     int d = pContext->getCurrentDistance();

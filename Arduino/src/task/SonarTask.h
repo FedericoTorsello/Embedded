@@ -31,7 +31,7 @@ private:
 protected:
     int echoPin;
     int trigPin;
-    int MAX_DISTANCE;
+    int maxDist;
 };
 
 #endif

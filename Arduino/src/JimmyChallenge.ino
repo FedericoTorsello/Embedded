@@ -1,42 +1,44 @@
 #include "control/Scheduler.h"
 #include "output/MessageService.h"
-#include "output/LedRound.h"
-#include "output/Multiplexer.h"
 #include "task/SonarTask.h"
 #include "task/LedTask.h"
 #include "task/LedPwmTask.h"
-#include "task/LedRoundTask.h"
+#include "task/LedRgbTask.h"
 #include "task/ButtonTask.h"
 #include "task/BuzzerTask.h"
 
 // configurazione porta seriale e messaggi
 const int BAUD = 9600;
-const int MAX_DISTANCE_SONAR = 100;
+const int MAX_DISTANCE_SONAR = 50;
 const int DEBOUNCE_DELAY = 40;
 const String FROM_ARDUINO = "arduino";
 const String TO_REMOTE = "remote";
+const int NUM_MUX_CHANNEL = 4;
 
 // configurazione task
-int channel[4] = {2, 3, 4, 5}; // pin che controllano i canali A,B,C,D del mux
-const int BUZZER_PIN = 6;
+// pin digital write
+int muxChannel[NUM_MUX_CHANNEL] = {4, 5, 12, 13}; // pin che controllano i canali A,B,C,D del mux
 const int TRIG_PIN = 7;
 const int ECHO_PIN = 8;
-// const int LED_RGB_R = 9;
-// const int LED_RGB_G = 10;
-// const int LED_RGB_B = 11;
-const int BUTTON_PIN = 12;
-const int LED_PIN_13 = 13;
-const int LED_PWM = 5;
+const int BUTTON_PIN = 2;
+
+// pin PWM 3, 5, 6, 9, 10, 11 (il pin 5 serve al mux)
+const int LED_PWM = 3;
+const int BUZZER_PIN = 6;
+const int LED_RGB_R = 9;
+const int LED_RGB_G = 10;
+const int LED_RGB_B = 11;
 
 Context* pContext;
 Scheduler sched;
 
-SonarTask* t0;
-ButtonTask* t1;
-BuzzerTask* t2;
-LedTask* t3;
-LedPwmTask* t4;
-LedRoundTask* t5;
+// task
+SonarTask* sonarT0;
+ButtonTask* buttonT0;
+BuzzerTask* buzzerT0;
+LedTask* ledT0;
+LedPwmTask* ledPwmT0;
+LedRgbTask* ledRgbT0;
 
 void setup() {
     pContext = new Context(MAX_DISTANCE_SONAR);
@@ -46,79 +48,83 @@ void setup() {
     sched.init(100);
 
     //** SonarTask
-    t0 = new SonarTask(TRIG_PIN, ECHO_PIN, MAX_DISTANCE_SONAR, pContext);
-    t0->init(50,
-             [] {
+    sonarT0 = new SonarTask(TRIG_PIN, ECHO_PIN, MAX_DISTANCE_SONAR, pContext);
+    sonarT0->init(50,
+                  [] {
         int level = pContext->getLevelToPlay();
         int secretNum = pContext->getRandomNumber();
         switch (level) {
-        case 0: playLevel(t0, level, 6, secretNum); break;
-        case 1: playLevel(t0, level, 5, secretNum); break;
-        case 2: playLevel(t0, level, 4, secretNum); break;
-        case 3: playLevel(t0, level, 3, secretNum); break;
-        default: {
+        case 0: playLevel(sonarT0, level, 6, secretNum); break;
+        case 1: playLevel(sonarT0, level, 5, secretNum); break;
+        case 2: playLevel(sonarT0, level, 4, secretNum); break;
+        case 3: playLevel(sonarT0, level, 3, secretNum); break;
+        default:
             if(!pContext->isGameOver()) {
                 msgService.sendMsg("Gioco Finito", FROM_ARDUINO, TO_REMOTE);
                 pContext->setGameOver(true);
             }
         }
-        }
     }
-             );
-    sched.addTask(t0);
+                  );
+    sched.addTask(sonarT0);
 
     //** ButtonTask
-    t1 = new ButtonTask(BUTTON_PIN, DEBOUNCE_DELAY, pContext);
-    t1->init(50, [] {
-            pContext->setButtonPressed(t1->btn->readBool());
-            if(t1->btn->readBool()){
-            msgService.sendMsg("Button premuto", FROM_ARDUINO, TO_REMOTE);
-            }
+    buttonT0 = new ButtonTask(BUTTON_PIN, DEBOUNCE_DELAY, pContext);
+    buttonT0->init(50, [] {
+        bool buttonState = buttonT0->btn->readBool();
+        pContext->setButtonPressed(buttonState);
+        if(buttonState) {
+            msgService.sendMsg("Secret number " + String(pContext->getRandomNumber()), FROM_ARDUINO, TO_REMOTE);
+        }
     });
-    sched.addTask(t1);
+    sched.addTask(buttonT0);
 
     //** BuzzerTask
-    t2 = new BuzzerTask(BUZZER_PIN, pContext);
-    t2->init(50, [] {
+    buzzerT0 = new BuzzerTask(BUZZER_PIN, pContext);
+    buzzerT0->init(50, [] {
         // sintassi: playSound(nSound)
         if(!pContext->isGameOver()) {
             if (pContext->isPadlockDetected()) {
-                t2->buzzer->playSound(0);
+                buzzerT0->buzzer->playSound(0);
             } else {
-                t2->buzzer->playSound(1);
+                buzzerT0->buzzer->playSound(1);
             }
-        } else {}
+        }
     });
-    sched.addTask(t2);
+    sched.addTask(buzzerT0);
 
     //** LedTask
-    t3 = new LedTask(LED_PIN_13, pContext);
-    t3->init(50, [] {
+    ledT0 = new LedTask(LED_PWM, pContext);
+    ledT0->init(50, [] {
         if (pContext->isPadlockDetected()) {
-            t3->led->switchOn();
+            ledT0->led->switchOn();
         } else {
-            t3->led->switchOff();
+            ledT0->led->switchOff();
         }
     });
-    sched.addTask(t3);
+    sched.addTask(ledT0);
 
     //** LedPwmTask
-    t4 = new LedPwmTask(LED_PWM, pContext);
-    t4->init(50, [] {
+    // ledPwmT0 = new LedPwmTask(LED_PWM, pContext);
+    // ledPwmT0->init(50, [] {
+    //     if (pContext->isPadlockDetected()) {
+    //         ledPwmT0->ledPwm->switchOn();
+    //     } else {
+    //         ledPwmT0->ledPwm->switchOff();
+    //     }
+    // });
+    // sched.addTask(ledPwmT0);
+
+    //** LedPwmTask
+    ledRgbT0 = new LedRgbTask(LED_RGB_R, LED_RGB_G, LED_RGB_B, pContext);
+    ledRgbT0->init(50, [] {
         if (pContext->isPadlockDetected()) {
-            t4->ledPwm->switchOn();
+            ledRgbT0->ledRgb->setColor(128, 255, 255);
         } else {
-            t4->ledPwm->switchOff();
+            ledRgbT0->ledRgb->setColor(255, 255, 128);
         }
     });
-    sched.addTask(t4);
-
-    //** LedRoundTask
-    t5 = new LedRoundTask(channel, 5, pContext);
-    t5->init(50, [] {
-        t5->led->carousel(50);
-    });
-    sched.addTask(t5);
+    sched.addTask(ledRgbT0);
 }
 
 void loop() {
@@ -139,10 +145,10 @@ void playLevel(SonarTask* sonarTask, int currentLevel, int delta, int numSegreto
     pContext->setCurrentDistance(distance);
 
     // print numero segreto da indovinare
-    // msgService.sendMsg(String(numSegreto), FROM_ARDUINO, TO_REMOTE);
+    // msgService.sendMsg("Secret number " + String(numSegreto), FROM_ARDUINO, TO_REMOTE);
 
     // print distance
-    // msgService.sendMsg(String(distance), FROM_ARDUINO, TO_REMOTE);
+    // msgService.sendMsg("Distance " + String(distance), FROM_ARDUINO, TO_REMOTE);
 
     if(distance <= numSegreto + delta && distance >= numSegreto - delta && !pContext->isPadlockOpen()) {
         pContext->setPadlockDetected(true);
@@ -151,10 +157,10 @@ void playLevel(SonarTask* sonarTask, int currentLevel, int delta, int numSegreto
         timer1 = millis()/1000;
         timer1 = timer1 - timer2;     // inizializzazione a zero
 
+        // girare la chia
         if(tempoCorretto && timer1 == 0) {
             msgService.sendMsg("Lucchetto livello " + String(currentLevel) + " APERTO", FROM_ARDUINO, TO_REMOTE);
-            pContext->setPadlockOpen(true);
-            t0->tempoCorretto = false;
+            sonarTask->tempoCorretto = false;
             pContext->setPadlockOpen(false);
             pContext->setLevelToPlay(currentLevel);
         }
@@ -171,28 +177,23 @@ void playLevel(SonarTask* sonarTask, int currentLevel, int delta, int numSegreto
 
         if(statoDiScasso) {
             timer3 = millis()/1000;
-            timer3 = timer3 - timer2 - 4;      // -4 per far partire il tempo t3 da zero
+            timer3 = timer3 - timer2 - 4;      // -4 per far partire il tempo ledT0 da zero
 
-            if(timer3 == 1) {
-                msgService.sendMsg("Stai scassinando il lucchetto", FROM_ARDUINO, TO_REMOTE);
-            } else if (timer3 == 2) {
-                msgService.sendMsg("Ancora un po' di pazienza", FROM_ARDUINO, TO_REMOTE);
-            } else if (timer3 == 3) {
-                msgService.sendMsg("Livello " + String(currentLevel) + " passato :D", FROM_ARDUINO, TO_REMOTE);
-                tempoCorretto = true;
-            } else if (timer3 == 4) {
-                msgService.sendMsg("...però non restare fermo...", FROM_ARDUINO, TO_REMOTE);
-                tempoCorretto = true;
-            } else if (timer3 == 5) {
-                msgService.sendMsg("...stai rishiando la rottura...", FROM_ARDUINO, TO_REMOTE);
-                tempoCorretto = true;
-            } else if (timer3 == 6) {
-                msgService.sendMsg("Attento! Lo rompi davvero!", FROM_ARDUINO, TO_REMOTE);
-                tempoCorretto = true;
-            } else if (timer3 == 7) {
-                msgService.sendMsg("Nooo, l'hai rotto! Devi riprovare", FROM_ARDUINO, TO_REMOTE);
+            switch (timer3) {
+            case 1: msgService.sendMsg("Stai scassinando il lucchetto", FROM_ARDUINO, TO_REMOTE); break;
+            case 2: msgService.sendMsg("Ancora un po' di pazienza", FROM_ARDUINO, TO_REMOTE); break;
+            case 3: msgService.sendMsg("Livello " + String(currentLevel) + " passato :D", FROM_ARDUINO, TO_REMOTE);
+                tempoCorretto = true; break;
+            case 4: msgService.sendMsg("...però non restare fermo...", FROM_ARDUINO, TO_REMOTE);
+                tempoCorretto = true; break;
+            case 5: msgService.sendMsg("...stai rishiando la rottura...", FROM_ARDUINO, TO_REMOTE);
+                tempoCorretto = true; break;
+            case 6: msgService.sendMsg("Attento! Lo rompi davvero!", FROM_ARDUINO, TO_REMOTE);
+                tempoCorretto = true; break;
+            case 7: msgService.sendMsg("Nooo, l'hai rotto! Devi riprovare", FROM_ARDUINO, TO_REMOTE);
                 tempoCorretto = false;
-                pContext->setPadlockOpen(false);
+                pContext->setPadlockOpen(false); break;
+            default: msgService.sendMsg("Devi ricominciare!", FROM_ARDUINO, TO_REMOTE); break;
             }
         }
     } else {

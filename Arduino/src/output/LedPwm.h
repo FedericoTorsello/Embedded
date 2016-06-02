@@ -13,7 +13,6 @@ public:
     void setIntensity(int);
 private:
     int currentIntensity;
-    bool isOn;
 };
 
 #endif

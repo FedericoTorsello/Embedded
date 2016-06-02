@@ -3,14 +3,14 @@
 SonarTask::SonarTask(int trigPin, int echoPin, int maxDist, Context* pContext) {
     this->trigPin = trigPin;
     this->echoPin = echoPin;
-    this->MAX_DISTANCE = maxDist;
+    this->maxDist = maxDist;
     this->pContext = pContext;
+    this->sonar = new Sonar(this->trigPin, this->echoPin, this->maxDist);
 }
 
 void SonarTask::init(int period, void (*f)()) {
     this->_f = f;
     Task::init(period);
-    sonar = new Sonar(this->trigPin, this->echoPin, this->MAX_DISTANCE);
 }
 
 void SonarTask::tick() {
