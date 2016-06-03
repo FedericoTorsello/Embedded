@@ -9,8 +9,6 @@ private:
 protected:
     virtual void foo() = 0;
 public:
-    virtual void init(int, void (*)());
-
     virtual void init(int period) {
         myPeriod = period;
         timeElapsed = 0;

@@ -15,86 +15,77 @@ void SonarTask::init(int period, void (*f)()) {
 
 void SonarTask::tick() {
     Task::callFoo();
-    // distance = sonar->readDistance();
-    // pContext->setCurrentDistance(distance);
-    // f();
-    //
-    // printDistance();
-
-    // if(distance <= indovina + DELTA && distance >= indovina - DELTA && !pContext->isPadlockOpen()) {
-    //
-    //     pContext->setPadlockDetected(true);
-    //
-    //     t = millis()/1000;
-    //     t = t - t2;         // inizializzazione a zero
-    //
-    //     if(tempoCorretto && t == 0) {
-    //         msgService.sendMsg("APERTO", "arduino", "remote");
-    //         pContext->setPadlockOpen(true);
-    //     }
-    //
-    //     switch (t) {
-    //     case 1:
-    //         Serial.println("hai trovato il lucchetto");
-    //         break;
-    //
-    //     case 2:
-    //         Serial.println("ti stai avvicinando");
-    //         break;
-    //
-    //     case 3:
-    //         Serial.println("ora bisogna stare attenti");
-    //         break;
-    //
-    //     case 4:
-    //         Serial.println("ora bisogna stare attenti");
-    //         break;
-    //     }
-    //
-    //     if (t >= 4) {
-    //         t3 = millis()/1000;
-    //         t3 = t3 - t2 - 4;             // -4 per far partire il tempo t3 da zero
-    //
-    //         switch (t3) {
-    //         case 1:
-    //             Serial.println("stai scassinando il lucchetto");
-    //             break;
-    //
-    //         case 2:
-    //             Serial.println("ancora un po' di pazienza");
-    //             break;
-    //
-    //         case 3:
-    //             Serial.println("ce l'hai fatta!!! :D");
-    //             tempoCorretto = true;
-    //             break;
-    //         }
-    //
-    //         if(t3 >= 4 && t3 <= 5) {
-    //             Serial.println("...però non restare fermo...");
-    //             tempoCorretto = true;
-    //         }
-    //
-    //         if(t3 == 6) {
-    //             Serial.println("Attento! rischi di romperlo!");
-    //             tempoCorretto = true;
-    //         }
-    //
-    //         if(t3 >= 7) {
-    //             Serial.println("Noooooo, l'hai rotto! Devi riprovare");
-    //             tempoCorretto = false;
-    //         }
-    //     }
-    // }else{
-    //     if(!pContext->isPadlockOpen()) {
-    //         t2 = millis()/1000;
-    //         // msgService.sendMsg("NON APERTO", "arduino", "remote");
-    //         pContext->setPadlockOpen(false);
-    //         pContext->setPadlockDetected(false);
-    //     }
-    // }
 }
 
-// void SonarTask::printDistance() {
-//     msgService.sendMsg(String(distance), "arduino", "remote");
-// }
+void SonarTask::playLevel(int currentLevel, int delta, int numSegreto){
+
+    String FROM_ARDUINO = "arduino";
+    String TO_REMOTE = "remote";
+    bool statoDiScasso = false;
+    int distance = sonar->readDistance();
+
+    pContext->setCurrentDistance(distance);
+
+    // print numero segreto da indovinare
+    // msgService.sendMsg("Secret number " + String(numSegreto), FROM_ARDUINO, TO_REMOTE);
+
+    // print distance
+    // msgService.sendMsg("Distance " + String(distance), FROM_ARDUINO, TO_REMOTE);
+
+    if(distance <= numSegreto + delta && distance >= numSegreto - delta && !pContext->isPadlockOpen()) {
+        pContext->setPadlockDetected(true);
+        statoDiScasso = false;
+
+        timer1 = millis()/1000;
+        timer1 = timer1 - timer2;     // inizializzazione a zero
+
+        // girare la chia
+        if(tempoCorretto && timer1 == 0) {
+            msgService.sendMsg("Lucchetto livello " + String(currentLevel) + " APERTO", FROM_ARDUINO, TO_REMOTE);
+            tempoCorretto = false;
+            timer1= 0;
+            pContext->setPadlockOpen(false);
+            pContext->setLevelToPlay(currentLevel);
+        }
+
+        if(timer1 >= 0 && timer1 <= 1 && !statoDiScasso) {
+            msgService.sendMsg("Hai trovato il lucchetto", FROM_ARDUINO, TO_REMOTE);
+        } else if(timer1 == 2) {
+            msgService.sendMsg("Bene, stai calmo", FROM_ARDUINO, TO_REMOTE);
+        } else if (timer1 == 3 || timer1 == 4) {
+            msgService.sendMsg("Bisogna stare attenti...", FROM_ARDUINO, TO_REMOTE);
+        } else if (timer1 > 4) {
+            statoDiScasso = true;
+        }
+
+        if(statoDiScasso) {
+            timer3 = millis()/1000;
+            timer3 = timer3 - timer2 - 4;      // -4 per far partire il tempo ledT0 da zero
+
+            switch (timer3) {
+            case 1: msgService.sendMsg("Stai scassinando il lucchetto", FROM_ARDUINO, TO_REMOTE); break;
+            case 2: msgService.sendMsg("Ancora un po' di pazienza", FROM_ARDUINO, TO_REMOTE); break;
+            case 3: msgService.sendMsg("Livello " + String(currentLevel) + " passato :D", FROM_ARDUINO, TO_REMOTE);
+                tempoCorretto = true; break;
+            case 4: msgService.sendMsg("...però non restare fermo...", FROM_ARDUINO, TO_REMOTE);
+                tempoCorretto = true; break;
+            case 5: msgService.sendMsg("...stai rishiando la rottura...", FROM_ARDUINO, TO_REMOTE);
+                tempoCorretto = true; break;
+            case 6: msgService.sendMsg("Attento! Lo rompi davvero!", FROM_ARDUINO, TO_REMOTE);
+                tempoCorretto = true; break;
+            case 7: msgService.sendMsg("Nooo, l'hai rotto! Devi riprovare", FROM_ARDUINO, TO_REMOTE);
+                tempoCorretto = false;
+                pContext->setPadlockOpen(false); break;
+            case 8: msgService.sendMsg("Devi ricominciare!", FROM_ARDUINO, TO_REMOTE); break;
+            default: break;
+            }
+        }
+    } else {
+        if(!pContext->isPadlockOpen()) {
+            timer2 = millis()/1000;
+            // msgService.sendMsg("NON APERTO", FROM_ARDUINO, TO_REMOTE);
+            pContext->setPadlockOpen(false);
+            pContext->setPadlockDetected(false);
+        }
+    }
+}

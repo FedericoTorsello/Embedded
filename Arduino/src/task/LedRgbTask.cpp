@@ -15,13 +15,4 @@ void LedRgbTask::init(int period, void (*f)()) {
 
 void LedRgbTask::tick() {
     Task::callFoo();
-    // if (pContext->isPadlockDetected()) {
-    //     int d = pContext->getCurrentDistance();
-    //     int val = (pContext->getMaxDistance() - d)*255;
-    //     if (val >= 0 && val <= 255) {
-    //         ledPwm->setIntensity(val);
-    //     }
-    // } else {
-    //     ledPwm->setIntensity(0);
-    // }
 }

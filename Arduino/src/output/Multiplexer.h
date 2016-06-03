@@ -15,7 +15,7 @@ public:
 private:
     int *channels;
     int size;
-    int pinInh;
+    // int pinInh;
     byte truthTable[16][4] = {
         {0,0,0,0},
         {1,0,0,0},
@@ -34,9 +34,6 @@ private:
         {0,1,1,1},
         {1,1,1,1}
     };
-
-    void muxWrite(int);
-
 };
 
 #endif

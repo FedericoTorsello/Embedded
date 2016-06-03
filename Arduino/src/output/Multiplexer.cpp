@@ -1,17 +1,25 @@
 #include "Multiplexer.h"
 
-// Multiplexer::Multiplexer(int *pins, int size ,int pinInh) {
-    Multiplexer::Multiplexer(int *pins, int size) {
+Multiplexer::Multiplexer(int *pins, int size) {
     channels = pins;
     this->size = size;
-    this->pinInh = pinInh;
-    pinMode(pinInh, OUTPUT);
-    digitalWrite(pinInh, LOW);
 
     for (int pin = 0; pin < size; ++pin) {
         pinMode(channels[pin], OUTPUT);
     }
 }
+
+// Multiplexer::Multiplexer(int *pins, int size ,int pinInh) {
+//     channels = pins;
+//     this->size = size;
+//     this->pinInh = pinInh;
+//     pinMode(pinInh, OUTPUT);
+//     digitalWrite(pinInh, LOW);
+//
+//     for (int pin = 0; pin < size; ++pin) {
+//         pinMode(channels[pin], OUTPUT);
+//     }
+// }
 
 // void Multiplexer::setInh(bool state){
 //     digitalWrite(pinInh, state);

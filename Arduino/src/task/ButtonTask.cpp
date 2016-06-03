@@ -15,6 +15,4 @@ void ButtonTask::init(int period, void (*f)()) {
 
 void ButtonTask::tick() {
     Task::callFoo();
-    // pContext->setButtonPressed(btn->readBool());
-    // Serial.println(state);
 }

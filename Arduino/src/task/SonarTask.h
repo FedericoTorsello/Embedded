@@ -13,16 +13,14 @@ public:
 
     void init(int, void (*)());
     void tick();
-    void printDistance();
+    void playLevel(int,int,int);
+private:
 
+    Context *pContext;
     unsigned long timer1 = 0;
     unsigned long timer2 = 0;
     unsigned long timer3 = 0;
     bool tempoCorretto = false;
-
-private:
-    Context *pContext;
-
     void (*_f)();
     void foo() {
         _f();

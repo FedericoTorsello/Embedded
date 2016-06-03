@@ -13,15 +13,4 @@ void BuzzerTask::init(int period, void (*f)()) {
 
 void BuzzerTask::tick() {
     Task::callFoo();
-    // int varDelayValue;
-    // int varNumCycles;
-    //
-    // if(varDelayValue == 0){
-    //     varDelayValue = 1;
-    // }
-    // if(varNumCycles == 0){
-    //     varNumCycles = 1;
-    // }
-    //
-    // buzzer->playSound(1, varDelayValue, varNumCycles);
 }

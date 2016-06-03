@@ -13,9 +13,4 @@ void LedTask::init(int period, void (*f)()) {
 
 void LedTask::tick() {
     Task::callFoo();
-    // if (pContext->isPadlockOpen()) {
-    //     led->switchOn();
-    // } else {
-    //     led->switchOff();
-    // }
 }

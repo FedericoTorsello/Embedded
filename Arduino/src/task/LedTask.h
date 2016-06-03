@@ -11,7 +11,7 @@ public:
     void init(int, void (*)());
     void tick();
     interface::Light* led;
-
+    
 private:
     void (*_f)();
     void foo() {
