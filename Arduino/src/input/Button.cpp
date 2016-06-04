@@ -22,7 +22,9 @@ bool Button::readBool() {
         lastDebounceTime = millis();
     }
 
-    if ((millis() - lastDebounceTime) > debounceDelay) {
-        return reading;
+    if ((millis() - lastDebounceTime) >= debounceDelay) {
+        return true;
+    } else {
+        return false;
     }
 }

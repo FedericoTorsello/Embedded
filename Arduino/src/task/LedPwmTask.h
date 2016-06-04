@@ -8,17 +8,16 @@
 class LedPwmTask : public Task {
 public:
     LedPwmTask(int, Context *);
+    interface::LightPwm *ledPwm;
+    
     void init(int, void (*)());
     void tick();
-
-    interface::LightPwm *ledPwm;
 private:
+    Context *pContext;
     void (*_f)();
     void foo() {
         _f();
     }
-
-    Context *pContext;
 protected:
     int pin;
 };

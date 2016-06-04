@@ -9,12 +9,19 @@ void Buzzer::playSound(int sound) {
 
     int varDelayValue, varNumCycles;
 
-    if(sound == 0) {
-        varDelayValue = 2;
-        varNumCycles = 2;
-    } else if(sound == 1) {
-        varDelayValue = 3;
-        varNumCycles = 1;
+    switch (sound) {
+        case 0:
+            varDelayValue = 2;
+            varNumCycles = 2;
+            break;
+        case 1:
+            varDelayValue = 3;
+            varNumCycles = 1;
+            break;
+        default:
+            varDelayValue = 1;
+            varNumCycles = 1;
+            break;
     }
     // iterate over the notes of the melody:
     for (int thisNote = 0; thisNote < 2; thisNote++) {

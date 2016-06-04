@@ -7,7 +7,6 @@
 class Sonar : public interface::Input {
 public:
     Sonar(int trigPin, int echoPin, int maxDist);
-    int readDistance();
 
 protected:
     NewPing *mySonar;
@@ -15,6 +14,7 @@ protected:
     int trigPin;
     int MAX_DISTANCE;
 
+    int readDistance();
 };
 
 #endif

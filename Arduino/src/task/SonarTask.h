@@ -10,22 +10,20 @@ class SonarTask : public Task {
 public:
     SonarTask(int, int, int, Context *);
     interface::Input* sonar;
-
     void init(int, void (*)());
     void tick();
     void playLevel(int,int,int);
 private:
-
     Context *pContext;
     unsigned long timer1 = 0;
     unsigned long timer2 = 0;
     unsigned long timer3 = 0;
     bool tempoCorretto = false;
+
     void (*_f)();
     void foo() {
         _f();
     }
-
 protected:
     int echoPin;
     int trigPin;

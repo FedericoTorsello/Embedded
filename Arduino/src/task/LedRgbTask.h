@@ -8,17 +8,17 @@
 class LedRgbTask : public Task {
 public:
     LedRgbTask(int, int, int, Context *);
+    LedRgb *ledRgb;
+
     void init(int, void (*)());
     void tick();
-
-    LedRgb *ledRgb;
 private:
+    Context *pContext;
+    
     void (*_f)();
     void foo() {
         _f();
     }
-
-    Context *pContext;
 protected:
     int pin1;
     int pin2;

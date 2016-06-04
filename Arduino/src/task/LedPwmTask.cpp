@@ -3,7 +3,7 @@
 LedPwmTask::LedPwmTask(int pin, Context* pContext) {
     this->pin = pin;
     this->pContext = pContext;
-    this->ledPwm = new LedPwm(pin);
+    this->ledPwm = new LedPwm(this->pin);
 }
 
 void LedPwmTask::init(int period, void (*f)()) {

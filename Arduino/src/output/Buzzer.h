@@ -7,10 +7,7 @@ class Buzzer : public interface::Audio {
 public:
     Buzzer(int);
     void playSound(int);
-    void stopSound();
 
-protected:
-    int pin;
 private:
     const int melody1[2] = {
         NOTE_C4, NOTE_G3
@@ -21,7 +18,6 @@ private:
         4, 8,
     };
 
-    void buzz(int, int);
 
     // const int NOTE_B0  = 31;
     // const int NOTE_C1  = 33;
@@ -112,5 +108,9 @@ private:
     // const int NOTE_CS8 = 4435;
     // const int NOTE_D8  = 4699;
     // const int NOTE_DS8 = 4978;
+
+    void buzz(int, int);
+protected:
+    int pin;
 };
 #endif

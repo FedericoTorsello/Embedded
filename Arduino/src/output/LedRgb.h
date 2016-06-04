@@ -7,13 +7,13 @@
 class LedRgb {
 public:
     LedRgb(int, int, int);
-    void switchOn();
-    void switchOff();
     void setColor(int, int, int);
 private:
     LedPwm *red;
     LedPwm *green;
     LedPwm *blue;
+protected:
+    void switchOn();
+    void switchOff();
 };
-
 #endif

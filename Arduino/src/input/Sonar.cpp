@@ -9,7 +9,6 @@ Sonar::Sonar(int trigPin, int echoPin, int MAX_DISTANCE) {
     pinMode(echoPin, INPUT);
 }
 
-
 int Sonar::readDistance(){
     return mySonar->ping_cm();
 }

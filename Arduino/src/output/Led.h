@@ -6,9 +6,9 @@
 class Led : public interface::Light {
 public:
     Led(int);
+protected:
     void switchOn();
     void switchOff();
-protected:
     int pin;
 };
 

@@ -5,7 +5,7 @@ LedRgbTask::LedRgbTask(int pin1, int pin2, int pin3, Context* pContext) {
     this->pin2 = pin2;
     this->pin3 = pin3;
     this->pContext = pContext;
-    this->ledRgb = new LedRgb(pin1, pin2, pin3);
+    this->ledRgb = new LedRgb(this->pin1, this->pin2, this->pin3);
 }
 
 void LedRgbTask::init(int period, void (*f)()) {

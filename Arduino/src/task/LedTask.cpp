@@ -3,7 +3,7 @@
 LedTask::LedTask(int pin, Context* pContext) {
     this->pin = pin;
     this->pContext = pContext;
-    this->led = new Led(pin);
+    this->led = new Led(this->pin);
 }
 
 void LedTask::init(int period, void (*f)()) {

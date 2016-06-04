@@ -3,7 +3,7 @@
 BuzzerTask::BuzzerTask(int pin, Context* pContext) {
     this->pin = pin;
     this->pContext = pContext;
-    this->buzzer = new Buzzer(pin);
+    this->buzzer = new Buzzer(this->pin);
 }
 
 void BuzzerTask::init(int period, void (*f)()) {

@@ -8,15 +8,16 @@
 class BuzzerTask : public Task {
 public:
     BuzzerTask(int, Context *);
+    Buzzer *buzzer;
+    
     void init(int, void (*)());
     void tick();
-    Buzzer *buzzer;
 private:
+    Context *pContext;
     void (*_f)();
     void foo() {
         _f();
     }
-    Context *pContext;
 protected:
     int pin;
 };

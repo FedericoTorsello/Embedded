@@ -21,6 +21,10 @@ private:
     volatile bool padlockOpen;
     volatile bool padlockDetected;
     Multiplexer* mux;
+    String from;
+    String to;
+    int dangerLevel;
+    bool statoDiScasso;
 
 public:
     Context(int maxDistance, Multiplexer* mux) {
@@ -32,10 +36,15 @@ public:
         padlockOpen = false;
         padlockDetected = false;
         gameOver = false;
+        statoDiScasso = false;
+        from = "";
+        to = "";
+        dangerLevel = 0;
+        mux->carouselRed(100);
+        mux->switchOn(currentlevel);
 
         // utilizzo delle uscite analogiche per creare entropia
-        randomSeed(analogRead(A0)*analogRead(A1));
-        // mux->switchOn(currentlevel);
+        randomSeed(analogRead(A0));
     }
 
     int getMaxDistance(){
@@ -46,37 +55,38 @@ public:
         return padlockOpen;
     }
 
-    void setPadlockOpen(bool status){
-        padlockOpen = status;
+    void setPadlockOpen(bool padlockOpen){
+        this->padlockOpen = padlockOpen;
     }
 
     bool isPadlockDetected(){
         return padlockDetected;
     }
 
-    void setPadlockDetected(bool status){
-        padlockDetected = status;
+    void setPadlockDetected(bool padlockDetected){
+        this->padlockDetected = padlockDetected;
     }
 
-    void setCurrentDistance(int lastDistance){
-        currentDistance = lastDistance;
+    void setCurrentDistance(int currentDistance){
+        this->currentDistance = currentDistance;
     }
 
     int getCurrentDistance(){
         return currentDistance;
     }
 
-    void setButtonPressed(bool buttonState){
-        buttonPressed = buttonState;
+    void setButtonPressed(bool buttonPressed){
+        this->buttonPressed = buttonPressed;
     }
 
     bool isButtonPressed(){
         return buttonPressed;
     }
 
-    void setLevelToPlay(int nLevel){
+    void setLevelToPlay(int currentlevel){
         newRandomNumber();
-        currentlevel = nLevel + 1;
+        this->currentlevel = currentlevel + 1;
+        mux->switchOn(this->currentlevel);
     }
 
     int getLevelToPlay(){
@@ -91,14 +101,49 @@ public:
         randomNum = random(5, maxDistance);
     }
 
-    void setGameOver(bool gameState){
-        gameOver = gameState;
-        mux->carouselRed(100);
-        mux->carouselYellow(100);
+    void setGameOver(bool gameOver){
+        this->gameOver = gameOver;
     }
 
     bool isGameOver(){
         return gameOver;
+    }
+
+    void setFrom(String from) {
+        this->from = from;
+    }
+
+    void setTo(String to) {
+        this->to = to;
+    }
+
+    String getTo(){
+        return to;
+    }
+
+    String getFrom(){
+        return from;
+    }
+
+    void setDangerLevel(int dangerLevel){
+        this->dangerLevel = dangerLevel;
+    }
+
+    int getDangerLevel(){
+        return dangerLevel;
+    }
+
+    void setStatoDiScasso(bool statoDiScasso){
+        this->statoDiScasso = statoDiScasso;
+    }
+
+    bool isStatoDiScasso(){
+        return statoDiScasso;
+    }
+
+    void carousel(){
+        mux->carouselRed(50);
+        mux->carouselYellow(50);
     }
 
 };

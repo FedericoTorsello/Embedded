@@ -8,16 +8,17 @@
 class LedTask : public Task {
 public:
     LedTask(int, Context *);
+    interface::Light* led;
+
     void init(int, void (*)());
     void tick();
-    interface::Light* led;
-    
 private:
+    Context *pContext;
+
     void (*_f)();
     void foo() {
         _f();
     }
-    Context* pContext;
 protected:
     int pin;
 };
