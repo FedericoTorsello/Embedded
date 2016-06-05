@@ -7,8 +7,7 @@ class Button : public interface::Input {
 public:
     Button(int, unsigned long);
     bool readBool();
-protected:
-    int pin;
+
 private:
     int buttonState;             // the current reading from the input pin
     int lastButtonState = HIGH; // the previous reading from the input pin
@@ -18,6 +17,8 @@ private:
     unsigned long lastDebounceTime = 0; // the last time the output pin was toggled
     unsigned long debounceDelay; // INIZIALIZZATA DAL COSTRUTTORE
 
+protected:
+    int pin;
 };
 
 #endif

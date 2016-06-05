@@ -1,6 +1,6 @@
 #include "Led.h"
 
-Led::Led(int pin) {
+Led::Led(const int pin) {
     this->pin = pin;
     pinMode(pin,OUTPUT);
 }

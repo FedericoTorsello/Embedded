@@ -1,6 +1,6 @@
 #include "SonarTask.h"
 
-SonarTask::SonarTask(int trigPin, int echoPin, int maxDist, Context* pContext) {
+SonarTask::SonarTask(const int trigPin, const int echoPin, const int maxDist, Context* pContext) {
     this->trigPin = trigPin;
     this->echoPin = echoPin;
     this->maxDist = maxDist;
@@ -19,9 +19,8 @@ void SonarTask::tick() {
 
 void SonarTask::playLevel(int currentLevel, int delta, int numSegreto){
 
-    const String FROM_ARDUINO = pContext->getFrom();
-    const String TO_REMOTE = pContext->getTo();
-    bool statoDiScasso = false;
+    String FROM_ARDUINO = pContext->getFrom();
+    String TO_REMOTE = pContext->getTo();
     int distance = sonar->readDistance();
 
     pContext->setCurrentDistance(distance);
@@ -48,7 +47,7 @@ void SonarTask::playLevel(int currentLevel, int delta, int numSegreto){
             pContext->setLevelToPlay(currentLevel);
         }
 
-        if(timer1 <= 1 && !statoDiScasso) {
+        if(timer1 <= 1) {
             msgService.sendMsg("Hai trovato il lucchetto", FROM_ARDUINO, TO_REMOTE);
         } else if(timer1 == 2) {
             msgService.sendMsg("Bene, stai calmo", FROM_ARDUINO, TO_REMOTE);

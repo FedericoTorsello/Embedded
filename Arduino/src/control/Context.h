@@ -15,16 +15,17 @@ private:
     int maxDistance;
     int currentlevel;
     int randomNum;
+    int dangerLevel;
+    bool statoDiScasso;
     volatile int currentDistance;
     volatile bool gameOver;
     volatile bool buttonPressed;
     volatile bool padlockOpen;
     volatile bool padlockDetected;
+
     Multiplexer* mux;
     String from;
     String to;
-    int dangerLevel;
-    bool statoDiScasso;
 
 public:
     Context(int maxDistance, Multiplexer* mux) {
@@ -40,7 +41,6 @@ public:
         from = "";
         to = "";
         dangerLevel = 0;
-        mux->carouselRed(100);
         mux->switchOn(currentlevel);
 
         // utilizzo delle uscite analogiche per creare entropia
@@ -141,11 +141,10 @@ public:
         return statoDiScasso;
     }
 
-    void carousel(){
-        mux->carouselRed(50);
-        mux->carouselYellow(50);
+    void carousel(int delay1, int delay2){
+        mux->carouselRed(delay1);
+        mux->carouselYellow(delay2);
     }
-
 };
 
 #endif

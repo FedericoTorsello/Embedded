@@ -1,6 +1,6 @@
 #include "BuzzerTask.h"
 
-BuzzerTask::BuzzerTask(int pin, Context* pContext) {
+BuzzerTask::BuzzerTask(const int pin, Context* pContext) {
     this->pin = pin;
     this->pContext = pContext;
     this->buzzer = new Buzzer(this->pin);

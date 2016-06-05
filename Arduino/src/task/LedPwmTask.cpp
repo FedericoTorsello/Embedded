@@ -1,6 +1,6 @@
 #include "LedPwmTask.h"
 
-LedPwmTask::LedPwmTask(int pin, Context* pContext) {
+LedPwmTask::LedPwmTask(const int pin, Context* pContext) {
     this->pin = pin;
     this->pContext = pContext;
     this->ledPwm = new LedPwm(this->pin);

@@ -2,15 +2,9 @@
 #define __TASK__
 
 class Task {
-private:
-    int myPeriod;
-    int timeElapsed;
-    bool enabled;
-protected:
-    virtual void foo() = 0;
 public:
     virtual void init(int period) {
-        myPeriod = period;
+        this->period = period;
         timeElapsed = 0;
         enabled = true;
     }
@@ -23,6 +17,7 @@ public:
     bool isEnabled() {
         return enabled;
     }
+
     void enable() {
         enabled = true;
     }
@@ -32,13 +27,19 @@ public:
 
     bool updateAndCheckTime(int basePeriod) {
         timeElapsed += basePeriod;
-        if (timeElapsed >= myPeriod) {
+        if (timeElapsed >= period) {
             timeElapsed = 0;
             return true;
         } else {
             return false;
         }
     }
+private:
+    int period;
+    int timeElapsed;
+    bool enabled;
+protected:
+    virtual void foo() = 0;
 };
 
 #endif

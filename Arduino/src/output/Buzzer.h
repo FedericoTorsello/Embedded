@@ -9,15 +9,8 @@ public:
     void playSound(int);
 
 private:
-    const int melody1[2] = {
-        NOTE_C4, NOTE_G3
-    };
-
-    // note durations: 4 = quarter note, 8 = eighth note, etc.:
-    const int noteDurations[2] = {
-        4, 8,
-    };
-
+    const int NOTE_C4  = 262;
+    const int NOTE_G3  = 196;
 
     // const int NOTE_B0  = 31;
     // const int NOTE_C1  = 33;
@@ -50,12 +43,10 @@ private:
     // const int NOTE_DS3 = 156;
     // const int NOTE_E3  = 165;
     // const int NOTE_F3  = 175;
-    const int NOTE_G3  = 196;
     // const int NOTE_FS3 = 185;
     // const int NOTE_GS3 = 208;
     // const int NOTE_A3  = 220;
     // const int NOTE_AS3 = 233;
-    const int NOTE_C4  = 262;
     // const int NOTE_B3  = 247;
     // const int NOTE_CS4 = 277;
     // const int NOTE_D4  = 294;
@@ -84,24 +75,29 @@ private:
     // const int NOTE_CS6 = 1109;
     // const int NOTE_D6  = 1175;
     // const int NOTE_DS6 = 1245;
-    // const int NOTE_E6  = 1319;
     // const int NOTE_F6  = 1397;
     // const int NOTE_FS6 = 1480;
-    // const int NOTE_G6  = 1568;
     // const int NOTE_GS6 = 1661;
-    // const int NOTE_A6  = 1760;
-    // const int NOTE_AS6 = 1865;
-    // const int NOTE_B6  = 1976;
-    // const int NOTE_C7  = 2093;
     // const int NOTE_CS7 = 2217;
-    // const int NOTE_D7  = 2349;
     // const int NOTE_DS7 = 2489;
+    // const int NOTE_FS7 = 2960;
+    // const int NOTE_GS7 = 3322;
+
+    /////
+    const int NO_NOTE  = 0;
+    const int NOTE_E6  = 1319;
+    const int NOTE_G6  = 1568;
+    const int NOTE_A6  = 1760;
+    const int NOTE_AS6 = 1865;
+    const int NOTE_B6  = 1976;
+    const int NOTE_C7  = 2093;
+    // const int NOTE_D7  = 2349;
     // const int NOTE_E7  = 2637;
     // const int NOTE_F7  = 2794;
-    // const int NOTE_FS7 = 2960;
     // const int NOTE_G7  = 3136;
-    // const int NOTE_GS7 = 3322;
     // const int NOTE_A7  = 3520;
+/////
+
     // const int NOTE_AS7 = 3729;
     // const int NOTE_B7  = 3951;
     // const int NOTE_C8  = 4186;
@@ -109,7 +105,47 @@ private:
     // const int NOTE_D8  = 4699;
     // const int NOTE_DS8 = 4978;
 
+    // NOTE_C4, NOTE_G3
+    const int melody1[2] = {
+        NOTE_C4, NOTE_G3
+    };
+
+    //Mario main theme melody
+    const int melody[16] = {
+        NOTE_C7, NO_NOTE, NO_NOTE, NOTE_G6,
+        NO_NOTE, NO_NOTE, NOTE_E6, NO_NOTE,
+        NO_NOTE, NOTE_A6, NO_NOTE, NOTE_B6,
+        NO_NOTE, NOTE_AS6, NOTE_A6, NO_NOTE
+
+        // NOTE_C7, NO_NOTE, NO_NOTE, NOTE_G6,
+        // NO_NOTE, NO_NOTE, NOTE_E6, NO_NOTE,
+        // NO_NOTE, NOTE_A6, NO_NOTE, NOTE_B6,
+        // NO_NOTE, NOTE_AS6, NOTE_A6, NO_NOTE,
+        //
+        // NOTE_G6, NOTE_E7, NOTE_G7,
+        // NOTE_A7, NO_NOTE, NOTE_F7, NOTE_G7,
+        // NO_NOTE, NOTE_E7, NO_NOTE, NOTE_C7,
+        // NOTE_D7, NOTE_B6, NO_NOTE, NO_NOTE,
+        //
+        // NOTE_C7, NO_NOTE, NO_NOTE, NOTE_G6,
+        // NO_NOTE, NO_NOTE, NOTE_E6, NO_NOTE,
+        // NO_NOTE, NOTE_A6, NO_NOTE, NOTE_B6,
+        // NO_NOTE, NOTE_AS6, NOTE_A6, NO_NOTE,
+        //
+        // NOTE_G6, NOTE_E7, NOTE_G7,
+        // NOTE_A7, NO_NOTE, NOTE_F7, NOTE_G7,
+        // NO_NOTE, NOTE_E7, NO_NOTE, NOTE_C7,
+        // NOTE_D7, NOTE_B6, NO_NOTE, NO_NOTE
+    };
+
+    // note durations: 4 = quarter note, 8 = eighth note, etc.:
+    const int noteDurations[2] = {
+        4, 8,
+    };
+
+    void playMarioTheme();
     void buzz(int, int);
+    void buzzMarioTheme(long, long);
 protected:
     int pin;
 };

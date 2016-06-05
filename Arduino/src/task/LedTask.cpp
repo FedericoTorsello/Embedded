@@ -1,6 +1,6 @@
 #include "LedTask.h"
 
-LedTask::LedTask(int pin, Context* pContext) {
+LedTask::LedTask(const int pin, Context* pContext) {
     this->pin = pin;
     this->pContext = pContext;
     this->led = new Led(this->pin);

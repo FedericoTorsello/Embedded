@@ -1,6 +1,6 @@
 #include "LedRgbTask.h"
 
-LedRgbTask::LedRgbTask(int pin1, int pin2, int pin3, Context* pContext) {
+LedRgbTask::LedRgbTask(const int pin1, const int pin2, const int pin3, Context* pContext) {
     this->pin1 = pin1;
     this->pin2 = pin2;
     this->pin3 = pin3;

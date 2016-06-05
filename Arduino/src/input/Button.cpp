@@ -1,6 +1,6 @@
 #include "Button.h"
 
-Button::Button(int pin, unsigned long debounceDelay) {
+Button::Button(const int pin, unsigned long debounceDelay) {
     this->pin = pin;
     this->debounceDelay = debounceDelay;
     //  INPUT_PULLUP: where HIGH means the sensor is off, and LOW means the sensor is on

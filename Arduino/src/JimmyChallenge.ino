@@ -42,13 +42,11 @@ void setup() {
     msgService.init(BAUD, "JimmyChallenge");
     sched.init(100);
 
-    const String FROM_ARDUINO = "arduino";
-    const String TO_REMOTE = "remote";
-
     pContext = new Context(MAX_DISTANCE_SONAR, new Multiplexer(muxChannel, NUM_MUX_CHANNEL));
     pContext->newRandomNumber();
-    pContext->setFrom(FROM_ARDUINO);
-    pContext->setTo(TO_REMOTE);
+    pContext->setFrom("arduino");
+    pContext->setTo("remote");
+    pContext->carousel(50, 50);
 
     //** SonarTask
     sonarT0 = new SonarTask(TRIG_PIN, ECHO_PIN, MAX_DISTANCE_SONAR, pContext);
@@ -69,7 +67,7 @@ void setup() {
                 break;
             }
         } else {
-            pContext->carousel();
+            pContext->carousel(50,50);
         }
     });
     sched.addTask(sonarT0);
@@ -77,13 +75,16 @@ void setup() {
     //** ButtonTask
     buttonT0 = new ButtonTask(BUTTON_PIN, DEBOUNCE_DELAY, pContext);
     buttonT0->init(50, [] {
+        bool buttonState = buttonT0->btn->readBool();
         if(!pContext->isGameOver()) {
-            bool buttonState = buttonT0->btn->readBool();
             pContext->setButtonPressed(buttonState);
             if(buttonState) {
-                msgService.sendMsg("Secret number " + String(pContext->getRandomNumber()),
-                                   pContext->getFrom(), pContext->getTo());
+                String rndNum = "Secret number " + String(pContext->getRandomNumber());
+                msgService.sendMsg(rndNum, pContext->getFrom(), pContext->getTo());
             }
+        } else {
+            // necessario per la mario easter egg...
+            pContext->setButtonPressed(buttonState);
         }
     });
     sched.addTask(buttonT0);
@@ -96,6 +97,11 @@ void setup() {
                 buzzerT0->buzzer->playSound(0);
             } else {
                 buzzerT0->buzzer->playSound(1);
+            }
+        } else {
+            // mario easter egg...
+            if(pContext->isButtonPressed()) {
+                buzzerT0->buzzer->playSound(2);
             }
         }
     });

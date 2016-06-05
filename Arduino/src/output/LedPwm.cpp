@@ -1,6 +1,6 @@
 #include "LedPwm.h"
 
-LedPwm::LedPwm(int pin) : Led(pin) {
+LedPwm::LedPwm(const int pin) : Led(pin) {
     currentIntensity = 0;
 }
 

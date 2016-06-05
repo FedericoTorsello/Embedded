@@ -1,6 +1,6 @@
 #include "LedRgb.h"
 
-LedRgb::LedRgb(int r, int g, int b) {
+LedRgb::LedRgb(const int r, const int g, const int b) {
     red = new LedPwm(r, 0);
     green = new LedPwm(g, 0);
     blue = new LedPwm(b, 0);
