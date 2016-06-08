@@ -9,7 +9,7 @@ class LedPwmTask : public Task {
 public:
     LedPwmTask(int, Context *);
     interface::LightPwm *ledPwm;
-    
+
     void init(int, void (*)());
     void tick();
 private:

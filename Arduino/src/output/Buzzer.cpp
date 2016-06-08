@@ -55,15 +55,15 @@ void Buzzer::buzz(int numCycles, int delayValue) {
 }
 
 void Buzzer::playMarioTheme(){
-    int size = sizeof(melody) / sizeof(int);
-    for (int thisNote = 0; thisNote < size; thisNote++) {
-
+    // int size = sizeof(melody2) / sizeof(int);
+    // for (int thisNote = 0; thisNote < size; thisNote++) {
+    for (int thisNote = 0; thisNote < 16; thisNote++) {
         // to calculate the note duration, take one second
         // divided by the note type.
         //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
         int noteDuration = 1000 / 12;
 
-        buzzMarioTheme(melody[thisNote], noteDuration);
+        buzzMarioTheme(melody2[thisNote], noteDuration);
 
         // to distinguish the notes, set a minimum time between them.
         // the note's duration + 30% seems to work well:

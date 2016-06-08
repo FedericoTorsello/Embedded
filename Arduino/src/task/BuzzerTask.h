@@ -9,7 +9,7 @@ class BuzzerTask : public Task {
 public:
     BuzzerTask(int, Context *);
     Buzzer *buzzer;
-    
+
     void init(int, void (*)());
     void tick();
 private:

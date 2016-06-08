@@ -10,14 +10,14 @@ Button::Button(const int pin, unsigned long debounceDelay) {
 bool Button::readBool() {
 
     // read the state of the switch into a local variable:
-    bool reading = !digitalRead(pin);
+    buttonState = !digitalRead(pin);
 
     // check to see if you just pressed the button
     // (i.e. the input went from LOW to HIGH),  and you've waited
     // long enough since the last press to ignore any noise:
 
     // If the switch changed, due to noise or pressing:
-    if (reading != lastButtonState) {
+    if (buttonState != true) {
         // reset the debouncing timer
         lastDebounceTime = millis();
     }

@@ -19,6 +19,7 @@ private:
     unsigned long timer2 = 0;
     unsigned long timer3 = 0;
     bool tempoCorretto = false;
+    int currentDistance = 0;
 
     void (*_f)();
     void foo() {

@@ -1,10 +1,7 @@
 #include "Sonar.h"
 
-Sonar::Sonar(const int trigPin, const int echoPin, const int MAX_DISTANCE) {
-    this->trigPin = trigPin;
-    this->echoPin = echoPin;
-    this->MAX_DISTANCE = MAX_DISTANCE;
-    this->mySonar = new NewPing(trigPin, echoPin, MAX_DISTANCE);
+Sonar::Sonar(const int trigPin, const int echoPin, const int maxDistance) {
+    this->mySonar = new NewPing(trigPin, echoPin, maxDistance);
     pinMode(trigPin, OUTPUT);
     pinMode(echoPin, INPUT);
 }

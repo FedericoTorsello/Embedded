@@ -12,6 +12,21 @@ private:
     const int NOTE_C4  = 262;
     const int NOTE_G3  = 196;
 
+    /////
+    const int NO_NOTE  = 0;
+    const int NOTE_E6  = 1319;
+    const int NOTE_G6  = 1568;
+    const int NOTE_A6  = 1760;
+    const int NOTE_AS6 = 1865;
+    const int NOTE_B6  = 1976;
+    const int NOTE_C7  = 2093;
+    /*
+       // const int NOTE_D7  = 2349;
+       // const int NOTE_E7  = 2637;
+       // const int NOTE_F7  = 2794;
+       // const int NOTE_G7  = 3136;
+       // const int NOTE_A7  = 3520;
+     */
     // const int NOTE_B0  = 31;
     // const int NOTE_C1  = 33;
     // const int NOTE_CS1 = 35;
@@ -83,20 +98,6 @@ private:
     // const int NOTE_FS7 = 2960;
     // const int NOTE_GS7 = 3322;
 
-    /////
-    const int NO_NOTE  = 0;
-    const int NOTE_E6  = 1319;
-    const int NOTE_G6  = 1568;
-    const int NOTE_A6  = 1760;
-    const int NOTE_AS6 = 1865;
-    const int NOTE_B6  = 1976;
-    const int NOTE_C7  = 2093;
-    // const int NOTE_D7  = 2349;
-    // const int NOTE_E7  = 2637;
-    // const int NOTE_F7  = 2794;
-    // const int NOTE_G7  = 3136;
-    // const int NOTE_A7  = 3520;
-/////
 
     // const int NOTE_AS7 = 3729;
     // const int NOTE_B7  = 3951;
@@ -111,7 +112,7 @@ private:
     };
 
     //Mario main theme melody
-    const int melody[16] = {
+    const int melody2[16] = {
         NOTE_C7, NO_NOTE, NO_NOTE, NOTE_G6,
         NO_NOTE, NO_NOTE, NOTE_E6, NO_NOTE,
         NO_NOTE, NOTE_A6, NO_NOTE, NOTE_B6,
@@ -138,7 +139,6 @@ private:
         // NOTE_D7, NOTE_B6, NO_NOTE, NO_NOTE
     };
 
-    // note durations: 4 = quarter note, 8 = eighth note, etc.:
     const int noteDurations[2] = {
         4, 8,
     };

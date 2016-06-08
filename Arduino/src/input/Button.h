@@ -9,8 +9,7 @@ public:
     bool readBool();
 
 private:
-    int buttonState;             // the current reading from the input pin
-    int lastButtonState = HIGH; // the previous reading from the input pin
+    bool buttonState = false;   // stato letto dal pin
 
 // the following variables are long's because the time, measured in miliseconds,
 // will quickly become a bigger number than can be stored in an int.

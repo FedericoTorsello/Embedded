@@ -21,17 +21,17 @@ void SonarTask::playLevel(int currentLevel, int delta, int numSegreto){
 
     String FROM_ARDUINO = pContext->getFrom();
     String TO_REMOTE = pContext->getTo();
-    int distance = sonar->readDistance();
+    currentDistance = sonar->readDistance();
 
-    pContext->setCurrentDistance(distance);
+    pContext->setCurrentDistance(currentDistance);
 
     // print numero segreto da indovinare
     // msgService.sendMsg("Secret number " + String(numSegreto), FROM_ARDUINO, TO_REMOTE);
 
-    // print distance
-    // msgService.sendMsg("Distance " + String(distance), FROM_ARDUINO, TO_REMOTE);
+    // print currentDistance
+    // msgService.sendMsg("Distance " + String(currentDistance), FROM_ARDUINO, TO_REMOTE);
 
-    if(distance <= numSegreto + delta && distance >= numSegreto - delta && !pContext->isPadlockOpen()) {
+    if(currentDistance <= numSegreto + delta && currentDistance >= numSegreto - delta && !pContext->isPadlockOpen()) {
         pContext->setPadlockDetected(true);
         pContext->setStatoDiScasso(false);
 
@@ -64,9 +64,11 @@ void SonarTask::playLevel(int currentLevel, int delta, int numSegreto){
             switch (timer3) {
             case 1:
                 msgService.sendMsg("Stai scassinando il lucchetto", FROM_ARDUINO, TO_REMOTE);
+                pContext->setDangerLevel(1);
                 break;
             case 2:
                 msgService.sendMsg("Ancora un po' di pazienza", FROM_ARDUINO, TO_REMOTE);
+                pContext->setDangerLevel(1);
                 break;
             case 3:
                 msgService.sendMsg("Livello " + String(currentLevel) + " passato :D", FROM_ARDUINO, TO_REMOTE);
@@ -75,7 +77,7 @@ void SonarTask::playLevel(int currentLevel, int delta, int numSegreto){
                 break;
             case 4:
                 msgService.sendMsg("...però non restare fermo...", FROM_ARDUINO, TO_REMOTE);
-                pContext->setDangerLevel(1);
+                pContext->setDangerLevel(0);
                 tempoCorretto = true;
                 break;
             case 5:

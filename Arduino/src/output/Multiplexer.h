@@ -9,14 +9,15 @@ public:
     // Multiplexer(int *, int, int);
     // void setInh(bool);
     void switchOn(int);
-    void switchOff();
+    // void switchOff();
     void carouselYellow(int);
     void carouselRed(int);
 private:
     int *channels;
     int size;
     // int pinInh;
-    byte truthTable[16][4] = {
+
+    const byte truthTable[16][4] = {
         {0,0,0,0},
         {1,0,0,0},
         {0,1,0,0},

@@ -55,12 +55,12 @@ void setup() {
             int level = pContext->getLevelToPlay();
             int secretNum = pContext->getRandomNumber();
             switch (level) {
-            case 1: sonarT0->playLevel(level, 5, secretNum); break;
-            // case 2: sonarT0->playLevel(level, 4, secretNum); break;
-            // case 3: sonarT0->playLevel(level, 3, secretNum); break;
-            // case 4: sonarT0->playLevel(level, 3, secretNum); break;
-            // case 5: sonarT0->playLevel(level, 3, secretNum); break;
-            // case 6: sonarT0->playLevel(level, 2, secretNum); break;
+            case 1: sonarT0->playLevel(level, 6, secretNum); break;
+            case 2: sonarT0->playLevel(level, 5, secretNum); break;
+            case 3: sonarT0->playLevel(level, 5, secretNum); break;
+            case 4: sonarT0->playLevel(level, 4, secretNum); break;
+            case 5: sonarT0->playLevel(level, 4, secretNum); break;
+            case 6: sonarT0->playLevel(level, 3, secretNum); break;
             default:
                 msgService.sendMsg("Gioco Finito!!!", pContext->getFrom(), pContext->getTo());
                 pContext->setGameOver(true);
@@ -137,18 +137,20 @@ void setup() {
     //** LedPwmTask
     ledRgbT0 = new LedRgbTask(LED_RGB_R, LED_RGB_G, LED_RGB_B, pContext);
     ledRgbT0->init(50, [] {
+
+        //non è stato possibile fare un avvertimento pwm in quanto
+        //l'utilizzo dei timer non lo consente
         if(!pContext->isGameOver()) {
-            if (!pContext->isPadlockDetected()) {
-                ledRgbT0->ledRgb->setColor(128, 255, 255);
-            } else if (pContext->isStatoDiScasso()) {
+            if (pContext->isStatoDiScasso()) {
                 switch (pContext->getDangerLevel()) {
                 case 0: ledRgbT0->ledRgb->setColor(0, 255, 0); break;                 // green = lucchetto aperto
-                case 1: ledRgbT0->ledRgb->setColor(0, 0, 165); break;                 // blue = alert
+                case 1: ledRgbT0->ledRgb->setColor(0, 0, 255); break;                 // blue = alert
                 case 2: ledRgbT0->ledRgb->setColor(255, 255, 0); break;                 // yellow = lieve pericolo rottura
-                case 3: ledRgbT0->ledRgb->setColor(255, 165, 0); break;                 // orange = forte pericolo rottura
+                case 3: ledRgbT0->ledRgb->setColor(255, 165, 255); break;                 // pink = forte pericolo rottura
                 case 4: ledRgbT0->ledRgb->setColor(255, 0, 0); break;                 // red == lucchetto rotto
-                default: ledRgbT0->ledRgb->setColor(128, 255, 255); break;
                 }
+            } else {
+                ledRgbT0->ledRgb->setColor(0, 130, 130);
             }
         }
     });

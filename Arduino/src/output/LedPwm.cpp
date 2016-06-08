@@ -1,16 +1,17 @@
 #include "LedPwm.h"
 
 LedPwm::LedPwm(const int pin) : Led(pin) {
-    currentIntensity = 0;
+    switchOff();
 }
 
 // costruttore per gestire i led RGB
 LedPwm::LedPwm(int pin, int intensity) : Led(pin) {
-    currentIntensity = intensity;
+    
+    switchOff();
 }
 
 void LedPwm::switchOn() {
-    analogWrite(pin, currentIntensity);
+    analogWrite(pin, 255);
 }
 
 void LedPwm::switchOff() {
@@ -18,6 +19,5 @@ void LedPwm::switchOff() {
 }
 
 void LedPwm::setIntensity(int value) {
-    currentIntensity = value;
-    analogWrite(pin, currentIntensity);
+    analogWrite(pin, value);
 }

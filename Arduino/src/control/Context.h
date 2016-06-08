@@ -47,10 +47,6 @@ public:
         randomSeed(analogRead(A0));
     }
 
-    int getMaxDistance(){
-        return maxDistance;
-    }
-
     bool isPadlockOpen(){
         return padlockOpen;
     }
@@ -113,16 +109,16 @@ public:
         this->from = from;
     }
 
+    String getFrom(){
+        return from;
+    }
+
     void setTo(String to) {
         this->to = to;
     }
 
     String getTo(){
         return to;
-    }
-
-    String getFrom(){
-        return from;
     }
 
     void setDangerLevel(int dangerLevel){

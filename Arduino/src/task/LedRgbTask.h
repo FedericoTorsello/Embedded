@@ -14,7 +14,7 @@ public:
     void tick();
 private:
     Context *pContext;
-    
+
     void (*_f)();
     void foo() {
         _f();
