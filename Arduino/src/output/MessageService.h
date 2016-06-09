@@ -11,10 +11,10 @@ public:
     String getMessage();
     void errorMsg();
     void ackMsg(String);
-    void sendMsg(String, String, String);
+    void sendMsg(String, String);
 private:
     String currentMsg = "";
-    String sender = "";
+    const String from = "arduino";
 };
 
 extern MessageService msgService;

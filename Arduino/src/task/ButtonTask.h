@@ -16,7 +16,7 @@ private:
     Context *pContext;
 
     void (*_f)();
-    void foo() {
+    void lambdaTick() {
         _f();
     }
 protected:

@@ -12,5 +12,5 @@ void LedTask::init(int period, void (*f)()) {
 }
 
 void LedTask::tick() {
-    Task::callFoo();
+    Task::callTick();
 }

@@ -12,17 +12,17 @@ public:
     interface::Input* sonar;
     void init(int, void (*)());
     void tick();
-    void playLevel(int,int,int);
+    void playLevel();
 private:
     Context *pContext;
-    unsigned long timer1 = 0;
-    unsigned long timer2 = 0;
-    unsigned long timer3 = 0;
-    bool tempoCorretto = false;
-    int currentDistance = 0;
+    unsigned long timeFound = 0;
+    unsigned long timeOut = 0;
+    bool lockOpen = false;
+    uint16_t currentDistance = 0;
+    uint8_t delta;
 
     void (*_f)();
-    void foo() {
+    void lambdaTick() {
         _f();
     }
 protected:

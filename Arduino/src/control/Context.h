@@ -12,132 +12,166 @@
 
 class Context {
 private:
-    int maxDistance;
-    int currentlevel;
-    int randomNum;
-    int dangerLevel;
-    bool statoDiScasso;
-    volatile int currentDistance;
+    volatile uint16_t currentDistance;
     volatile bool gameOver;
     volatile bool buttonPressed;
     volatile bool padlockOpen;
     volatile bool padlockDetected;
-
+    uint16_t maxDistance;
+    uint8_t delta;
+    uint8_t currentlevel;
+    uint16_t randomNum;
+    uint8_t dangerLevel;
+    bool statoDiScasso;
     Multiplexer* mux;
-    String from;
-    String to;
-
 public:
-    Context(int maxDistance, Multiplexer* mux) {
+    /** @brief ###Construct and initialize the 'Context'
+     *
+     * Initialize all parameters of the game and set the random seed with
+     * analog output entropy
+     * @param[in] maxDistance Maximum distance game
+     * @param[in] mux         Multiplexer instance
+     */
+    Context(uint16_t maxDistance, Multiplexer* mux) {
         this->maxDistance = maxDistance;
         this->mux = mux;
         currentDistance = 0;
+        delta = 6;
         currentlevel = 1;
         randomNum = 0;
         padlockOpen = false;
         padlockDetected = false;
         gameOver = false;
         statoDiScasso = false;
-        from = "";
-        to = "";
         dangerLevel = 0;
         mux->switchOn(currentlevel);
-
-        // utilizzo delle uscite analogiche per creare entropia
         randomSeed(analogRead(A0));
     }
 
-    bool isPadlockOpen(){
+    /** @brief ###If the player has guessed and opened the padlock **/
+    bool isPadlockOpen() {
         return padlockOpen;
     }
 
-    void setPadlockOpen(bool padlockOpen){
+    /** @brief ###Set the padlock's state
+     *
+     * @param[in] padlockOpen The state of the padlock
+     */
+    void setPadlockOpen(bool padlockOpen) {
         this->padlockOpen = padlockOpen;
     }
 
-    bool isPadlockDetected(){
+    /** @brief ###If the player has guessed the secret position **/
+    bool isPadlockDetected() {
         return padlockDetected;
     }
 
-    void setPadlockDetected(bool padlockDetected){
+    /** @brief ###Set the state of the padlock when user guess the secret position
+     *
+     * @param[in] padlockDetected The state of the guessing part
+     */
+    void setPadlockDetected(bool padlockDetected) {
         this->padlockDetected = padlockDetected;
     }
 
-    void setCurrentDistance(int currentDistance){
+    /** @brief ###Set the distance at which the padlock will open
+     *
+     * @param[in] currentDistance The distance to set
+     */
+    void setCurrentDistance(uint16_t currentDistance) {
         this->currentDistance = currentDistance;
     }
 
-    int getCurrentDistance(){
+    /** @brief ###Get the distance at which the padlock will open */
+    uint16_t getCurrentDistance() {
         return currentDistance;
     }
 
-    void setButtonPressed(bool buttonPressed){
+    /** @brief ###Set the state of the button if pressed
+     *
+     * @param[in] buttonPressed The state of the button
+     */
+    void setButtonPressed(bool buttonPressed) {
         this->buttonPressed = buttonPressed;
     }
 
-    bool isButtonPressed(){
+    /** @brief ###Get the state of the button */
+    bool isButtonPressed() {
         return buttonPressed;
     }
 
-    void setLevelToPlay(int currentlevel){
+    /** @brief ###Set a new level
+     *
+     * @param[in] currentlevel The level to create
+     */
+    void setNewLevel() {
         newRandomNumber();
-        this->currentlevel = currentlevel + 1;
+        this->currentlevel++;
+        if (delta > 0)
+            this->delta--;
         mux->switchOn(this->currentlevel);
     }
 
-    int getLevelToPlay(){
+    /** @brief ###Get the margin of error for the distance */
+    uint8_t getDelta() {
+        return delta;
+    }
+
+    /** @brief ###Get the level to play */
+    uint8_t getLevel() {
         return currentlevel;
     }
 
-    int getRandomNumber(){
+    /** @brief ###Get the scret distance where the padlock will open */
+    uint16_t getRandomNumber() {
         return randomNum;
     }
 
-    void newRandomNumber(){
+    /** @brief ###Generate a new random number */
+    void newRandomNumber() {
         randomNum = random(5, maxDistance);
     }
 
-    void setGameOver(bool gameOver){
+    /** @brief ###Set the game state
+     *
+     * param[in] gameOver The state of the game
+     */
+    void setGameOver(bool gameOver) {
         this->gameOver = gameOver;
     }
 
-    bool isGameOver(){
+    /** @brief ###Get the stat of the game */
+    bool isGameOver() {
         return gameOver;
     }
 
-    void setFrom(String from) {
-        this->from = from;
-    }
-
-    String getFrom(){
-        return from;
-    }
-
-    void setTo(String to) {
-        this->to = to;
-    }
-
-    String getTo(){
-        return to;
-    }
-
-    void setDangerLevel(int dangerLevel){
+    /** @brief ###Set the level at which the padlock will starts to break */
+    void setDangerLevel(uint8_t dangerLevel) {
         this->dangerLevel = dangerLevel;
     }
 
-    int getDangerLevel(){
+    /** @brief ###Get the current level of breakage of padlock */
+    uint8_t getDangerLevel() {
         return dangerLevel;
     }
 
-    void setStatoDiScasso(bool statoDiScasso){
+    /** @brief ###Set if the padlock is found and the user starts to pick */
+    void setStatoDiScasso(bool statoDiScasso) {
         this->statoDiScasso = statoDiScasso;
     }
 
-    bool isStatoDiScasso(){
+    /** @brief ###Get if the user start to lock-picking the padlock */
+    bool isStatoDiScasso() {
         return statoDiScasso;
     }
 
-    void carousel(int delay1, int delay2){
+    /** @brief ###Run a carousel with two led color
+     *
+     * The carousel activate two circular array of 6 leds.
+     * @param[in] delay1 The delay before change position
+     * @param[in] delay2 The delay before change position
+     */
+    void carousel(uint8_t delay1, uint8_t delay2) {
         mux->carouselRed(delay1);
         mux->carouselYellow(delay2);
     }

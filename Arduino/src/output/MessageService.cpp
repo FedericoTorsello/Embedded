@@ -4,27 +4,23 @@ String contentArduino = "";
 MessageService msgService;
 int i = 0;
 
-void MessageService::init(const int baud, const String&  name) {
+void MessageService::init(const int baud, const String &name) {
     Serial.begin(baud);
     while(!Serial) { }
     Serial.println(name);
     Serial.flush();
 }
 
-void MessageService::setMessage(String msg) {
+void MessageService::setMessage(const String msg) {
     this->currentMsg = msg;
     if (!msg.equals("")) {
         StaticJsonBuffer<100> jsonBuffer;
         JsonObject &root = jsonBuffer.parseObject(msg);
         Serial.println("REC " + this->currentMsg);
-        String sender = "";
-        String receiver = "";
-        if (root.success() && root.containsKey("msg")) {
+        if (root.success() && root.containsKey("msg") && root.containsKey("from") && root.containsKey("to")) {
             String content = root["msg"].asString();
-            if (root.containsKey("from"))
-                sender = root["from"].asString();
-            if (root.containsKey("to"))
-                receiver = root["to"].asString();
+            String sender = root["from"].asString();
+            String receiver = root["to"].asString();
             Msg m(content, sender, receiver);
             msgService.ackMsg(sender);
         } else {
@@ -38,18 +34,18 @@ void MessageService::errorMsg() {
     String p = "";
     StaticJsonBuffer<35> jsonBuffer;
     JsonObject &root = jsonBuffer.createObject();
-    root["from"] = "arduinoCore";
+    root["from"] = this->from;
     root["msg"] = "Parse Error";
     root.printTo(p);
     Serial.println(p);
     Serial.flush();
 }
 
-void MessageService::ackMsg(String to) {
+void MessageService::ackMsg(const String to) {
     String p = "";
     StaticJsonBuffer<50> jsonBuffer;
     JsonObject &root = jsonBuffer.createObject();
-    root["from"] = "arduinoCore";
+    root["from"] = this->from;
     root["to"] = to;
     root["msg"] = "ACK";
     root.printTo(p);
@@ -57,11 +53,11 @@ void MessageService::ackMsg(String to) {
     Serial.flush();
 }
 
-void MessageService::sendMsg(String content, String sender, String receiver) {
+void MessageService::sendMsg(const String content, const String receiver) {
     String p = "";
     StaticJsonBuffer<100> jsonBuffer;
     JsonObject &root = jsonBuffer.createObject();
-    root["from"] = sender;
+    root["from"] = this->from;
     root["to"] = receiver;
     root["msg"] = content;
     root.printTo(p);

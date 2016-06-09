@@ -2,6 +2,12 @@
 #define __TASK__
 
 class Task {
+private:
+    int period;
+    int timeElapsed;
+    bool enabled;
+protected:
+    virtual void lambdaTick() = 0;
 public:
     virtual void init(int period) {
         this->period = period;
@@ -10,8 +16,8 @@ public:
     }
     virtual void tick() = 0;
 
-    void callFoo() {
-        foo();
+    void callTick() {
+        lambdaTick();
     }
 
     bool isEnabled() {
@@ -34,12 +40,6 @@ public:
             return false;
         }
     }
-private:
-    int period;
-    int timeElapsed;
-    bool enabled;
-protected:
-    virtual void foo() = 0;
 };
 
 #endif

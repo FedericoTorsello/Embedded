@@ -13,5 +13,5 @@ void ButtonTask::init(int period, void (*f)()) {
 }
 
 void ButtonTask::tick() {
-    Task::callFoo();
+    Task::callTick();
 }

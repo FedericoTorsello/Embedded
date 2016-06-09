@@ -7,30 +7,31 @@
 #include "task/ButtonTask.h"
 #include "task/BuzzerTask.h"
 
-// configurazione porta seriale e messaggi
-const int BAUD = 9600;
-const int MAX_DISTANCE_SONAR = 50;
-const int DEBOUNCE_DELAY = 30; // un debounce delay a 30 sembra un buon compromesso
-const int NUM_MUX_CHANNEL = 4;
+const int BAUD = 9600;                              /**< Serial baud rate */
+const int MAX_DISTANCE_SONAR = 50;                  /**< Maximum distance game */
+const int DEBOUNCE_DELAY = 30;                      /**< Button debounce delay */
+const int NUM_MUX_CHANNEL = 4;                      /**< Number of input channels for the multiplexer */
 
 // configurazione task
 // pin digital write
-const int BUTTON_PIN = 2;
-int muxChannel[NUM_MUX_CHANNEL] = {4, 5, 12, 13}; // pin che controllano i canali A,B,C,D del mux
-const int TRIG_PIN = 7;
-const int ECHO_PIN = 8;
+const int BUTTON_PIN = 2;                           /**< Input digital from button */
+int muxChannel[NUM_MUX_CHANNEL] = {4, 5, 12, 13};   /**< Input channels for the multiplexer */
+const int TRIG_PIN = 7;                             /**< Trigger pin of sonar */
+const int ECHO_PIN = 8;                             /**< Echo pin of sonar*/
 
 // pin PWM 3, 5, 6, 9, 10, 11 (il pin 5 serve al mux)
-const int BUZZER_PIN = 3;
-const int LED_PWM = 6;
-const int LED_RGB_R = 9;
-const int LED_RGB_G = 10;
-const int LED_RGB_B = 11;
+const int BUZZER_PIN = 3;                           /**< Input pin for buzzer */
+const int LED_PWM = 6;                              /**< Input pwm for led */
+const int LED_RGB_R = 9;                            /**< Input pwm for color red of RGB led */
+const int LED_RGB_G = 10;                           /**< Input pwm for color green of RGB led */
+const int LED_RGB_B = 11;                           /**< Input pwm for color blue of RGB led */
 
-Context* pContext;
-Scheduler sched;
+Context* pContext;                                  /**< Context instance */
+Scheduler sched;                                    /**< Scheduler instance */
 
-// task
+/**
+ * Tasks instances
+ */
 SonarTask* sonarT0;
 ButtonTask* buttonT0;
 BuzzerTask* buzzerT0;
@@ -38,35 +39,23 @@ LedTask* ledT0;
 LedPwmTask* ledPwmT0;
 LedRgbTask* ledRgbT0;
 
+
 void setup() {
     msgService.init(BAUD, "JimmyChallenge");
     sched.init(100);
 
     pContext = new Context(MAX_DISTANCE_SONAR, new Multiplexer(muxChannel, NUM_MUX_CHANNEL));
     pContext->newRandomNumber();
-    pContext->setFrom("arduino");
-    pContext->setTo("remote");
     pContext->carousel(50, 50);
 
-    //** SonarTask
+    /** Sonar task */
     sonarT0 = new SonarTask(TRIG_PIN, ECHO_PIN, MAX_DISTANCE_SONAR, pContext);
     sonarT0->init(50, [] {
-        if(!pContext->isGameOver()) {
-            int level = pContext->getLevelToPlay();
-            int secretNum = pContext->getRandomNumber();
-            switch (level) {
-            case 1: sonarT0->playLevel(level, 6, secretNum); break;
-            case 2: sonarT0->playLevel(level, 5, secretNum); break;
-            case 3: sonarT0->playLevel(level, 5, secretNum); break;
-            case 4: sonarT0->playLevel(level, 4, secretNum); break;
-            case 5: sonarT0->playLevel(level, 4, secretNum); break;
-            case 6: sonarT0->playLevel(level, 3, secretNum); break;
-            default:
-                msgService.sendMsg("Gioco Finito!!!", pContext->getFrom(), pContext->getTo());
-                pContext->setGameOver(true);
-                break;
-            }
+        if(!pContext->isGameOver() && pContext->getLevel() <= 6) {
+            sonarT0->playLevel();
         } else {
+            msgService.sendMsg("Gioco Finito!!!", "all");
+            pContext->setGameOver(true);
             pContext->carousel(50,50);
         }
     });
@@ -79,8 +68,7 @@ void setup() {
         if(!pContext->isGameOver()) {
             pContext->setButtonPressed(buttonState);
             if(buttonState) {
-                String rndNum = "Secret number " + String(pContext->getRandomNumber());
-                msgService.sendMsg(rndNum, pContext->getFrom(), pContext->getTo());
+                msgService.sendMsg("Secret number " + String(pContext->getRandomNumber()), "debug");
             }
         } else {
             // necessario per la mario easter egg...
@@ -137,16 +125,14 @@ void setup() {
     //** LedPwmTask
     ledRgbT0 = new LedRgbTask(LED_RGB_R, LED_RGB_G, LED_RGB_B, pContext);
     ledRgbT0->init(50, [] {
-
-        //non è stato possibile fare un avvertimento pwm in quanto
-        //l'utilizzo dei timer non lo consente
+        // analogWrite in Arduino Uno in not fully compatible with new avrdude (use timer)
         if(!pContext->isGameOver()) {
             if (pContext->isStatoDiScasso()) {
                 switch (pContext->getDangerLevel()) {
                 case 0: ledRgbT0->ledRgb->setColor(0, 255, 0); break;                 // green = lucchetto aperto
                 case 1: ledRgbT0->ledRgb->setColor(0, 0, 255); break;                 // blue = alert
-                case 2: ledRgbT0->ledRgb->setColor(255, 255, 0); break;                 // yellow = lieve pericolo rottura
-                case 3: ledRgbT0->ledRgb->setColor(255, 165, 255); break;                 // pink = forte pericolo rottura
+                case 2: ledRgbT0->ledRgb->setColor(255, 255, 0); break;               // yellow = lieve pericolo rottura
+                case 3: ledRgbT0->ledRgb->setColor(255, 165, 255); break;             // pink = forte pericolo rottura
                 case 4: ledRgbT0->ledRgb->setColor(255, 0, 0); break;                 // red == lucchetto rotto
                 }
             } else {
@@ -155,7 +141,7 @@ void setup() {
         }
     });
     sched.addTask(ledRgbT0);
-}
+} // end setup()
 
 void loop() {
     sched.schedule();

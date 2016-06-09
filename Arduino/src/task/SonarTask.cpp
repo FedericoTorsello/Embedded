@@ -6,6 +6,7 @@ SonarTask::SonarTask(const int trigPin, const int echoPin, const int maxDist, Co
     this->maxDist = maxDist;
     this->pContext = pContext;
     this->sonar = new Sonar(this->trigPin, this->echoPin, this->maxDist);
+    this->delta = pContext->getDelta();
 }
 
 void SonarTask::init(int period, void (*f)()) {
@@ -14,101 +15,85 @@ void SonarTask::init(int period, void (*f)()) {
 }
 
 void SonarTask::tick() {
-    Task::callFoo();
+    Task::callTick();
 }
 
-void SonarTask::playLevel(int currentLevel, int delta, int numSegreto){
-
-    String FROM_ARDUINO = pContext->getFrom();
-    String TO_REMOTE = pContext->getTo();
-    currentDistance = sonar->readDistance();
-
+void SonarTask::playLevel() {
+    String TO_REMOTE = "remote";
+    String TO_ALL = "all";
+    currentDistance = uint16_t(sonar->readDistance());
     pContext->setCurrentDistance(currentDistance);
+    uint16_t secretDistance = pContext->getRandomNumber();
+    uint16_t currentLevel = pContext->getLevel();
 
-    // print numero segreto da indovinare
-    // msgService.sendMsg("Secret number " + String(numSegreto), FROM_ARDUINO, TO_REMOTE);
-
-    // print currentDistance
-    // msgService.sendMsg("Distance " + String(currentDistance), FROM_ARDUINO, TO_REMOTE);
-
-    if(currentDistance <= numSegreto + delta && currentDistance >= numSegreto - delta && !pContext->isPadlockOpen()) {
+    msgService.sendMsg("d" + String(currentDistance), TO_REMOTE);
+    if(currentDistance <= (secretDistance + delta)
+       && currentDistance >= (secretDistance - delta)) {
         pContext->setPadlockDetected(true);
-        pContext->setStatoDiScasso(false);
-
-        timer1 = millis()/1000;
-        timer1 = timer1 - timer2;     // inizializzazione a zero
-
-        // girare la chia
-        if(tempoCorretto && timer1 == 0) {
-            msgService.sendMsg("Lucchetto livello " + String(currentLevel) + " APERTO", FROM_ARDUINO, TO_REMOTE);
-            tempoCorretto = false;
-            timer1 = 0;
-            pContext->setPadlockOpen(false);
-            pContext->setLevelToPlay(currentLevel);
-        }
-
-        if(timer1 <= 1) {
-            msgService.sendMsg("Hai trovato il lucchetto", FROM_ARDUINO, TO_REMOTE);
-        } else if(timer1 == 2) {
-            msgService.sendMsg("Bene, stai calmo", FROM_ARDUINO, TO_REMOTE);
-        } else if (timer1 == 3 || timer1 == 4) {
-            msgService.sendMsg("Bisogna stare attenti...", FROM_ARDUINO, TO_REMOTE);
-        } else if (timer1 > 4) {
-            pContext->setStatoDiScasso(true);
-        }
-
-        if(pContext->isStatoDiScasso()) {
-            timer3 = millis()/1000;
-            timer3 = timer3 - timer2 - 4;      // -4 per far partire il tempo ledT0 da zero
-
-            switch (timer3) {
-            case 1:
-                msgService.sendMsg("Stai scassinando il lucchetto", FROM_ARDUINO, TO_REMOTE);
-                pContext->setDangerLevel(1);
-                break;
-            case 2:
-                msgService.sendMsg("Ancora un po' di pazienza", FROM_ARDUINO, TO_REMOTE);
-                pContext->setDangerLevel(1);
-                break;
-            case 3:
-                msgService.sendMsg("Livello " + String(currentLevel) + " passato :D", FROM_ARDUINO, TO_REMOTE);
-                pContext->setDangerLevel(0);
-                tempoCorretto = true;
-                break;
-            case 4:
-                msgService.sendMsg("...però non restare fermo...", FROM_ARDUINO, TO_REMOTE);
-                pContext->setDangerLevel(0);
-                tempoCorretto = true;
-                break;
-            case 5:
-                msgService.sendMsg("...stai rishiando la rottura...", FROM_ARDUINO, TO_REMOTE);
-                pContext->setDangerLevel(2);
-                tempoCorretto = true;
-                break;
-            case 6:
-                msgService.sendMsg("Attento! Lo rompi davvero!", FROM_ARDUINO, TO_REMOTE);
-                pContext->setDangerLevel(3);
-                tempoCorretto = true;
-                break;
-            case 7:
-                msgService.sendMsg("Nooo, l'hai rotto! Devi riprovare", FROM_ARDUINO, TO_REMOTE);
-                tempoCorretto = false;
-                pContext->setDangerLevel(4);
+        timeFound = (millis()/1000) - timeOut;     // inizializzazione a zero
+        switch (timeFound) {
+        case 0:
+            if (lockOpen) {
+                msgService.sendMsg("Lucchetto livello " + String(currentLevel) + " APERTO", "debug");
+                msgService.sendMsg("418", TO_REMOTE);
+                lockOpen = false;
                 pContext->setPadlockOpen(false);
-                break;
-            case 8:
-                msgService.sendMsg("Devi ricominciare!", FROM_ARDUINO, TO_REMOTE);
-                pContext->setDangerLevel(4);
-                break;
-            default: break;
-            }
+                pContext->setStatoDiScasso(false);
+                pContext->setNewLevel();
+                delta = pContext->getDelta();
+            } else
+                msgService.sendMsg("101", TO_REMOTE);
+            break;
+        case 1:
+            msgService.sendMsg("101", TO_REMOTE);
+            break;
+        case 2:
+            msgService.sendMsg("102", TO_REMOTE);
+            break;
+        case 3:
+            msgService.sendMsg("103", TO_REMOTE);
+            break;
+        case 4:
+            msgService.sendMsg("104", TO_REMOTE);
+            pContext->setDangerLevel(1);
+            pContext->setStatoDiScasso(true);
+            break;
+        case 5:
+            msgService.sendMsg("104", TO_REMOTE);
+            pContext->setDangerLevel(1);
+            break;
+        case 6:
+            msgService.sendMsg("105", TO_REMOTE);
+            pContext->setDangerLevel(0);
+            lockOpen = true;
+            break;
+        case 7:
+            msgService.sendMsg("201", TO_REMOTE);
+            pContext->setDangerLevel(0);
+            break;
+        case 8:
+            msgService.sendMsg("202", TO_REMOTE);
+            pContext->setDangerLevel(2);
+            break;
+        case 9:
+            msgService.sendMsg("203", TO_REMOTE);
+            pContext->setDangerLevel(3);
+            break;
+        case 10:
+            msgService.sendMsg("204", TO_REMOTE);
+            lockOpen = false;
+            pContext->setDangerLevel(4);
+            pContext->setPadlockOpen(false);
+            break;
+        case 11:
+            msgService.sendMsg("205", TO_REMOTE);
+            pContext->setDangerLevel(4);
+            break;
+        default: break;
         }
     } else {
-        if(!pContext->isPadlockOpen()) {
-            timer2 = millis()/1000;
-            // msgService.sendMsg("NON APERTO", FROM_ARDUINO, TO_REMOTE);
-            pContext->setPadlockOpen(false);
-            pContext->setPadlockDetected(false);
-        }
+        timeOut = millis()/1000;
+        pContext->setPadlockDetected(false);
+        pContext->setStatoDiScasso(false);
     }
 }

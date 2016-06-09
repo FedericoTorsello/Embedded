@@ -12,5 +12,5 @@ void BuzzerTask::init(int period, void (*f)()) {
 }
 
 void BuzzerTask::tick() {
-    Task::callFoo();
+    Task::callTick();
 }
