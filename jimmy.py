@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import asyncio
+import functools as ft
+import re
 import signal
 import ujson as json
 import utils
@@ -7,10 +9,12 @@ from serial.threaded import ReaderThread
 from aiohttp import ClientSession, ClientOSError, Timeout
 
 _stop = False
+user = None
 url = 'https://embedded16.duckdns.org/phplibs/api.php'
 
 
 async def get_token(user, pwd):
+    global _stop
     h = {'content-type': 'application/json'}
     data = json.dumps({'request': 'auth', 'username': user, 'password': pwd})
     with Timeout(0.8):
@@ -20,6 +24,7 @@ async def get_token(user, pwd):
                     return {'sessionID': response.cookies['sessionID'].value}
                 else:
                     utils.print('Wrong Credentials!', 1)
+                    _stop = True
 
 
 async def send_post(data, cookie, queue):
@@ -53,40 +58,45 @@ async def dispatch(cookie, protocol):
         else:
             msg, f, t = utils.parse_json(data)
             if all(k is not None for k in (msg, f, t)):
-                if t == utils.ARDUINO:
-                   protocol.write_line(msg)
-                   await asyncio.sleep(0.3)
+                print(msg, f, t)
                 if t == utils.REMOTE:
                     await send_post(data, cookie, from_arduino)
                 if t == utils.LOCAL:
                     utils.print(msg)
 
-async def main():
+async def main(loop):
+    global user
     user, pwd = utils.read_inputs()
     cookie = await get_token(user, pwd)
-    user = pwd = None
+    pwd = None
     arduino = utils.connect_arduino()
     if all(k is not None for k in (arduino, cookie)):
-        reader_arduino = ReaderThread(arduino, utils.PrintLines)
-        reader_arduino.start()
-        rt, printlines = reader_arduino.connect()
-        disp_coro = asyncio.ensure_future(dispatch(cookie, printlines))
-        await asyncio.wait([disp_coro])
+        try:
+            reader_arduino = ReaderThread(arduino, utils.PrintLines)
+            reader_arduino.start()
+            rt, printlines = reader_arduino.connect()
+            for signame in ('SIGINT', 'SIGTERM'):
+                loop.add_signal_handler(getattr(signal, signame), ft.partial(end, printlines))
+            data = {'msg': 'start', 'from': 'python', 'to': 'arduino'}
+            printlines.write_line(json.dumps(data))
+            disp_coro = asyncio.ensure_future(dispatch(cookie, printlines))
+            await asyncio.wait([disp_coro])
+        finally:
+            end(printlines)
 
 
-def end():
+def end(protocol):
     global _stop
+    data = {'msg': 'stop', 'from': 'python', 'to': 'arduino'}
+    protocol.write_line(json.dumps(data))
     _stop = True
 
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    for signame in ('SIGINT', 'SIGTERM'):
-        loop.add_signal_handler(
-            getattr(signal, signame), end)
     utils.print('Ctrl-C to close the program...')
     try:
-        loop.run_until_complete(main())
+        loop.run_until_complete(main(loop))
     finally:
         loop.close()
         utils.print('Bye!')

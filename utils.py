@@ -9,7 +9,7 @@ from serial.threaded import LineReader
 
 REMOTE = 'remote'
 ARDUINO = 'arduino'
-LOCAL = 'local'
+LOCAL = 'python'
 
 
 class PrintLines(LineReader):
@@ -30,6 +30,8 @@ class PrintLines(LineReader):
 
     def connection_lost(self, exc):
         print('Port Closed!', 1)
+        import os
+        os._exit(1)
 
 
 def print(msg, t=0):
@@ -52,7 +54,7 @@ def connect_arduino():
                                 bytesize=serial.EIGHTBITS)
         arduino.setDTR(False)
         import time
-        time.sleep(.022)
+        time.sleep(.2)
         arduino.flushInput()
         arduino.flushOutput()
         arduino.setDTR(True)
