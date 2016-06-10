@@ -13,7 +13,6 @@ public:
     void switchOn();
     void switchOff();
 private:
-    int currentIntensity;
 };
 
 #endif

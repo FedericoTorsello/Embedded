@@ -1,13 +1,12 @@
 #ifndef __CONTEXT__
 #define __CONTEXT__
 
-#include "Arduino.h"
 #include "../output/Multiplexer.h"
 
-/*
- * Raccoglie tutti gli stati delle variabili della partita.
- * Viene usato per comunicare tra i vari Task e poter implemantare
- * eventuale busy wait.
+/** Contains all status variable for the program.
+ *
+ * It's used to share informations between task and
+ * coordinate them creating a simple game.
  */
 
 class Context {
@@ -22,9 +21,10 @@ private:
     uint8_t currentlevel;
     uint16_t randomNum;
     uint8_t dangerLevel;
-    bool statoDiScasso;
+    bool lockpickingState;
     Multiplexer* mux;
 public:
+
     /** @brief ###Construct and initialize the 'Context'
      *
      * Initialize all parameters of the game and set the random seed with
@@ -42,7 +42,7 @@ public:
         padlockOpen = false;
         padlockDetected = false;
         gameOver = false;
-        statoDiScasso = false;
+        lockpickingState = false;
         dangerLevel = 0;
         mux->switchOn(currentlevel);
         randomSeed(analogRead(A0));
@@ -107,9 +107,11 @@ public:
     void setNewLevel() {
         newRandomNumber();
         this->currentlevel++;
-        if (delta > 0)
-            this->delta--;
-        mux->switchOn(this->currentlevel);
+        this->delta--;
+        if (this->currentlevel > 6)
+            this->gameOver = true;
+        else
+            mux->switchOn(this->currentlevel);
     }
 
     /** @brief ###Get the margin of error for the distance */
@@ -123,21 +125,21 @@ public:
     }
 
     /** @brief ###Get the scret distance where the padlock will open */
-    uint16_t getRandomNumber() {
+    uint16_t getSecret() {
         return randomNum;
     }
 
     /** @brief ###Generate a new random number */
     void newRandomNumber() {
-        randomNum = random(5, maxDistance);
+        randomNum = random(6, maxDistance - 1);
     }
 
     /** @brief ###Set the game state
      *
      * param[in] gameOver The state of the game
      */
-    void setGameOver(bool gameOver) {
-        this->gameOver = gameOver;
+    void setGameOver(bool status) {
+        this->gameOver = status;
     }
 
     /** @brief ###Get the stat of the game */
@@ -156,13 +158,13 @@ public:
     }
 
     /** @brief ###Set if the padlock is found and the user starts to pick */
-    void setStatoDiScasso(bool statoDiScasso) {
-        this->statoDiScasso = statoDiScasso;
+    void setLockpicking(bool state) {
+        this->lockpickingState = state;
     }
 
     /** @brief ###Get if the user start to lock-picking the padlock */
-    bool isStatoDiScasso() {
-        return statoDiScasso;
+    bool isLockpicking() {
+        return lockpickingState;
     }
 
     /** @brief ###Run a carousel with two led color

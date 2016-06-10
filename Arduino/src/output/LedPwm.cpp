@@ -4,9 +4,7 @@ LedPwm::LedPwm(const int pin) : Led(pin) {
     switchOff();
 }
 
-// costruttore per gestire i led RGB
 LedPwm::LedPwm(int pin, int intensity) : Led(pin) {
-
     switchOff();
 }
 

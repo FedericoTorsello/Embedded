@@ -41,7 +41,7 @@ LedRgbTask* ledRgbT0;
 
 
 void setup() {
-    msgService.init(BAUD, "JimmyChallenge");
+    msgService.init(BAUD, "JimmyChallenge", pContext);
     sched.init(100);
 
     pContext = new Context(MAX_DISTANCE_SONAR, new Multiplexer(muxChannel, NUM_MUX_CHANNEL));
@@ -51,10 +51,11 @@ void setup() {
     /** Sonar task */
     sonarT0 = new SonarTask(TRIG_PIN, ECHO_PIN, MAX_DISTANCE_SONAR, pContext);
     sonarT0->init(50, [] {
-        if(!pContext->isGameOver() && pContext->getLevel() <= 6) {
+        if(!pContext->isGameOver()) {
             sonarT0->playLevel();
         } else {
             msgService.sendMsg("Gioco Finito!!!", "all");
+            msgService.sendCode(500, "all", "status");
             pContext->setGameOver(true);
             pContext->carousel(50,50);
         }
@@ -68,7 +69,7 @@ void setup() {
         if(!pContext->isGameOver()) {
             pContext->setButtonPressed(buttonState);
             if(buttonState) {
-                msgService.sendMsg("Secret number " + String(pContext->getRandomNumber()), "debug");
+                msgService.sendMsg("Secret number " + String(pContext->getSecret()), "debug");
             }
         } else {
             // necessario per la mario easter egg...
@@ -112,9 +113,8 @@ void setup() {
     ledPwmT0 = new LedPwmTask(LED_PWM, pContext);
     ledPwmT0->init(50, [] {
         if (pContext->isGameOver()) {
-            for (int i = 10; i < 255; i++) {
+            for (int i = 5; i < 255; i++) {
                 ledPwmT0->ledPwm->setIntensity(i);
-                ledPwmT0->ledPwm->switchOn();
                 delay(3);
             }
             ledPwmT0->ledPwm->switchOff();
@@ -125,12 +125,12 @@ void setup() {
     //** LedPwmTask
     ledRgbT0 = new LedRgbTask(LED_RGB_R, LED_RGB_G, LED_RGB_B, pContext);
     ledRgbT0->init(50, [] {
-        // analogWrite in Arduino Uno in not fully compatible with new avrdude (use timer)
+        // analogWrite in Arduino Uno in not fully compatible with new avrdude which use timer (on PlatformIO)
         if(!pContext->isGameOver()) {
-            if (pContext->isStatoDiScasso()) {
+            if (pContext->isLockpicking()) {
                 switch (pContext->getDangerLevel()) {
-                case 0: ledRgbT0->ledRgb->setColor(0, 255, 0); break;                 // green = lucchetto aperto
-                case 1: ledRgbT0->ledRgb->setColor(0, 0, 255); break;                 // blue = alert
+                case 0: ledRgbT0->ledRgb->setColor(0, 0, 255); break;                 // blue = alert
+                case 1: ledRgbT0->ledRgb->setColor(0, 255, 0); break;                 // green = lucchetto aperto
                 case 2: ledRgbT0->ledRgb->setColor(255, 255, 0); break;               // yellow = lieve pericolo rottura
                 case 3: ledRgbT0->ledRgb->setColor(255, 165, 255); break;             // pink = forte pericolo rottura
                 case 4: ledRgbT0->ledRgb->setColor(255, 0, 0); break;                 // red == lucchetto rotto

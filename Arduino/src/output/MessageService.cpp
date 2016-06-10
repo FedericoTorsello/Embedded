@@ -4,11 +4,12 @@ String contentArduino = "";
 MessageService msgService;
 int i = 0;
 
-void MessageService::init(const int baud, const String &name) {
-    Serial.begin(baud);
+void MessageService::init(const int baud, const String &name, Context *c) {
     while(!Serial) { }
+    Serial.begin(baud);
     Serial.println(name);
     Serial.flush();
+    pContext = c;
 }
 
 void MessageService::setMessage(const String msg) {
@@ -16,13 +17,19 @@ void MessageService::setMessage(const String msg) {
     if (!msg.equals("")) {
         StaticJsonBuffer<100> jsonBuffer;
         JsonObject &root = jsonBuffer.parseObject(msg);
-        Serial.println("REC " + this->currentMsg);
         if (root.success() && root.containsKey("msg") && root.containsKey("from") && root.containsKey("to")) {
             String content = root["msg"].asString();
             String sender = root["from"].asString();
             String receiver = root["to"].asString();
-            Msg m(content, sender, receiver);
-            msgService.ackMsg(sender);
+            if (sender.equals("python") && content.equals("stop")) {
+                pContext->setGameOver(true);
+                //Serial.println("REC " + this->currentMsg + " " + pContext->isGameOver());
+            }
+            if (sender.equals("python") && content.equals("start")) {
+                pContext->setGameOver(false);
+                //Serial.println("REC " + this->currentMsg + " " + pContext->isGameOver());
+            }
+            this->ackMsg(sender);
         } else {
             msgService.errorMsg();
         }
@@ -60,6 +67,19 @@ void MessageService::sendMsg(const String content, const String receiver) {
     root["from"] = this->from;
     root["to"] = receiver;
     root["msg"] = content;
+    root.printTo(p);
+    Serial.println(p);
+    Serial.flush();
+}
+
+void MessageService::sendCode(const int content, const String receiver, const String key) {
+    String p = "";
+    StaticJsonBuffer<100> jsonBuffer;
+    JsonObject &root = jsonBuffer.createObject();
+    root["from"] = this->from;
+    root["to"] = receiver;
+    root["msg"] = key;
+    root[key] = content;
     root.printTo(p);
     Serial.println(p);
     Serial.flush();

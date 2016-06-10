@@ -10,7 +10,6 @@ public:
 
 protected:
     NewPing *mySonar;
-
     int readDistance();
 };
 
