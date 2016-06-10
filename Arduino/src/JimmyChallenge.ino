@@ -69,7 +69,7 @@ void setup() {
         if(!pContext->isGameOver()) {
             pContext->setButtonPressed(buttonState);
             if(buttonState) {
-                msgService.sendMsg("Secret number " + String(pContext->getSecret()), "debug");
+                msgService.sendMsg("Secret number " + String(pContext->getSecret()), "all");
             }
         } else {
             // necessario per la mario easter egg...
