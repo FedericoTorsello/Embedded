@@ -50,7 +50,6 @@ void SonarTask::playLevel() {
                     lockOpen = false;
                     pContext->setPadlockOpen(false);
                     pContext->setLockpicking(false);
-                    delta = pContext->getDelta();
                 }
             } else
                 status = 101;
