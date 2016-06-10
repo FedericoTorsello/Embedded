@@ -1,1 +1,3 @@
 modules/serial/threaded/__pycache__
+.env/
+
