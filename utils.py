@@ -1,3 +1,4 @@
+"""Module library for JimmyChallenge main script (jimmy.py)."""
 import builtins
 import getpass
 import serial
@@ -7,17 +8,20 @@ from colored import fore, style
 from serial.tools import list_ports
 from serial.threaded import LineReader
 
+
 REMOTE = 'remote'
 ARDUINO = 'arduino'
 LOCAL = 'python'
 
 
+"""Extend LineReader from pyserial library."""
 class PrintLines(LineReader):
     def connection_made(self, transport):
         super(PrintLines, self).connection_made(transport)
         self.from_arduino = queue.Queue()
 
     def handle_line(self, data):
+        # Parse message from Arduino, if JSON add to queue
         try:
             data = json.loads(data)
         except ValueError:
@@ -26,15 +30,18 @@ class PrintLines(LineReader):
             self.from_arduino.put(data)
 
     def get_message_queue(self):
+        # Return the queue of messages
         return self.from_arduino
 
     def connection_lost(self, exc):
+        # When an exception occour close the program
         print('Port Closed!', 1)
         import os
         os._exit(1)
 
 
 def print(msg, t=0):
+    """Wrapper of builtin python print function."""
     if t == 0:
         builtins.print(fore.BLUE + style.BOLD + msg + style.RESET)
     if t == 1:
@@ -42,6 +49,7 @@ def print(msg, t=0):
 
 
 def connect_arduino():
+    """Connect to serial and reset the Arduino to start a new game."""
     try:
         arduino_port = list(list_ports.grep('2341:0043'))[0][0]
     except IndexError:
@@ -52,9 +60,11 @@ def connect_arduino():
                                 parity=serial.PARITY_NONE,
                                 stopbits=serial.STOPBITS_ONE,
                                 bytesize=serial.EIGHTBITS)
+        # Change state of DTR to reset arduino
         arduino.setDTR(False)
         import time
-        time.sleep(.2)
+        # Wait for 22ms (from Arduino specs)
+        time.sleep(.022)
         arduino.flushInput()
         arduino.flushOutput()
         arduino.setDTR(True)
@@ -62,17 +72,20 @@ def connect_arduino():
 
 
 def parse_json(data):
+    """Parse the JSON message and return all message fields"""
     try:
         msg = data.get('msg')
         f = data.get('from')
         t = data.get('to')
+        payload = data.get(msg)
     except ValueError:
         pass
     else:
-        return (msg, f, t)
+        return (f, t, msg, payload)
 
 
 def read_inputs():
+    """Asks login credentials"""
     user = input('Username: ')
     pwd = getpass.getpass()
     return (user, pwd)
