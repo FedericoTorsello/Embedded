@@ -21,14 +21,13 @@ void SonarTask::tick() {
 void SonarTask::playLevel() {
     String TO_REMOTE = "remote";
     String TO_ALL = "all";
-    currentDistance = uint16_t(sonar->readDistance());
+    currentDistance = int(sonar->readDistance());
     pContext->setCurrentDistance(currentDistance);
     uint16_t secretDistance = pContext->getSecret();
     uint16_t currentLevel = pContext->getLevel();
     uint8_t delta = pContext->getDelta();
     uint16_t status = 0;
-    int feedbackDistance = 0;
-
+    unsigned int feedbackDistance = 0;
 
     feedbackDistance = abs(int(currentDistance) - int(secretDistance));
     if (feedbackDistance == 0)
@@ -104,6 +103,7 @@ void SonarTask::playLevel() {
         pContext->setPadlockDetected(false);
         pContext->setLockpicking(false);
     }
-    msgService.sendCode(status, TO_REMOTE, "status");
+    // msgService.sendCode(status, TO_REMOTE, "status");
     // msgService.sendCode(feedbackDistance, TO_REMOTE, "distance");
+    msgService.sendMsg(String(status) + " " + String(feedbackDistance), "all");
 }
