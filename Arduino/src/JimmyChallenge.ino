@@ -112,9 +112,15 @@ void setup() {
     //** LedPwmTask
     ledPwmT0 = new LedPwmTask(LED_PWM, pContext);
     ledPwmT0->init(50, [] {
-        if (pContext->isGameOver()) {
-            for (int i = 5; i < 255; i++) {
+        if (!pContext->isPadlockOpen() && !pContext->isPadlockDetected()) {
+            for (int i = 64; i < 255; i++) {
                 ledPwmT0->ledPwm->setIntensity(i);
+            }
+            ledPwmT0->ledPwm->switchOff();
+        } else if (pContext->isGameOver()) {
+            for (int i = 10; i < 255; i++) {
+                ledPwmT0->ledPwm->setIntensity(i);
+                ledPwmT0->ledPwm->switchOn();
                 delay(3);
             }
             ledPwmT0->ledPwm->switchOff();

@@ -138,9 +138,9 @@ public:
      *
      * param[in] gameOver The state of the game
      */
-    void setGameOver(bool status) {
-        this->gameOver = status;
-    }
+     void setGameOver(bool gameOver) {
+         this->gameOver = gameOver;
+     }
 
     /** @brief ###Get the stat of the game */
     bool isGameOver() {

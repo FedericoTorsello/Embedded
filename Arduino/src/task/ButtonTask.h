@@ -7,7 +7,7 @@
 
 class ButtonTask : public Task {
 public:
-    ButtonTask(int, int, Context *);
+    ButtonTask(int, unsigned long, Context *);
     Button *btn;
 
     void init(int, void (*)());
@@ -21,7 +21,7 @@ private:
     }
 protected:
     int pin;
-    int debounceDelay;
+    unsigned long debounceDelay;
 };
 
 #endif

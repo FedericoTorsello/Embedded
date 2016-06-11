@@ -25,6 +25,7 @@ void SonarTask::playLevel() {
     pContext->setCurrentDistance(currentDistance);
     uint16_t secretDistance = pContext->getSecret();
     uint16_t currentLevel = pContext->getLevel();
+    uint8_t delta = pContext->getDelta();
     uint16_t status = 0;
     int feedbackDistance = 0;
 
@@ -34,7 +35,7 @@ void SonarTask::playLevel() {
         feedbackDistance = 0;
     else if (currentDistance == 0)
         feedbackDistance = 100;
-    msgService.sendCode(feedbackDistance, TO_REMOTE, "distance");
+    // msgService.sendCode(feedbackDistance, TO_REMOTE, "distance");
 
     if(currentDistance <= (secretDistance + delta)
        && currentDistance >= (secretDistance - delta)) {
@@ -42,12 +43,11 @@ void SonarTask::playLevel() {
         timeFound = (millis()/1000) - timeOut;     // inizializzazione a zero
         switch (timeFound) {
         case 0:
-            if (lockOpen) {
+            if (pContext->isPadlockOpen()) {
                 msgService.sendMsg("Lucchetto livello " + String(currentLevel) + " APERTO", "debug");
                 pContext->setNewLevel();
                 if (!pContext->isGameOver()) {
                     status = 300 + currentLevel + 1;
-                    lockOpen = false;
                     pContext->setPadlockOpen(false);
                     pContext->setLockpicking(false);
                 }
@@ -75,7 +75,7 @@ void SonarTask::playLevel() {
         case 6:
             status = 105;
             pContext->setDangerLevel(1);
-            lockOpen = true;
+            pContext->setPadlockOpen(true);
             break;
         case 7:
             status = 201;
@@ -91,7 +91,6 @@ void SonarTask::playLevel() {
             break;
         case 10:
             status = 204;
-            lockOpen = false;
             pContext->setDangerLevel(4);
             pContext->setPadlockOpen(false);
             break;
@@ -100,11 +99,11 @@ void SonarTask::playLevel() {
             pContext->setDangerLevel(4);
             break;
         }
-        msgService.sendCode(status, TO_REMOTE, "status");
     } else {
         timeOut = millis()/1000;
         pContext->setPadlockDetected(false);
         pContext->setLockpicking(false);
-        msgService.sendCode(0, TO_REMOTE, "status");
     }
+    msgService.sendCode(status, TO_REMOTE, "status");
+    // msgService.sendCode(feedbackDistance, TO_REMOTE, "distance");
 }

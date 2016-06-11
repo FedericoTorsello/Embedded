@@ -17,7 +17,6 @@ private:
     Context *pContext;
     unsigned long timeFound = 0;
     unsigned long timeOut = 0;
-    bool lockOpen = false;
     uint16_t currentDistance = 0;
     uint8_t delta;
 
