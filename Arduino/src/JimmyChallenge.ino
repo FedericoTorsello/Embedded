@@ -54,9 +54,10 @@ void setup() {
         if(!pContext->isGameOver()) {
             sonarT0->playLevel();
         } else {
-            msgService.sendMsg("Gioco Finito!!!", "all");
-            msgService.sendCode(500, "all", "status");
-            pContext->setGameOver(true);
+            if (!pContext->isGameOver()){
+                msgService.sendMsg("Gioco Finito!!!", "all");
+                pContext->setGameOver(true);
+            }
             pContext->carousel(50,50);
         }
     });
@@ -117,10 +118,11 @@ void setup() {
                 ledPwmT0->ledPwm->setIntensity(i);
             }
             ledPwmT0->ledPwm->switchOff();
-        } else if (pContext->isGameOver()) {
+        }
+
+        if (pContext->isGameOver()) {
             for (int i = 10; i < 255; i++) {
                 ledPwmT0->ledPwm->setIntensity(i);
-                ledPwmT0->ledPwm->switchOn();
                 delay(3);
             }
             ledPwmT0->ledPwm->switchOff();
