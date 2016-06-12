@@ -5,6 +5,7 @@
 #include "../output/LedPwm.h"
 #include "../control/Context.h"
 
+/** Class to manage the behaviour of a led pwm */
 class LedPwmTask : public Task {
 public:
     LedPwmTask(int, Context *);

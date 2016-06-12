@@ -6,6 +6,7 @@
 #include "../control/Context.h"
 #include "../output/MessageService.h"
 
+/** Class to manage the behaviour of the sonar */
 class SonarTask : public Task {
 public:
     SonarTask(int, int, int, Context *);

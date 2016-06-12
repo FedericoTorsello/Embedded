@@ -5,6 +5,7 @@
 #include "../output/Buzzer.h"
 #include "../control/Context.h"
 
+/** Class to manage the behaviour of a buzzer */
 class BuzzerTask : public Task {
 public:
     BuzzerTask(int, Context *);

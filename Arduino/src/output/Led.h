@@ -3,6 +3,7 @@
 
 #include "../interface/Light.h"
 
+/** Class to manage a led */
 class Led : public interface::Light {
 public:
     Led(int);

@@ -5,9 +5,10 @@
 
 namespace interface {
 
+/**Interface for devices that use a dimmable light as a feedback */
 class LightPwm : public interface::Light {
 public:
-    virtual void setIntensity(int) = 0;
+    virtual void setIntensity(uint8_t) = 0;
 };
 
 }

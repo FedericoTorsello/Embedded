@@ -4,6 +4,7 @@
 #include "../interface/LightPwm.h"
 #include "LedPwm.h"
 
+/** Class to manage a RGB led */
 class LedRgb {
 public:
     LedRgb(int, int, int);

@@ -3,9 +3,10 @@
 
 #include "../interface/Audio.h"
 
+/** Class to manage the buzzer sounds */
 class Buzzer : public interface::Audio {
 public:
-    Buzzer(int);
+    Buzzer(const int);
     void playSound(int);
 private:
      int NOTE_C4  = 262;
@@ -24,11 +25,10 @@ private:
      int NOTE_G7  = 3136;
      int NOTE_A7  = 3520;
 
-    const int drin[2] = { NOTE_C4, NOTE_G3 };
+    const int drin[2] = { NOTE_C4, NOTE_G3 };               /**< Default tune */
 
     const int noteDurations[2] = { 4, 8 };
 
-    // Mario main theme melody
     const int melody2[31] = {
         NOTE_C7, NO_NOTE, NO_NOTE, NOTE_G6,
         NO_NOTE, NO_NOTE, NOTE_E6, NO_NOTE,
@@ -39,11 +39,10 @@ private:
         NOTE_A7, NO_NOTE, NOTE_F7, NOTE_G7,
         NO_NOTE, NOTE_E7, NO_NOTE, NOTE_C7,
         NOTE_D7, NOTE_B6, NO_NOTE, NO_NOTE
-    };
+    };                                                      /**< Super Mario theme */
 
     void playMarioTheme();
     void buzz(int, int);
-    void buzzMarioTheme(unsigned long, unsigned long);
 protected:
     int pin;
 };

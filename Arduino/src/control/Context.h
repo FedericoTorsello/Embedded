@@ -8,20 +8,20 @@
  * It's used to share informations between task and
  * coordinate them creating a simple game.
  */
-
 class Context {
 private:
-    volatile uint16_t currentDistance;
-    volatile bool gameOver;
+    volatile int currentDistance = 0;
+    volatile bool gameOver = false;
     volatile bool buttonPressed;
-    volatile bool padlockOpen;
-    volatile bool padlockDetected;
-    uint16_t maxDistance;
-    uint8_t delta;
-    uint8_t currentlevel;
-    uint16_t randomNum;
-    uint8_t dangerLevel;
-    bool lockpickingState;
+    volatile bool padlockOpen = false;
+    volatile bool padlockDetected = false;
+    uint8_t delta = 6;
+    uint8_t currentlevel = 0;
+    uint8_t maxLevel = 6;
+    uint8_t dangerLevel = 0;
+    int maxDistance;
+    int randomNum;
+    bool lockpickingState = false;
     Multiplexer* mux;
 public:
 
@@ -32,18 +32,9 @@ public:
      * @param[in] maxDistance Maximum distance game
      * @param[in] mux         Multiplexer instance
      */
-    Context(uint16_t maxDistance, Multiplexer* mux) {
+    Context(int maxDistance, Multiplexer* mux) {
         this->maxDistance = maxDistance;
         this->mux = mux;
-        currentDistance = 0;
-        delta = 6;
-        currentlevel = 1;
-        randomNum = 0;
-        padlockOpen = false;
-        padlockDetected = false;
-        gameOver = false;
-        lockpickingState = false;
-        dangerLevel = 0;
         mux->switchOn(currentlevel);
         randomSeed(analogRead(A0));
     }
@@ -78,12 +69,12 @@ public:
      *
      * @param[in] currentDistance The distance to set
      */
-    void setCurrentDistance(uint16_t currentDistance) {
+    void setCurrentDistance(int currentDistance) {
         this->currentDistance = currentDistance;
     }
 
     /** @brief ###Get the distance at which the padlock will open */
-    uint16_t getCurrentDistance() {
+    int getCurrentDistance() {
         return currentDistance;
     }
 
@@ -100,15 +91,13 @@ public:
         return buttonPressed;
     }
 
-    /** @brief ###Set a new level
-     *
-     * @param[in] currentlevel The level to create
-     */
+    /** @brief ###Set a new level */
     void setNewLevel() {
         newRandomNumber();
         this->currentlevel++;
-        this->delta--;
-        if (this->currentlevel > 6)
+        if (this->delta > 1)
+            this->delta--;
+        if (this->currentlevel > this->maxLevel)
             this->gameOver = true;
         else
             mux->switchOn(this->currentlevel);
@@ -125,7 +114,7 @@ public:
     }
 
     /** @brief ###Get the scret distance where the padlock will open */
-    uint16_t getSecret() {
+    int getSecret() {
         return randomNum;
     }
 
@@ -136,7 +125,7 @@ public:
 
     /** @brief ###Set the game state
      *
-     * param[in] gameOver The state of the game
+     * @param[in] gameOver The state of the game
      */
      void setGameOver(bool gameOver) {
          this->gameOver = gameOver;

@@ -5,6 +5,7 @@
 #include "../input/Button.h"
 #include "../control/Context.h"
 
+/** Class to create a task using the state of a button */
 class ButtonTask : public Task {
 public:
     ButtonTask(int, unsigned long, Context *);

@@ -5,6 +5,7 @@
 #include "../output/LedRgb.h"
 #include "../control/Context.h"
 
+/** Class to manage the behaviour of a RGB led */
 class LedRgbTask : public Task {
 public:
     LedRgbTask(int, int, int, Context *);

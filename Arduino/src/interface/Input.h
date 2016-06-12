@@ -5,6 +5,7 @@
 
 namespace interface {
 
+/** Interface for input devices */
 class Input {
 public:
     virtual bool readBool() {

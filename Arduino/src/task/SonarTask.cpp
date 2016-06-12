@@ -15,26 +15,23 @@ void SonarTask::init(int period, void (*f)()) {
 }
 
 void SonarTask::tick() {
-    Task::callTick();
+    this->lambdaTick();
 }
 
 void SonarTask::playLevel() {
-    String TO_REMOTE = "remote";
-    String TO_ALL = "all";
-    currentDistance = int(sonar->readDistance());
+    currentDistance = sonar->readDistance();
     pContext->setCurrentDistance(currentDistance);
-    uint16_t secretDistance = pContext->getSecret();
-    uint16_t currentLevel = pContext->getLevel();
+    int secretDistance = pContext->getSecret();
+    int currentLevel = pContext->getLevel();
     uint8_t delta = pContext->getDelta();
-    uint16_t status = 0;
-    unsigned int feedbackDistance = 0;
+    int status = 0;
+    int feedbackDistance = 0;
 
-    feedbackDistance = abs(int(currentDistance) - int(secretDistance));
+    feedbackDistance = abs(currentDistance - secretDistance);
     if (feedbackDistance == 0)
         feedbackDistance = 0;
     else if (currentDistance == 0)
         feedbackDistance = 100;
-    // msgService.sendCode(feedbackDistance, TO_REMOTE, "distance");
 
     if(currentDistance <= (secretDistance + delta)
        && currentDistance >= (secretDistance - delta)) {
@@ -43,7 +40,7 @@ void SonarTask::playLevel() {
         switch (timeFound) {
         case 0:
             if (pContext->isPadlockOpen()) {
-                msgService.sendMsg("Lucchetto livello " + String(currentLevel) + " APERTO", "debug");
+                msgService.sendMsg("Lucchetto livello " + String(currentLevel) + " APERTO", F("all"));
                 pContext->setNewLevel();
                 if (!pContext->isGameOver()) {
                     status = 300 + currentLevel + 1;
@@ -103,7 +100,5 @@ void SonarTask::playLevel() {
         pContext->setPadlockDetected(false);
         pContext->setLockpicking(false);
     }
-    // msgService.sendCode(status, TO_REMOTE, "status");
-    // msgService.sendCode(feedbackDistance, TO_REMOTE, "distance");
-    msgService.sendMsg(String(status) + " " + String(feedbackDistance), "all");
+    msgService.sendInfo(currentDistance, status, currentLevel, F("remote"));
 }

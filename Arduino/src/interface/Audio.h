@@ -5,6 +5,7 @@
 
 namespace interface {
 
+/** Interface for audio devices */
 class Audio {
 public:
     virtual void playSound(int) = 0;

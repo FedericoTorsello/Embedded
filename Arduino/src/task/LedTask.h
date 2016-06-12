@@ -5,6 +5,7 @@
 #include "../output/Led.h"
 #include "../control/Context.h"
 
+/** Class to manage the behaviour of a simple led */
 class LedTask : public Task {
 public:
     LedTask(int, Context *);

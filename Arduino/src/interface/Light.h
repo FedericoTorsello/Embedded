@@ -5,6 +5,7 @@
 
 namespace interface {
 
+/** Interface for devices that use light as a feedback */
 class Light {
 public:
     virtual void switchOn() = 0;
