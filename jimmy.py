@@ -5,8 +5,8 @@ import signal
 import ujson as json
 import utils
 from serial.threaded import ReaderThread
-from aiohttp import ClientSession, ClientOSError, Timeout, TCPConnector
-
+from aiohttp import ClientSession, ClientOSError, Timeout
+import asyncio_redis
 """""" """""" """""" """""" """""" """""" """""" """""" ""
 " This script reads from the serial port messages from   "
 " Arduino and forwards them to te recipient              "
@@ -32,6 +32,7 @@ async def get_token(user, pwd):
         with Timeout(0.8):
             async with ClientSession() as session:
                 async with session.post(url, data=data, headers=h) as response:
+                    await response.read()
                     if 'sessionID' in response.cookies:
                         # Read and return cookie value from HTTP response
                         return {'sessionID':
@@ -44,9 +45,8 @@ async def get_token(user, pwd):
         _stop = True
 
 
-async def send_post(data, cookie, queue):
+async def send_post(data, cookie):
     """Send a POST request to the server."""
-    global _stop
     try:
         h = {'Content-Type': 'application/json'}
         data = json.dumps(data)
@@ -63,11 +63,15 @@ async def dispatch(cookie, protocol):
     global _stop
     # Retrieve the queue of messages from Arduino
     from_arduino = protocol.get_message_queue()
-    last_distance = 0
-    last_status = 0
+    last = [0, 0, 0]
     # Prepare standard messages
-    data_distance = {'request': 'distance', 'msg': None, 'username': user}
-    data_code = {'request': 'status', 'msg': None, 'username': user}
+    info = {'distance': None, 'status': None, 'level': None}
+    p = 'redis_password'
+    conn = await asyncio_redis.Pool.create(host='embedded16.duckdns.org',
+                                           port=3501,
+                                           poolsize=3,
+                                           password=p,
+                                           db=2)
     while not _stop:
         # Pop a JSON message from the queue or wait for it
         try:
@@ -76,24 +80,24 @@ async def dispatch(cookie, protocol):
             pass
         else:
             # Parse the message and get payload informations
-            f, t, msg, payload = utils.parse_json(data)
-            if all(k is not None for k in (msg, f, t, payload)):
+            t, d, s, l = utils.parse_json(data)
+            if all(k is not None for k in (t, d, s, l)):
                 if t == utils.ARDUINO:
                     # Send message to Arduino
                     protocol.write_line(data)
                     await asyncio.sleep(0.3)
                 if t == utils.REMOTE:
-                    # Send message to serer API with HTTP request
-                    if msg == 'distance' and (payload > (last_distance + 2) or
-                                              payload < (last_distance - 2)):
-                        last_distance = data_distance['msg'] = payload
-                        await send_post(data_distance, cookie, from_arduino)
-                    if msg == 'status' and payload != last_status:
-                        last_status = data_code['msg'] = payload
-                        await send_post(data_code, cookie, from_arduino)
-                if t == utils.LOCAL or t == 'debug':
+                    # Send message to server API with HTTP request
+                    if any(k not in last for k in (d, s, l)):
+                        last = [d, s, l]
+                        info['distance'] = d
+                        info['status'] = s
+                        info['level'] = l
+                        await conn.set('info fede', json.dumps(info))
+                        # await send_post(info, cookie)
+                if t == 'all':
                     # Print the message
-                    utils.print(msg)
+                    utils.print(data)
 
 
 async def main(loop):
@@ -113,8 +117,7 @@ async def main(loop):
             # Handler signal from system
             for signame in ('SIGINT', 'SIGTERM'):
                 loop.add_signal_handler(
-                    getattr(signal, signame),
-                    ft.partial(end, printlines))
+                    getattr(signal, signame), ft.partial(end, printlines))
             # Create a coroutine to run into asyncio loop
             disp_coro = asyncio.ensure_future(dispatch(cookie, printlines))
             # Run the coroutine and wait

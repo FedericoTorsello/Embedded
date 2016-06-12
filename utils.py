@@ -1,6 +1,7 @@
 """Module library for JimmyChallenge main script (jimmy.py)."""
 import builtins
 import getpass
+import orderedset
 import serial
 import queue
 import ujson as json
@@ -11,7 +12,6 @@ from serial.threaded import LineReader
 
 REMOTE = 'remote'
 ARDUINO = 'arduino'
-LOCAL = 'python'
 
 
 """Extend LineReader from pyserial library."""
@@ -74,14 +74,15 @@ def connect_arduino():
 def parse_json(data):
     """Parse the JSON message and return all message fields"""
     try:
-        msg = data.get('msg')
-        f = data.get('from')
-        t = data.get('to')
-        payload = data.get(msg)
+        if (data.get('from') == 'arduino'):
+            t = data.get('to')
+            d = data.get('distance')
+            s = data.get('status')
+            l = data.get('level')
     except ValueError:
         pass
     else:
-        return (f, t, msg, payload)
+        return (t, d, s, l)
 
 
 def read_inputs():
