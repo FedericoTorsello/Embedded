@@ -60,10 +60,10 @@ void setup() {
     sonarT0 = new SonarTask(TRIG_PIN, ECHO_PIN, MAX_DISTANCE_SONAR, pContext);
     sonarT0->init(50, [] {
         if(!pContext->isGameOver()) {
-            // Set up and confi a level
+            // Set up and config a level
             sonarT0->playLevel();
         } else {
-            // When the is ended
+            // When the game is finished
             msgService.sendMsg(F("Gioco Finito!!!"), F("all"));
             msgService.sendInfo(0, 500, pContext->getDangerLevel(), F("remote"));
             pContext->carousel(50,50);
