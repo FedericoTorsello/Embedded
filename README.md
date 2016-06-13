@@ -2,6 +2,8 @@
 
 ### Configuration
 
-```{r, engine='bash', count_lines}
-wc -l en_US.twitter.txt 
+```{r, engine='bash'}
+virtualenv3 -p python3 --no-site-packages .env && source .env/bin/activate \
+  pip install -r requirements.txt \
+    chmod +x jimmy.py
 ```
