@@ -1,0 +1,31 @@
+.main h2 {
+	text-align: center;
+	margin: 0;
+}
+
+.main h3 {
+	margin: 0;
+}
+
+.main .row {
+	text-align: center;
+}
+
+.local, .remote {
+	height: 120px;
+	width: 100%;
+}
+
+.timer {
+	height: 80px;
+}
+
+.top {
+	content: '';
+	position: absolute;
+	top: -13px;
+	left: 0;
+	height: 5px;
+	width: 100%;
+	z-index: 900;
+}

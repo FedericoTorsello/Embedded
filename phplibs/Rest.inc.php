@@ -1,27 +1,23 @@
 <?php
 class REST {
 	public $_allow = array();
-	public $_content_type = "application/json";
+	public $_content_type = 'application/json';
 	public $_request = array();
 
-	private $_method = "";
+	private $_method = '';
 	private $_code = 200;
 
 	public function __construct() {
 		$this->inputs();
 	}
-
-	public function get_referer(){
-		return $_SERVER['HTTP_REFERER'];
-	}
-
+	
 	public function response($data, $status) {
 		$this->_code = ($status)? $status:200;
 		$this->set_headers();
-		echo json_encode($data);
+		echo json_encode(array('response' => $data));
 		exit;
 	}
-
+	
 	private function get_status_message() {
 		$status = array(
 			100 => 'Continue',
@@ -74,16 +70,12 @@ class REST {
 
 	private function inputs() {
 		switch($this->get_request_method()) {
-		case "POST":
-			$this->_request = $this->cleanInputs($_POST);
-			break;
-		case "GET":
-		case "DELETE":
-			$this->_request = $this->cleanInputs($_GET);
-			break;
-		case "PUT":
-			parse_str(file_get_contents("php://input"),$this->_request);
-			$this->_request = $this->cleanInputs($this->_request);
+		case 'POST':
+			if (isset($_SERVER['HTTP_CONTENT_TYPE']) && strncmp($_SERVER['HTTP_CONTENT_TYPE'], 'application/json', strlen('application/json')) === 0){
+				$this->_request = json_decode(file_get_contents('php://input'), TRUE);
+				if ($this->_request === NULL)
+					$this->_request = [];
+			} 
 			break;
 		default:
 			$this->response('',406);
@@ -108,8 +100,8 @@ class REST {
 	}
 
 	private function set_headers() {
-		header("HTTP/1.1 ".$this->_code." ".$this->get_status_message());
-		header("Content-Type: ".$this->_content_type);
+		header('HTTP/1.1 '.$this->_code.' '.$this->get_status_message());
+		header('Content-Type: '.$this->_content_type);
 	}
 }
 ?>

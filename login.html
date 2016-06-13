@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JimmyChallenge</title>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta content='width:device-width, initial-scale=1.0' name='viewport'>
+    <link type='image/x-icon' href='../images/favicon.ico' rel='shortcut icon'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	    <link rel='stylesheet' href='css/normalize.css' type='text/css'>
+    <link rel='stylesheet' href='css/login.css' type='text/css'>
+</head>
+
+<body>
+    <div class='login-container'>
+        <section class='login' id='login'>
+            <header>
+				<a href="#">
+					<img src="images/keyhole.svg" alt='Welcome to'/><br/>
+					<h2>JimmyChallenge</h2>
+				</a>
+                <h4>Login</h4>
+            </header>
+            <form class='login-form' action='' method='post'>
+				<input type='text' id='username' class='login-input' placeholder='User' required='' autofocus>
+				<input type='password' id='password' class='login-input' placeholder='Password'>
+                <div class='submit-container'>
+                    <button type='submit' id='e1' class='login-button'>SIGN IN</button>
+                </div>
+            </form>
+        </section>
+    </div>
+	<script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+	<script src="js/script.js" type="text/javascript"></script>
+    <script>
+		$('.login-form').submit(function (evt) {
+		    evt.preventDefault();
+		});
+		document.getElementById('e1').addEventListener('click', function () {
+			var _user = document.getElementById('username').value;
+			var _pass = document.getElementById('password').value;
+			send_auth(_user, _pass);
+		});
+    </script>
+</body>
+</html>
