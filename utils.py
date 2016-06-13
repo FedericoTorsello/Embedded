@@ -1,7 +1,6 @@
 """Module library for JimmyChallenge main script (jimmy.py)."""
 import builtins
 import getpass
-import orderedset
 import serial
 import queue
 import ujson as json

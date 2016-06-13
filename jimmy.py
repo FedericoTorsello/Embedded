@@ -6,7 +6,6 @@ import ujson as json
 import utils
 from serial.threaded import ReaderThread
 from aiohttp import ClientSession, ClientOSError, Timeout
-import asyncio_redis
 """""" """""" """""" """""" """""" """""" """""" """""" ""
 " This script reads from the serial port messages from   "
 " Arduino and forwards them to te recipient              "
@@ -19,6 +18,8 @@ import asyncio_redis
 _stop = False
 user = None
 url = 'https://embedded16.duckdns.org/phplibs/api.php'
+# URL FOR TESTING
+url = 'http://192.168.43.140/phplibs/api.php'
 
 
 async def get_token(user, pwd):
@@ -65,13 +66,7 @@ async def dispatch(cookie, protocol):
     from_arduino = protocol.get_message_queue()
     last = [0, 0, 0]
     # Prepare standard messages
-    info = {'distance': None, 'status': None, 'level': None}
-    p = 'redis_password'
-    conn = await asyncio_redis.Pool.create(host='embedded16.duckdns.org',
-                                           port=3501,
-                                           poolsize=3,
-                                           password=p,
-                                           db=2)
+    info = {'request': 'update_info', 'distance': None, 'status': None, 'level': None}
     while not _stop:
         # Pop a JSON message from the queue or wait for it
         try:
@@ -93,8 +88,9 @@ async def dispatch(cookie, protocol):
                         info['distance'] = d
                         info['status'] = s
                         info['level'] = l
-                        await conn.set('info fede', json.dumps(info))
-                        # await send_post(info, cookie)
+                        await send_post(info, cookie)
+                        # Catch if a signal is triggered
+                        await asyncio.sleep(0.01)
                 if t == 'all':
                     # Print the message
                     utils.print(data)
