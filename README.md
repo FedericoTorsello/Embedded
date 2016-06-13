@@ -2,8 +2,6 @@
 
 ### Configuration
 
-`virtualenv3 -p python3 --no-site-packages .env	\
-
-	pip install -r requirements.txt	\
-	
-	chmod +x jimmy.py`
+```{r, engine='bash', count_lines}
+wc -l en_US.twitter.txt 
+```
