@@ -27,26 +27,22 @@ void SonarTask::playLevel() {
     int status = 0;
     int feedbackDistance = 0;
 
-    feedbackDistance = abs(currentDistance - secretDistance);
-    if (feedbackDistance == 0)
-        feedbackDistance = 0;
-    else if (currentDistance == 0)
-        feedbackDistance = 100;
+    if (currentDistance <= secretDistance)
+        feedbackDistance = 100 * currentDistance / secretDistance;
+    else
+        feedbackDistance = 100 - ((currentDistance - secretDistance) * 100 / (pContext->getMaxDistance() - secretDistance));
 
     if(currentDistance <= (secretDistance + delta)
        && currentDistance >= (secretDistance - delta)) {
         pContext->setPadlockDetected(true);
-        timeFound = (millis()/1000) - timeOut;     // inizializzazione a zero
+        timeFound = (millis()/1000) - timeOut;
         switch (timeFound) {
         case 0:
             if (pContext->isPadlockOpen()) {
                 msgService.sendMsg("Lucchetto livello " + String(currentLevel) + " APERTO", F("all"));
                 pContext->setNewLevel();
-                if (!pContext->isGameOver()) {
-                    status = 300 + currentLevel + 1;
-                    pContext->setPadlockOpen(false);
-                    pContext->setLockpicking(false);
-                }
+                pContext->setPadlockOpen(false);
+                pContext->setLockpicking(false);
             } else
                 status = 101;
             break;
@@ -100,5 +96,5 @@ void SonarTask::playLevel() {
         pContext->setPadlockDetected(false);
         pContext->setLockpicking(false);
     }
-    msgService.sendInfo(currentDistance, status, currentLevel, F("remote"));
+    msgService.sendInfo(feedbackDistance, status, currentLevel, F("remote"));
 }

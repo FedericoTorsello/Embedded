@@ -16,7 +16,7 @@ private:
     volatile bool padlockOpen = false;
     volatile bool padlockDetected = false;
     uint8_t delta = 6;
-    uint8_t currentlevel = 0;
+    uint8_t currentlevel = 1;
     uint8_t maxLevel = 6;
     uint8_t dangerLevel = 0;
     int maxDistance;
@@ -76,6 +76,11 @@ public:
     /** @brief ###Get the distance at which the padlock will open */
     int getCurrentDistance() {
         return currentDistance;
+    }
+
+    /** @brief ###Get the max distance allowed */
+    int getMaxDistance() {
+        return maxDistance;
     }
 
     /** @brief ###Set the state of the button if pressed
