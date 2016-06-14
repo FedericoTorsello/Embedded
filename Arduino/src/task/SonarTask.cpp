@@ -41,16 +41,14 @@ void SonarTask::playLevel() {
             if (pContext->isPadlockOpen()) {
                 msgService.sendMsg("Lucchetto livello " + String(currentLevel) + " APERTO", F("all"));
                 pContext->setNewLevel();
-<<<<<<< HEAD
+
                 // if (!pContext->isGameOver()) {
                 //     status = 300 + currentLevel + 1;
-                    pContext->setPadlockOpen(false);
-                    pContext->setLockpicking(false);
+                    // pContext->setPadlockOpen(false);
+                    // pContext->setLockpicking(false);
                 // }
-=======
                 pContext->setPadlockOpen(false);
                 pContext->setLockpicking(false);
->>>>>>> 7689b0e249af51f78f620c63637e6b11a624d854
             } else
                 status = 101;
             break;
