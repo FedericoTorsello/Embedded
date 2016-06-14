@@ -35,7 +35,7 @@ public:
     Context(int maxDistance, Multiplexer* mux) {
         this->maxDistance = maxDistance;
         this->mux = mux;
-        mux->switchOn(currentlevel);
+        mux->switchOn(currentlevel - 1);
         randomSeed(analogRead(A0));
     }
 
