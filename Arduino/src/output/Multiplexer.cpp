@@ -16,7 +16,7 @@ Multiplexer::Multiplexer(int *pins, const int size) {
  * @param[in] output The pin to be enabled
  */
 void Multiplexer::switchOn(const int output) {
-    if(output >= 16) {
+    if(output <= 16) {
         digitalWrite(channels[0], truthTable[output][0]);
         digitalWrite(channels[1], truthTable[output][1]);
         digitalWrite(channels[2], truthTable[output][2]);
@@ -32,25 +32,15 @@ void Multiplexer::switchOn(const int output) {
  * @param[in] del The delay time between each single shift
  */
 void Multiplexer::carouselYellow(const int del) {
-    for (int thisChannel = 0; thisChannel < 6; thisChannel++) {
-        // set the channel pins based on the channel you want:
-        for (int thisPin = 0; thisPin < 4; thisPin++) {
-            // calculate the state of this pin based on
-            // its bit value in whichChannel:
-            int pinState = bitRead(thisChannel, thisPin);
-            // turn the pin on or off:
-            digitalWrite(channels[thisPin],pinState);
-        }
+    for (int out = 0; out < 6; out++) {
+        switchOn(out);
         delay(del);
     }
 }
 
 void Multiplexer::carouselRed(int del) {
-    for (int thisChannel = 6; thisChannel < 12; thisChannel++) {
-        for (int thisPin = 0; thisPin < 4; thisPin++) {
-            int pinState = bitRead(thisChannel, thisPin);
-            digitalWrite(channels[thisPin],pinState);
-        }
+    for (int out = 6; out < 12; out++) {
+        switchOn(out);
         delay(del);
     }
 }

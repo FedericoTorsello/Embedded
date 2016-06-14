@@ -51,6 +51,7 @@ void setup() {
     pContext->newRandomNumber();
     // Show a nice effect
     pContext->carousel(50, 50);
+    pContext->setGameOver(true);
 
     /** @brief ###Sonar Task
      *
