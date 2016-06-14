@@ -51,8 +51,7 @@ void setup() {
     pContext->newRandomNumber();
     // Show a nice effect
     pContext->carousel(50, 50);
-    pContext->setGameOver(true);
-
+    
     /** @brief ###Sonar Task
      *
      * This task reads the distance from the sonar and set the context's
