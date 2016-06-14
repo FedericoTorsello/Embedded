@@ -111,6 +111,5 @@ function start_game(local, remote) {
 		request: 'start_game',
 		remoteuser: remote
 	}
-	req.sendPost(data, function(data) { console.log(data); });
-	subscribe_game();
+	req.sendPost(data, function(data) { if (data.status === 200) subscribe_game(); });
 }
