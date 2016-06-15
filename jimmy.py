@@ -30,7 +30,7 @@ async def get_token(user, pwd):
     # Convert data to JSON format
     data = json.dumps({'request': 'auth', 'username': user, 'password': pwd})
     try:
-        with Timeout(0.8):
+        with Timeout(1):
             async with ClientSession() as session:
                 async with session.post(url, data=data, headers=h) as response:
                     await response.read()
@@ -66,7 +66,10 @@ async def dispatch(cookie, protocol):
     from_arduino = protocol.get_message_queue()
     last = [0, 0, 0]
     # Prepare standard messages
-    info = {'request': 'update_info', 'distance': None, 'status': None, 'level': None}
+    info = {'request': 'update_info',
+            'distance': None,
+            'status': None,
+            'level': None}
     while not _stop:
         # Pop a JSON message from the queue or wait for it
         try:
@@ -81,19 +84,19 @@ async def dispatch(cookie, protocol):
                     # Send message to Arduino
                     protocol.write_line(data)
                     await asyncio.sleep(0.3)
-                if t == utils.REMOTE:
+                if t == utils.REMOTE and any(k not in last for k in (d, s, l)):
                     # Send message to server API with HTTP request
-                    if any(k not in last for k in (d, s, l)):
-                        last = [d, s, l]
-                        info['distance'] = d
-                        info['status'] = s
-                        info['level'] = l
-                        await send_post(info, cookie)
-                        # Catch if a signal is triggered
-                        await asyncio.sleep(0.01)
-                if t == 'all':
-                    # Print the message
-                    utils.print(data)
+                    last = [d, s, l]
+                    info['distance'] = d
+                    info['status'] = s
+                    info['level'] = l
+                    await send_post(info, cookie)
+                    # Catch if a signal is triggered
+                    await asyncio.sleep(0.01)
+                if t == 'all' and l == 'terminal':
+                    # Print the message (debug)
+                    msg = 'MESSAGE FROM <' + str(d) + '> ' + str(s)
+                    utils.print(msg)
 
 
 async def main(loop):

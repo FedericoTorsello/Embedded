@@ -75,13 +75,17 @@ def parse_json(data):
     try:
         if (data.get('from') == 'arduino'):
             t = data.get('to')
-            d = data.get('distance')
-            s = data.get('status')
-            l = data.get('level')
+            if (t == 'all'):
+                f = data.get('from')
+                msg = data.get('msg')
+                return (t, f, msg, 'terminal')
+            else:
+                d = data.get('distance')
+                s = data.get('status')
+                l = data.get('level')
+                return (t, d, s, l)
     except ValueError:
         pass
-    else:
-        return (t, d, s, l)
 
 
 def read_inputs():
