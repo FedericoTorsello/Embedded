@@ -146,8 +146,3 @@ function subscribe_game() {
 		}
 	},false);
 }
-
-// add an event listener for the game status changes and animate the bar
-function handle_status(s) {
-	console.log(s);
-}
