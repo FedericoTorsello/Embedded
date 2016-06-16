@@ -91,8 +91,6 @@ async def dispatch(cookie, protocol):
                     info['status'] = s
                     info['level'] = l
                     await send_post(info, cookie)
-                    # Catch if a signal is triggered
-                    await asyncio.sleep(0.01)
                 if t == 'all' and l == 'terminal':
                     # Print the message (debug)
                     msg = 'MESSAGE FROM <' + str(d) + '> ' + str(s)
