@@ -139,6 +139,7 @@ function subscribe_game() {
 			}
 			if (_status === 500) {
 				_domstatus.innerHTML = "Congratulations! You pick all locks!<p>GAME OVER!</p>";
+				_domlevel.innerHTML = "";
 				game.close();
 			}
 
